@@ -1,41 +1,51 @@
 import 'dart:async';
-import 'package:health/health.dart';
+import 'package:fit_kit/fit_kit.dart';
+import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/repositories/repository.dart';
 
 abstract class FitnessRepositoryClient {
   void fitnessRepositoryDidUpdate(FitnessRepository repository,
-      {SyncState state, DateTime day, List<HealthDataPoint> data});
+      {SyncState state, DateTime day, Map<DataType, FitSnapshot> data});
 }
 
 class FitnessRepository extends Repository {
   ///
   Future<void> syncTodaysSteps({FitnessRepositoryClient client}) async {
-    List<HealthDataPoint> data = [];
+    Map<DataType, FitSnapshot> data = Map();
 
     final DateTime endDate = DateTime.now();
     final DateTime startDate =
         DateTime(endDate.year, endDate.month, endDate.day);
+
     client.fitnessRepositoryDidUpdate(this,
         state: SyncState.FETCHING_DATA, day: startDate);
 
-    final HealthFactory health = HealthFactory();
-    final List<HealthDataType> types = [
-      HealthDataType.STEPS,
-      HealthDataType.WEIGHT,
-    ];
-
-    /// Get all available data for each declared type
-    for (HealthDataType type in types) {
-      /// Calls must be wrapped in a try catch block
-      /// Fetch new data
-      List<HealthDataPoint> healthData =
-          await health.getHealthDataFromType(startDate, endDate, type);
-
-      /// Save all the new data points
-      data.addAll(healthData);
-
-      /// Filter out duplicates
-      data = HealthFactory.removeDuplicates(data);
+    try {
+      if (!await FitKit.requestPermissions(DataType.values)) {
+        // 'requestPermissions: failed';
+      } else {
+        final DateTime today = DateTime.now();
+        final DateTime from = DateTime(today.year, today.month, today.day)
+            .subtract(Duration(days: 10));
+        final DateTime to =
+            DateTime(today.year, today.month, today.day, 23, 59);
+        List<FitData> dataSet;
+        for (DataType type in [DataType.STEP_COUNT]) {
+          try {
+            dataSet = await FitKit.read(
+              type,
+              dateFrom: from,
+              dateTo: to,
+              limit: 9999,
+            );
+            data[type] = FitSnapshot(data: dataSet);
+          } on UnsupportedException catch (e) {
+            print(e.toString());
+          }
+        }
+      }
+    } catch (e) {
+      print(e.toString());
     }
 
     if (data.isEmpty) {
@@ -44,6 +54,25 @@ class FitnessRepository extends Repository {
     } else {
       client.fitnessRepositoryDidUpdate(this,
           state: SyncState.DATA_READY, day: startDate, data: data);
+    }
+  }
+
+  Future<bool> revokePermissions() async {
+    try {
+      await FitKit.revokePermissions();
+      return await FitKit.hasPermissions(DataType.values);
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> hasPermissions() async {
+    try {
+      return await FitKit.hasPermissions(DataType.values);
+    } catch (e) {
+      print(e.toString());
+      return false;
     }
   }
 }

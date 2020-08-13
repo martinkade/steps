@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:health/health.dart';
+import 'package:fit_kit/fit_kit.dart';
+import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 import 'package:steps/model/repositories/repository.dart';
 
@@ -15,6 +16,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard>
     implements FitnessRepositoryClient {
   final FitnessRepository _repository = FitnessRepository();
+  FitSnapshot _snapshot;
   SyncState _fitnessSyncState = SyncState.NOT_FETCHED;
 
   @override
@@ -26,7 +28,7 @@ class _DashboardState extends State<Dashboard>
 
   @override
   void fitnessRepositoryDidUpdate(FitnessRepository repository,
-      {SyncState state, DateTime day, List<HealthDataPoint> data}) {
+      {SyncState state, DateTime day, Map<DataType, FitSnapshot> data}) {
     if (!mounted) return;
 
     switch (state) {
@@ -35,7 +37,9 @@ class _DashboardState extends State<Dashboard>
         // loading indicator
         break;
       default:
-        data.forEach((x) => print("Data point: $x"));
+        data.forEach((key, value) {
+          _snapshot = value;
+        });
         break;
     }
 
@@ -54,7 +58,7 @@ class _DashboardState extends State<Dashboard>
         child: Center(
           child: Text(_fitnessSyncState == SyncState.FETCHING_DATA
               ? 'Loading steps'
-              : 'Step display'),
+              : '${_snapshot?.valueOfDate(DateTime.now())} steps'),
         ),
       ),
     );
