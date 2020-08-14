@@ -1,17 +1,32 @@
 import 'dart:async';
-import 'package:fit_kit/fit_kit.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/services.dart';
 import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/repositories/repository.dart';
+import 'package:steps/model/storage.dart';
 
 abstract class FitnessRepositoryClient {
   void fitnessRepositoryDidUpdate(FitnessRepository repository,
-      {SyncState state, DateTime day, Map<DataType, FitSnapshot> data});
+      {SyncState state, DateTime day, FitSnapshot snapshot});
 }
 
+/// https://flutter.dev/docs/development/platform-integration/platform-channels
 class FitnessRepository extends Repository {
   ///
-  Future<void> syncTodaysSteps({FitnessRepositoryClient client}) async {
-    Map<DataType, FitSnapshot> data = Map();
+  static const platform = const MethodChannel('com.mediabeam/fitness');
+
+  ///
+  Future<bool> hasPermissions() async {
+    return true;
+  }
+
+  ///
+  Future<void> syncTodaysSteps(
+      {String userKey,
+      String teamName,
+      FitnessRepositoryClient client,
+      bool pushData = false}) async {
+    Map<dynamic, dynamic> data = Map();
 
     final DateTime endDate = DateTime.now();
     final DateTime startDate =
@@ -21,58 +36,40 @@ class FitnessRepository extends Repository {
         state: SyncState.FETCHING_DATA, day: startDate);
 
     try {
-      if (!await FitKit.requestPermissions(DataType.values)) {
-        // 'requestPermissions: failed';
-      } else {
-        final DateTime today = DateTime.now();
-        final DateTime from = DateTime(today.year, today.month, today.day)
-            .subtract(Duration(days: 10));
-        final DateTime to =
-            DateTime(today.year, today.month, today.day, 23, 59);
-        List<FitData> dataSet;
-        for (DataType type in [DataType.STEP_COUNT]) {
-          try {
-            dataSet = await FitKit.read(
-              type,
-              dateFrom: from,
-              dateTo: to,
-              limit: 9999,
-            );
-            data[type] = FitSnapshot(data: dataSet);
-          } on UnsupportedException catch (e) {
-            print(e.toString());
-          }
-        }
-      }
-    } catch (e) {
+      data = await platform.invokeMethod('getFitnessMetrics');
+      print('$data');
+    } on PlatformException catch (e) {
       print(e.toString());
+    }
+
+    final FitSnapshot snapshot = FitSnapshot(data: data);
+
+    if (pushData) {
+      applySnapshot(snapshot, userKey: userKey, teamName: teamName);
     }
 
     if (data.isEmpty) {
       client.fitnessRepositoryDidUpdate(this,
-          state: SyncState.NO_DATA, day: startDate, data: data);
+          state: SyncState.NO_DATA, day: startDate, snapshot: snapshot);
     } else {
       client.fitnessRepositoryDidUpdate(this,
-          state: SyncState.DATA_READY, day: startDate, data: data);
+          state: SyncState.DATA_READY, day: startDate, snapshot: snapshot);
     }
   }
 
-  Future<bool> revokePermissions() async {
-    try {
-      await FitKit.revokePermissions();
-      return await FitKit.hasPermissions(DataType.values);
-    } catch (e) {
-      print(e.toString());
-      return false;
-    }
-  }
+  ///
+  Future<void> applySnapshot(FitSnapshot snapshot,
+      {String userKey, String teamName}) async {
+    Storage().access().then((instance) {
+      final FirebaseDatabase db = FirebaseDatabase(app: instance);
+      db.setPersistenceEnabled(true);
+      db.setPersistenceCacheSizeBytes(1024 * 1024);
 
-  Future<bool> hasPermissions() async {
-    try {
-      return await FitKit.hasPermissions(DataType.values);
-    } catch (e) {
-      print(e.toString());
-      return false;
-    }
+      final Map<String, dynamic> snapshotData = Map();
+      snapshotData.putIfAbsent('team', () => teamName);
+      snapshotData.addAll(snapshot.persist());
+
+      db.reference().child('users').child(userKey).set(snapshotData);
+    });
   }
 }

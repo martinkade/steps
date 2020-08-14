@@ -1,34 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:fit_kit/fit_kit.dart';
 import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 import 'package:steps/model/repositories/repository.dart';
 
-class Dashboard extends StatefulWidget {
-  final String title;
+class SyncController extends StatefulWidget {
+  ///
+  final String userKey;
 
-  Dashboard({Key key, this.title}) : super(key: key);
+  ///
+  final String team;
+
+  ///
+  SyncController({Key key, this.userKey, this.team}) : super(key: key);
 
   @override
-  _DashboardState createState() => _DashboardState();
+  _SyncControllerState createState() => _SyncControllerState();
 }
 
-class _DashboardState extends State<Dashboard>
+class _SyncControllerState extends State<SyncController>
     implements FitnessRepositoryClient {
+  ///
   final FitnessRepository _repository = FitnessRepository();
+
+  ///
   FitSnapshot _snapshot;
+
+  ///
   SyncState _fitnessSyncState = SyncState.NOT_FETCHED;
 
   @override
   void initState() {
     super.initState();
 
-    _repository.syncTodaysSteps(client: this);
+    _repository.syncTodaysSteps(
+        userKey: widget.userKey, teamName: widget.team, client: this);
   }
 
   @override
   void fitnessRepositoryDidUpdate(FitnessRepository repository,
-      {SyncState state, DateTime day, Map<DataType, FitSnapshot> data}) {
+      {SyncState state, DateTime day, FitSnapshot snapshot}) {
     if (!mounted) return;
 
     switch (state) {
@@ -37,9 +47,7 @@ class _DashboardState extends State<Dashboard>
         // loading indicator
         break;
       default:
-        data.forEach((key, value) {
-          _snapshot = value;
-        });
+        _snapshot = snapshot;
         break;
     }
 
@@ -50,16 +58,11 @@ class _DashboardState extends State<Dashboard>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Container(
-        child: Center(
-          child: Text(_fitnessSyncState == SyncState.FETCHING_DATA
-              ? 'Loading steps'
-              : '${_snapshot?.valueOfDate(DateTime.now())} steps'),
-        ),
+    return Container(
+      child: Center(
+        child: Text(_fitnessSyncState == SyncState.FETCHING_DATA
+            ? 'Loading steps'
+            : '${_snapshot?.today()} steps'),
       ),
     );
   }

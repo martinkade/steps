@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/dashboard.component.dart';
+import 'package:steps/components/dashboard/dashboard.component.dart';
 
 class App extends StatelessWidget {
   // This widget is the root of your application.
