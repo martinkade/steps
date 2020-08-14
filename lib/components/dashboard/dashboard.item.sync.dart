@@ -145,11 +145,11 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 16.0),
+                          padding: const EdgeInsets.only(top: 22.0),
                           child: Text(
                             '${_snapshot?.week() ?? 0}',
                             style: TextStyle(
-                              fontSize: 32.0,
+                              fontSize: 28.0,
                               fontWeight: FontWeight.normal,
                             ),
                           ),
@@ -164,13 +164,17 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
           )
         : unauthorizedWidget;
 
-    return Card(
-      elevation: 2.0,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+      child: Card(
+        elevation: 8.0,
+        shadowColor: Colors.grey.withAlpha(50),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: _loading ? loadingWidget : contentWidget,
       ),
-      child: _loading ? loadingWidget : contentWidget,
     );
   }
 }
