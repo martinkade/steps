@@ -3,11 +3,13 @@
 
     <item android:drawable="@drawable/launch_background_drawable" />
 
-    <!-- You can insert your own image assets here -->
-    <!-- <item>
+    <item
+        android:width="128dp"
+        android:height="128dp"
+        android:gravity="center">
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/launch_image" />
-    </item> -->
+            android:src="@drawable/img_launch" />
+    </item>
 
 </layer-list>

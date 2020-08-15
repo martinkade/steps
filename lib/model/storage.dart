@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:steps/__secrets.dart';
 
 class Storage {
   FirebaseApp _app;
@@ -13,14 +14,14 @@ class Storage {
         name: 'db',
         options: Platform.isIOS
             ? const FirebaseOptions(
-                googleAppID: '1:42298583733:ios:a77f31b494c48fefbaecfc',
-                gcmSenderID: '42298583733',
-                databaseURL: 'https://jovial-engine-286206.firebaseio.com/',
+                googleAppID: IOS_APP_ID,
+                gcmSenderID: GCM_SENDER_ID,
+                databaseURL: DATABASE_URL,
               )
             : const FirebaseOptions(
-                googleAppID: '1:42298583733:android:bf2de8626fe1bb00baecfc',
-                apiKey: 'AIzaSyAQxMNw-X0T-9qJcy9D_WkpH7s3W1enADM',
-                databaseURL: 'https://jovial-engine-286206.firebaseio.com/',
+                googleAppID: ANDROID_APP_ID,
+                apiKey: API_KEY,
+                databaseURL: DATABASE_URL,
               ),
       );
     }

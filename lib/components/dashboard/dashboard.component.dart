@@ -1,9 +1,12 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:steps/components/dashboard/dashboard.item.challenge.dart';
 import 'package:steps/components/dashboard/dashboard.item.ranking.dart';
 import 'package:steps/components/dashboard/dashboard.item.sync.dart';
 import 'package:steps/components/dashboard/dashboard.item.title.dart';
+import 'package:steps/components/landing/landing.component.dart';
+import 'package:steps/components/shared/bezier.clipper.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/storage.dart';
 
@@ -20,7 +23,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   ///
-  String _userKey;
+  String _userName;
 
   ///
   String _teamName;
@@ -32,14 +35,35 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
 
-    _userKey =
-        'martin.kade@mediabeam.com'.split('@').first?.replaceAll('.', '_');
-    _teamName = 'Team A';
+    SharedPreferences.getInstance().then((preferences) {
+      final String userValue = preferences.getString('kUser');
+      final String teamValue = preferences.getString('kTeam');
+      if (!mounted) return;
 
-    load();
+      if (userValue != null && teamValue != null) {
+        setState(() {
+          _userName = userValue;
+          _teamName = teamValue;
+        });
+
+        _load();
+      } else {
+        _land();
+      }
+    });
+
+    // 'martin.kade@mediabeam.com'.split('@').first?.replaceAll('.', '_');
+    // 'Team A'
   }
 
-  void load() {
+  void _land() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Landing()),
+    );
+  }
+
+  void _load() {
     Storage().access().then((instance) {
       final FirebaseDatabase db = FirebaseDatabase(app: instance);
       db.reference().child('users').once().then((snapshot) {
@@ -64,21 +88,21 @@ class _DashboardState extends State<Dashboard> {
           case 1:
             return DashboardSyncItem(
               title: 'Deine Woche',
-              userKey: _userKey,
+              userKey: _userName,
               teamName: _teamName,
             );
           case 2:
             return DashboardChallengeItem(
               title: 'Aktuelle Challenges',
               ranking: _ranking,
-              userKey: _userKey,
+              userKey: _userName,
               teamName: _teamName,
             );
           case 3:
             return DashboardRankingItem(
               title: 'Team der Woche',
               ranking: _ranking,
-              userKey: _userKey,
+              userKey: _userName,
               teamName: _teamName,
             );
           default:
@@ -88,33 +112,24 @@ class _DashboardState extends State<Dashboard> {
     );
 
     return Scaffold(
-      body: Stack(
-        children: [
-          ClipPath(
-            clipper: BezierClipper(),
-            child: Container(
-              height: 192.0,
-              color: Color.fromARGB(255, 255, 215, 0),
+      body: _userName == null || _teamName == null
+          ? Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : Stack(
+              children: [
+                ClipPath(
+                  clipper: BezierClipper(),
+                  child: Container(
+                    height: 192.0,
+                    color: Color.fromARGB(255, 255, 215, 0),
+                  ),
+                ),
+                listWidget
+              ],
             ),
-          ),
-          listWidget
-        ],
-      ),
     );
   }
-}
-
-class BezierClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = new Path();
-    path.lineTo(0.0, size.height * 0.75);
-    path.quadraticBezierTo(
-        size.width * 0.5, size.height, size.width, size.height * 0.75);
-    path.lineTo(size.width, 0.0);
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
 }
