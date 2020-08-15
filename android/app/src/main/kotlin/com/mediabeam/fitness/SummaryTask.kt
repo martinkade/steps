@@ -38,12 +38,12 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
         val startMillis: Long = now.timeInMillis
 
         val data = HashMap<String, Any>()
-        val stepData = HashMap<String, Int>()
-        stepData["today"] = readSteps(todayMillis, nowMillis)
-        stepData["week"] = readSteps(weekStartMillis, nowMillis)
-        stepData["lastWeek"] = readSteps(lastWeekStartMillis, weekStartMillis)
-        stepData["total"] = readSteps(startMillis, nowMillis)
-        data["steps"] = stepData
+        // val stepData = HashMap<String, Int>()
+        // stepData["today"] = readSteps(todayMillis, nowMillis)
+        // stepData["week"] = readSteps(weekStartMillis, nowMillis)
+        // stepData["lastWeek"] = readSteps(lastWeekStartMillis, weekStartMillis)
+        // stepData["total"] = readSteps(startMillis, nowMillis)
+        // data["steps"] = stepData
         val activeData = HashMap<String, Int>()
         activeData["today"] = readActiveMinutes(todayMillis, nowMillis)
         activeData["week"] = readActiveMinutes(weekStartMillis, nowMillis)

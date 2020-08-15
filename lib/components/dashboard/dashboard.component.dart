@@ -37,13 +37,12 @@ class _DashboardState extends State<Dashboard> {
 
     SharedPreferences.getInstance().then((preferences) {
       final String userValue = preferences.getString('kUser');
-      final String teamValue = preferences.getString('kTeam');
       if (!mounted) return;
 
-      if (userValue != null && teamValue != null) {
+      if (userValue != null) {
         setState(() {
-          _userName = userValue;
-          _teamName = teamValue;
+          _userName = userValue.split('@').first?.replaceAll('.', '_');
+          _teamName = 'Die Entwickler dieser App 🤓';
         });
 
         _load();
@@ -51,9 +50,6 @@ class _DashboardState extends State<Dashboard> {
         _land();
       }
     });
-
-    // 'martin.kade@mediabeam.com'.split('@').first?.replaceAll('.', '_');
-    // 'Team A'
   }
 
   void _land() {

@@ -39,6 +39,12 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Widget loadingWidget = Container(
       child: Center(
@@ -60,7 +66,7 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
     );
 
     final double cardWidth = 312.0;
-    final double cardHeight = 208.0;
+    final double cardHeight = cardWidth * 0.75;
     final Widget contentWidget = Container(
       height: cardHeight + 16.0,
       child: ListView.builder(
@@ -89,7 +95,8 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
                       Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/images/challenge1.jpg'),
+                            image: AssetImage(
+                                'assets/images/challenge${index + 1}.jpg'),
                             fit: BoxFit.cover,
                           ),
                         ),

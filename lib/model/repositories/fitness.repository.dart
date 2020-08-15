@@ -11,13 +11,21 @@ abstract class FitnessRepositoryClient {
 }
 
 /// https://flutter.dev/docs/development/platform-integration/platform-channels
+/// https://developers.google.com/fit/android/get-api-key
 class FitnessRepository extends Repository {
   ///
   static const platform = const MethodChannel('com.mediabeam/fitness');
 
   ///
   Future<bool> hasPermissions() async {
-    return true;
+    final bool isAuthenticated = await platform.invokeMethod('isAuthenticated');
+    return isAuthenticated;
+  }
+
+  ///
+  Future<bool> requestPermissions() async {
+    final bool isAuthenticated = await platform.invokeMethod('authenticate');
+    return isAuthenticated;
   }
 
   ///
