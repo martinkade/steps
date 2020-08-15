@@ -1,0 +1,27 @@
+{
+    "appName": "Die App",
+
+    "lblLandingTitle1": "Willkommen bei",
+    "lblLandingText1": "Wir benötigen noch einige Informationen, doch in wenigen Schritten bist du startklar 🥳",
+    "lblLandingTitle2": "Wer bist du?",
+    "lblLandingText2": "Gib nachfolgend bitte deine mediabeam.com Adresse ein. Dann können wir dich einem Team zuordnen.",
+    "lblLandingTitle3": "Eine Kleinigkeit noch",
+    "lblLandingText3Apple": "Um dein Team unterstützen zu können, benötigt die App Zugriff auf Apple Health. Bitte stelle vorher sicher, dass Apple Health auch auf deinem Gerät installiert ist.",
+    "lblLandingText3Google": "Um dein Team unterstützen zu können, benötigt die App Zugriff auf Google Fit. Bitte stelle vorher sicher, dass Google Fit auch auf deinem Gerät installiert ist.",
+    
+    "lblDashboardUserStats": "Deine Punkte",
+    "lblDashboardUserStatsToday": "Deine Punktzahl heute",
+    "lblDashboardUserStatsWeek": "diese Woche",
+    "lblDashboardUserStatsConnectErrorTitle": "Schade :(",
+    "lblDashboardUserStatsConnectErrorApple": "Die App kann nicht auf die Daten aus Apple Health zugreifen.",
+    "lblDashboardUserStatsConnectErrorGoogle": "Die App kann nicht auf die Daten aus Google Fit zugreifen.",
+    "lblDashboardActiveChallenges": "Aktuelle Challenges",
+    "lblDashboardTeamStandings": "Team der Woche",
+
+    "lblActionGetStarted": "Los gehts!",
+    "lblActionBack": "Zurück",
+    "lblActionForward": "Weiter",
+    "lblActionDone": "Fertig",
+    "lblActionGrant": "Erlauben",
+    "lblEmail": "E-Mail Adresse"
+}

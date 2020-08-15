@@ -7,6 +7,7 @@ import 'package:steps/components/landing/landing.item.identity.dart';
 import 'package:steps/components/landing/landing.item.fitaccess.dart';
 import 'package:steps/components/landing/landing.item.welcome.dart';
 import 'package:steps/components/shared/bezier.clipper.dart';
+import 'package:steps/components/shared/localizer.dart';
 
 class Landing extends StatefulWidget {
   ///
@@ -34,6 +35,12 @@ class _LandingState extends State<Landing> implements LandingDelegate {
     super.initState();
 
     _scrollController = ScrollController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
     _title = _titleForIndex(_cardIndex);
   }
 
@@ -46,11 +53,11 @@ class _LandingState extends State<Landing> implements LandingDelegate {
   String _titleForIndex(int index) {
     switch (index) {
       case 1:
-        return 'Wer bist du?';
+        return Localizer.translate(context, 'lblLandingTitle2');
       case 2:
-        return 'Letzter Schritt';
+        return Localizer.translate(context, 'lblLandingTitle3');
       default:
-        return 'Willkommen bei Die App';
+        return '${Localizer.translate(context, 'lblLandingTitle1')} ${Localizer.translate(context, 'appName')}';
     }
   }
 

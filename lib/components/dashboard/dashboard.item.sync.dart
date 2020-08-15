@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:io' show Platform;
 import 'package:steps/components/dashboard/dashboard.item.dart';
+import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 import 'package:steps/model/repositories/repository.dart';
@@ -100,14 +102,19 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Schade :(',
+              Localizer.translate(
+                  context, 'lblDashboardUserStatsConnectErrorTitle'),
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20.0),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
-                'Die App kann nicht auf die Daten aus Google Fit bzw. Apple Health zugreifen.',
+                Platform.isIOS
+                    ? Localizer.translate(
+                        context, 'lblDashboardUserStatsConnectErrorApple')
+                    : Localizer.translate(
+                        context, 'lblDashboardUserStatsConnectErrorGoogle'),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -136,7 +143,10 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text('Punktzahl heute')
+                        Text(
+                          Localizer.translate(
+                              context, 'lblDashboardUserStatsToday'),
+                        )
                       ],
                     ),
                   ),
@@ -154,7 +164,10 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                             ),
                           ),
                         ),
-                        Text('diese Woche')
+                        Text(
+                          Localizer.translate(
+                              context, 'lblDashboardUserStatsWeek'),
+                        )
                       ],
                     ),
                   ),

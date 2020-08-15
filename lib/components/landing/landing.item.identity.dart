@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:steps/components/landing/landing.item.dart';
+import 'package:steps/components/shared/localizer.dart';
 
 class LandingIdentityItem extends LandingItem {
   ///
@@ -70,7 +71,7 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
           child: Text(
-            'Gib nachfolgend bitte deine mediabeam.com Adresse ein. Dann können wir dich einem Team zuordnen.',
+            Localizer.translate(context, 'lblLandingText2'),
             textAlign: TextAlign.start,
             style: TextStyle(
               fontSize: 16.0,
@@ -94,7 +95,7 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
               obscureText: false,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'E-Mail Adresse',
+                labelText: Localizer.translate(context, 'lblEmail'),
               ),
             ),
           ),
@@ -105,7 +106,7 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
           children: [
             FlatButton(
               child: Text(
-                'Zurück',
+                Localizer.translate(context, 'lblActionBack'),
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.normal,
@@ -118,7 +119,7 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
             FlatButton(
               disabledTextColor: Colors.grey,
               child: Text(
-                'Weiter',
+                Localizer.translate(context, 'lblActionForward'),
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,

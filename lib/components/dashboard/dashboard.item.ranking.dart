@@ -25,8 +25,6 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
   @override
   void initState() {
     super.initState();
-
-    print('ranking = ${widget.ranking}');
   }
 
   @override
@@ -96,13 +94,17 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
-                                  16.0, 8.0, 16.0, 8.0),
+                                  16.0, 8.0, 8.0, 8.0),
                               child: Container(
                                 child: Center(
                                   child: Text(
                                     '${index + 1}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                      fontWeight: item.name == widget.teamName
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      fontSize: 16.0,
+                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -119,20 +121,30 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(
-                                    16.0, 8.0, 16.0, 8.0),
+                                    8.0, 8.0, 8.0, 8.0),
                                 child: Text(
                                   item.name,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: item.name == widget.teamName
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    fontSize: 16.0,
+                                  ),
                                   textAlign: TextAlign.left,
                                 ),
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
-                                  16.0, 8.0, 16.0, 8.0),
+                                  8.0, 8.0, 16.0, 8.0),
                               child: Text(
                                 item.value,
-                                style: TextStyle(fontWeight: FontWeight.normal),
+                                style: TextStyle(
+                                  fontWeight: item.name == widget.teamName
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  fontSize: 16.0,
+                                ),
                                 textAlign: TextAlign.right,
                               ),
                             ),

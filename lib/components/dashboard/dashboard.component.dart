@@ -7,6 +7,7 @@ import 'package:steps/components/dashboard/dashboard.item.sync.dart';
 import 'package:steps/components/dashboard/dashboard.item.title.dart';
 import 'package:steps/components/landing/landing.component.dart';
 import 'package:steps/components/shared/bezier.clipper.dart';
+import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/storage.dart';
 
@@ -79,24 +80,25 @@ class _DashboardState extends State<Dashboard> {
         switch (index) {
           case 0:
             return DashboardTitleItem(
-              title: 'Die App',
+              title: Localizer.translate(context, 'appName'),
             );
           case 1:
             return DashboardSyncItem(
-              title: 'Deine Woche',
+              title: Localizer.translate(context, 'lblDashboardUserStats'),
               userKey: _userName,
               teamName: _teamName,
             );
           case 2:
             return DashboardChallengeItem(
-              title: 'Aktuelle Challenges',
+              title:
+                  Localizer.translate(context, 'lblDashboardActiveChallenges'),
               ranking: _ranking,
               userKey: _userName,
               teamName: _teamName,
             );
           case 3:
             return DashboardRankingItem(
-              title: 'Team der Woche',
+              title: Localizer.translate(context, 'lblDashboardTeamStandings'),
               ranking: _ranking,
               userKey: _userName,
               teamName: _teamName,
@@ -117,7 +119,7 @@ class _DashboardState extends State<Dashboard> {
           : Stack(
               children: [
                 ClipPath(
-                  clipper: BezierClipper(),
+                  clipper: BezierClipper(leftHeight: 0.9, rightHeight: 0.67),
                   child: Container(
                     height: 192.0,
                     color: Color.fromARGB(255, 255, 215, 0),

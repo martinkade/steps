@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:steps/components/landing/landing.item.dart';
+import 'package:steps/components/shared/localizer.dart';
 
 class LandingWelcomeItem extends LandingItem {
   ///
@@ -36,7 +37,7 @@ class _LandingWelcomeItemState extends State<LandingWelcomeItem> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
           child: Text(
-            'Wir benötigen noch einige Informationen, doch in wenigen Schritten bist du startklar 🥳',
+            Localizer.translate(context, 'lblLandingText1'),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16.0,
@@ -46,7 +47,7 @@ class _LandingWelcomeItemState extends State<LandingWelcomeItem> {
         ),
         FlatButton(
           child: Text(
-            'Los gehts!',
+            Localizer.translate(context, 'lblActionGetStarted'),
             style: TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,

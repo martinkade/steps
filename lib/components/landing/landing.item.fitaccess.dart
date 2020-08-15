@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:steps/components/landing/landing.item.dart';
+import 'package:steps/components/shared/localizer.dart';
 import 'dart:io' show Platform;
 
 import 'package:steps/model/repositories/fitness.repository.dart';
@@ -44,7 +45,9 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
           child: Text(
-            'Um dein Team unterstützen zu können, benötigt die App Zugriff auf dein ${Platform.isIOS ? 'Apple Health' : 'Google Fit'} Konto. Bitte stelle vorher sicher, dass ${Platform.isIOS ? 'Apple Health' : 'Google Fit'} auch auf deinem Gerät installiert ist.',
+            Platform.isIOS
+                ? Localizer.translate(context, 'lblLandingText3Apple')
+                : Localizer.translate(context, 'lblLandingText3Google'),
             textAlign: TextAlign.left,
             style: TextStyle(
               fontSize: 16.0,
@@ -83,7 +86,7 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
                             });
                           },
                           child: Text(
-                            'Erlauben',
+                            Localizer.translate(context, 'lblActionGrant'),
                             style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
@@ -102,7 +105,7 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
           children: [
             FlatButton(
               child: Text(
-                'Zurück',
+                Localizer.translate(context, 'lblActionBack'),
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.normal,
@@ -114,7 +117,7 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
             ),
             FlatButton(
               child: Text(
-                'Fertig',
+                Localizer.translate(context, 'lblActionDone'),
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
