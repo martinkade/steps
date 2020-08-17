@@ -30,6 +30,9 @@ class _LandingState extends State<Landing> implements LandingDelegate {
   ///
   String _title;
 
+  ///
+  String _subtitle;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +45,7 @@ class _LandingState extends State<Landing> implements LandingDelegate {
     super.didChangeDependencies();
 
     _title = _titleForIndex(_cardIndex);
+    _subtitle = _subtitleForIndex(_cardIndex);
   }
 
   @override
@@ -57,7 +61,18 @@ class _LandingState extends State<Landing> implements LandingDelegate {
       case 2:
         return Localizer.translate(context, 'lblLandingTitle3');
       default:
-        return '${Localizer.translate(context, 'lblLandingTitle1')} ${Localizer.translate(context, 'appName')}';
+        return Localizer.translate(context, 'appName');
+    }
+  }
+
+  String _subtitleForIndex(int index) {
+    switch (index) {
+      case 1:
+        return Localizer.translate(context, 'appName');
+      case 2:
+        return Localizer.translate(context, 'appName');
+      default:
+        return Localizer.translate(context, 'lblLandingTitle1');
     }
   }
 
@@ -82,8 +97,15 @@ class _LandingState extends State<Landing> implements LandingDelegate {
     } else {
       _cardIndex = min(2, _cardIndex + 1);
       final double cardWidth = MediaQuery.of(context).size.width - 24.0;
+      if (item is LandingIdentityItem) {
+        final FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      }
       setState(() {
         _title = _titleForIndex(_cardIndex);
+        _subtitle = _subtitleForIndex(_cardIndex);
         _scrollController.animateTo(
           _cardIndex * cardWidth + _cardIndex * 16.0,
           duration: Duration(milliseconds: 200),
@@ -97,8 +119,15 @@ class _LandingState extends State<Landing> implements LandingDelegate {
   void previousItem(LandingItem item) {
     _cardIndex = max(0, _cardIndex - 1);
     final double cardWidth = MediaQuery.of(context).size.width - 24.0;
+    if (item is LandingIdentityItem) {
+      final FocusScopeNode currentFocus = FocusScope.of(context);
+      if (!currentFocus.hasPrimaryFocus) {
+        currentFocus.unfocus();
+      }
+    }
     setState(() {
       _title = _titleForIndex(_cardIndex);
+      _subtitle = _subtitleForIndex(_cardIndex);
       _scrollController.animateTo(
         _cardIndex * cardWidth + _cardIndex * 16.0,
         duration: Duration(milliseconds: 200),
@@ -160,7 +189,17 @@ class _LandingState extends State<Landing> implements LandingDelegate {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(22.0, 96.0, 22.0, 24.0),
+                    padding: const EdgeInsets.fromLTRB(22.0, 96.0, 22.0, 0.0),
+                    child: Text(
+                      _subtitle,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(22.0, 0.0, 22.0, 24.0),
                     child: Text(
                       _title,
                       style: TextStyle(

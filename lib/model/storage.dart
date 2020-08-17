@@ -11,12 +11,13 @@ class Storage {
   Future<FirebaseApp> access() async {
     if (_app == null) {
       _app = await FirebaseApp.configure(
-        name: 'db',
+        name: 'jovial-engine-286206',
         options: Platform.isIOS
             ? const FirebaseOptions(
                 googleAppID: IOS_APP_ID,
-                gcmSenderID: GCM_SENDER_ID,
+                apiKey: API_KEY,
                 databaseURL: DATABASE_URL,
+                gcmSenderID: GCM_SENDER_ID,
               )
             : const FirebaseOptions(
                 googleAppID: ANDROID_APP_ID,

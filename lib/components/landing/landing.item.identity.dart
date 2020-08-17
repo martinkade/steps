@@ -19,11 +19,15 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
   ///
   String _email;
 
+  ///
+  FocusNode _focusNode;
+
   @override
   void initState() {
     super.initState();
 
     _inputController = TextEditingController();
+    _focusNode = FocusNode();
 
     SharedPreferences.getInstance().then((preferences) {
       final String userValue = preferences.getString('kUser');
@@ -37,10 +41,11 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _inputController.dispose();
     super.dispose();
   }
-
+  
   bool _validate(String value) {
     final String text = value.toLowerCase();
     final bool valid =
@@ -86,6 +91,7 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
             child: TextField(
               keyboardType: TextInputType.emailAddress,
               controller: _inputController,
+              focusNode: _focusNode,
               onChanged: (value) {
                 _validate(value);
               },
