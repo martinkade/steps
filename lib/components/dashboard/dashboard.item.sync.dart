@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 import 'package:steps/components/dashboard/dashboard.item.dart';
@@ -5,6 +7,10 @@ import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 import 'package:steps/model/repositories/repository.dart';
+
+abstract class DashboardSyncDelegate {
+  void onFitnessDataUpadte(FitSnapshot snapshot);
+}
 
 class DashboardSyncItem extends DashboardItem {
   ///
@@ -14,7 +20,11 @@ class DashboardSyncItem extends DashboardItem {
   final String teamName;
 
   ///
-  DashboardSyncItem({Key key, String title, this.userKey, this.teamName})
+  final DashboardSyncDelegate delegate;
+
+  ///
+  DashboardSyncItem(
+      {Key key, String title, this.delegate, this.userKey, this.teamName})
       : super(key: key, title: title);
 
   @override
@@ -56,10 +66,11 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
         });
       } else {
         _repository.syncTodaysSteps(
-            userKey: widget.userKey,
-            teamName: widget.teamName,
-            client: this,
-            pushData: true);
+          userKey: widget.userKey,
+          teamName: widget.teamName,
+          client: this,
+          pushData: true,
+        );
       }
     });
   }
@@ -76,6 +87,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
         break;
       default:
         _snapshot = snapshot;
+        widget.delegate?.onFitnessDataUpadte(snapshot);
         break;
     }
 
@@ -133,42 +145,62 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${_snapshot?.today() ?? 0}',
-                          style: TextStyle(
-                            fontSize: 48.0,
-                            fontWeight: FontWeight.bold,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${_snapshot?.today() ?? 0}',
+                            style: TextStyle(
+                              fontSize: 48.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          Localizer.translate(
-                              context, 'lblDashboardUserStatsToday'),
-                        )
-                      ],
+                          Text(
+                            Localizer.translate(
+                                context, 'lblDashboardUserStatsToday'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: LinearProgressIndicator(
+                              value:
+                                  min(((_snapshot?.today() ?? 0) / 20.0), 1.0),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 22.0),
-                          child: Text(
-                            '${_snapshot?.week() ?? 0}',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.normal,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 23.0),
+                            child: Text(
+                              '${_snapshot?.week() ?? 0}',
+                              style: TextStyle(
+                                fontSize: 28.0,
+                                fontWeight: FontWeight.normal,
+                              ),
                             ),
                           ),
-                        ),
-                        Text(
-                          Localizer.translate(
-                              context, 'lblDashboardUserStatsWeek'),
-                        )
-                      ],
+                          Text(
+                            Localizer.translate(
+                                context, 'lblDashboardUserStatsWeek'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: LinearProgressIndicator(
+                              value:
+                                  min(((_snapshot?.week() ?? 0) / 140.0), 1.0),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ],

@@ -22,6 +22,7 @@ class DashboardRankingItem extends DashboardItem {
 }
 
 class _DashboardRankingItemState extends State<DashboardRankingItem> {
+
   @override
   void initState() {
     super.initState();

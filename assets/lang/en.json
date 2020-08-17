@@ -18,6 +18,11 @@
     "lblDashboardActiveChallenges": "Active challenges",
     "lblDashboardTeamStandings": "Team of the week",
 
+    "lblWeekChallengeTitle": "Personal weekly goal",
+    "lblWeekChallengeDescription": "Challenge accepted! Try to collect 140 points for your team every week.🤘",
+    "lblTeamChallengeTitle": "Our team challenge",
+    "lblTeamChallengeDescription": "Will we be able to cover the distance from A to B together? 5 points result in one kilometer.",
+
     "lblActionGetStarted": "Here we go!",
     "lblActionBack": "Back",
     "lblActionForward": "Next",

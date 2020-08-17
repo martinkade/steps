@@ -45,7 +45,7 @@ class FitnessRepository extends Repository {
 
     try {
       data = await platform.invokeMethod('getFitnessMetrics');
-      print('$data');
+      print('Loaded local fitness data $data');
     } on PlatformException catch (e) {
       print(e.toString());
     }

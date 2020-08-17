@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +10,7 @@ import 'package:steps/components/landing/landing.component.dart';
 import 'package:steps/components/shared/bezier.clipper.dart';
 import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/model/fit.ranking.dart';
+import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/storage.dart';
 
 class Dashboard extends StatefulWidget {
@@ -22,7 +24,8 @@ class Dashboard extends StatefulWidget {
   _DashboardState createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends State<Dashboard>
+    implements DashboardSyncDelegate {
   ///
   String _userName;
 
@@ -30,7 +33,13 @@ class _DashboardState extends State<Dashboard> {
   String _teamName;
 
   ///
+  FitSnapshot _fitSnapshot;
+
+  ///
   FitRanking _ranking;
+
+  ///
+  StreamSubscription<Event> _rankingSubscription;
 
   @override
   void initState() {
@@ -43,7 +52,7 @@ class _DashboardState extends State<Dashboard> {
       if (userValue != null) {
         setState(() {
           _userName = userValue.split('@').first?.replaceAll('.', '_');
-          _teamName = 'Die Entwickler dieser App 🤓';
+          _teamName = 'Das beste Team der Welt';
         });
 
         _load();
@@ -65,11 +74,40 @@ class _DashboardState extends State<Dashboard> {
       final FirebaseDatabase db = FirebaseDatabase(app: instance);
       db.reference().child('users').once().then((snapshot) {
         if (!mounted) return;
-        setState(() {
-          _ranking = FitRanking.createFromSnapshot(snapshot);
-        });
+        _onSnapshotChanged(snapshot);
       });
+
+      if (_rankingSubscription == null) {
+        _rankingSubscription =
+            db.reference().child('users').onChildChanged.listen((_) {
+          if (!mounted) return;
+          db.reference().child('users').once().then((snapshot) {
+            _onSnapshotChanged(snapshot);
+          });
+        });
+      }
     });
+  }
+
+  void _onSnapshotChanged(DataSnapshot snapshot) {
+    if (snapshot == null) return;
+    setState(() {
+      _ranking = FitRanking.createFromSnapshot(snapshot);
+    });
+  }
+
+  @override
+  void onFitnessDataUpadte(FitSnapshot snapshot) {
+    if (!mounted) return;
+    setState(() {
+      _fitSnapshot = snapshot;
+    });
+  }
+
+  @override
+  void dispose() {
+    _rankingSubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -85,6 +123,7 @@ class _DashboardState extends State<Dashboard> {
           case 1:
             return DashboardSyncItem(
               title: Localizer.translate(context, 'lblDashboardUserStats'),
+              delegate: this,
               userKey: _userName,
               teamName: _teamName,
             );
@@ -93,6 +132,7 @@ class _DashboardState extends State<Dashboard> {
               title:
                   Localizer.translate(context, 'lblDashboardActiveChallenges'),
               ranking: _ranking,
+              snapshot: _fitSnapshot,
               userKey: _userName,
               teamName: _teamName,
             );

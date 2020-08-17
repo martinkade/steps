@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:steps/components/dashboard/dashboard.item.challenge.detail.dart';
 import 'package:steps/components/dashboard/dashboard.item.dart';
+import 'package:steps/model/fit.challenge.dart';
+import 'package:steps/model/fit.challenge.team.dart';
+import 'package:steps/model/fit.challenge.week.dart';
 import 'package:steps/model/fit.ranking.dart';
+import 'package:steps/model/fit.snapshot.dart';
 
 class DashboardChallengeItem extends DashboardItem {
   ///
@@ -13,8 +18,16 @@ class DashboardChallengeItem extends DashboardItem {
   final FitRanking ranking;
 
   ///
+  final FitSnapshot snapshot;
+
+  ///
   DashboardChallengeItem(
-      {Key key, String title, this.ranking, this.userKey, this.teamName})
+      {Key key,
+      String title,
+      this.ranking,
+      this.snapshot,
+      this.userKey,
+      this.teamName})
       : super(key: key, title: title);
 
   @override
@@ -23,10 +36,10 @@ class DashboardChallengeItem extends DashboardItem {
 
 class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
   ///
-  bool _loading = true;
+  ScrollController _scrollController;
 
   ///
-  ScrollController _scrollController;
+  List<FitChallenge> _challenges;
 
   ///
   int _cardIndex = 0;
@@ -39,6 +52,25 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _challenges = [
+      FitChallengeWeek(context),
+      FitChallengeTeam(context),
+    ];
+  }
+
+  @override
+  void didUpdateWidget(DashboardChallengeItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _challenges.forEach((challenge) {
+      challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
+    });
+  }
+
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
@@ -46,11 +78,14 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
 
   @override
   Widget build(BuildContext context) {
+    final double cardWidth = 312.0;
+    final double cardHeight = cardWidth * 0.75;
+
     final Widget loadingWidget = Container(
       child: Center(
         child: CircularProgressIndicator(),
       ),
-      height: 96.0,
+      height: cardHeight + 16.0,
     );
 
     final Widget titleWidget = Padding(
@@ -65,21 +100,19 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
       ),
     );
 
-    final double cardWidth = 312.0;
-    final double cardHeight = cardWidth * 0.75;
     final Widget contentWidget = Container(
       height: cardHeight + 16.0,
       child: ListView.builder(
         physics: NeverScrollableScrollPhysics(),
-        itemCount: 3,
+        itemCount: _challenges?.length ?? 0,
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.all(0.0),
         itemBuilder: (context, index) {
           return GestureDetector(
             child: Padding(
-              padding:
-                  EdgeInsets.fromLTRB(8.0, 0.0, index < 2 ? 0.0 : 8.0, 8.0),
+              padding: EdgeInsets.fromLTRB(
+                  8.0, 0.0, index < _challenges.length - 1 ? 0.0 : 8.0, 8.0),
               child: Card(
                 elevation: 8.0,
                 shadowColor: Colors.grey.withAlpha(50),
@@ -90,61 +123,8 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
                 child: Container(
                   height: cardHeight,
                   width: cardWidth,
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                                'assets/images/challenge${index + 1}.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                          colors: [
-                            Colors.white.withAlpha(10),
-                            Colors.white.withAlpha(205)
-                          ],
-                          stops: [0.1, 0.9],
-                          begin: Alignment.topRight,
-                          end: Alignment.bottomCenter,
-                        )),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Container(),
-                            ),
-                            Text(
-                              '${index + 1} mal um die Welt',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                            Text(
-                              'Beschreibung der Challenge',
-                              style: TextStyle(fontWeight: FontWeight.normal),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: LinearProgressIndicator(
-                                value: ((index + 1) * 13.0) * 0.01,
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                  child:
+                      DashboardChallengeDetail(challenge: _challenges[index]),
                 ),
               ),
             ),

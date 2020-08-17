@@ -2,6 +2,7 @@ package com.mediabeam.fitness
 
 import android.content.Context
 import android.os.AsyncTask
+import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
@@ -16,26 +17,31 @@ import kotlin.collections.HashMap
 
 class SummaryTask(private val context: Context, private val options: FitnessOptions, private val result: MethodChannel.Result?) : AsyncTask<Void, Void, Map<String, Any?>>() {
     override fun doInBackground(vararg p0: Void?): Map<String, Any?> {
-        val now = Calendar.getInstance()
+        val now = Calendar.getInstance(Locale.GERMANY)
         now.time = Date()
 
         val nowMillis = now.timeInMillis
-        now.set(Calendar.HOUR, 0)
+        Log.i(SummaryTask::javaClass.name, "\tNow: $now")
+        now.set(Calendar.HOUR_OF_DAY, 0)
         now.set(Calendar.MINUTE, 0)
         now.set(Calendar.SECOND, 0)
 
         val todayMillis: Long = now.timeInMillis
+        Log.i(SummaryTask::javaClass.name, "\tToday: $now")
         now.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
 
         val weekStartMillis: Long = now.timeInMillis
+        Log.i(SummaryTask::javaClass.name, "\tMonday: $now")
         now.set(Calendar.DATE, -7)
 
         val lastWeekStartMillis: Long = now.timeInMillis
-        now.set(Calendar.DATE, 1)
+        Log.i(SummaryTask::javaClass.name, "\tLast monday: $now")
+        now.set(Calendar.DATE, 17)
         now.set(Calendar.MONTH, Calendar.AUGUST)
         now.set(Calendar.YEAR, 2020)
 
         val startMillis: Long = now.timeInMillis
+        Log.i(SummaryTask::javaClass.name, "\tAll time: $now")
 
         val data = HashMap<String, Any>()
         // val stepData = HashMap<String, Int>()
@@ -98,9 +104,9 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
                                         return 0
                                     }
                                     dataPoints.first()?.apply {
-                                        // Log.i("-", "\tType: " + dataType.name)
-                                        // Log.i("-", "\tStart: " + dateFormat.format(getStartTime(TimeUnit.MILLISECONDS)))
-                                        // Log.i("-", "\tEnd: " + dateFormat.format(getEndTime(TimeUnit.MILLISECONDS)))
+                                        Log.i("-", "\tType: " + dataType.name)
+                                        Log.i("-", "\tStart: " + dateFormat.format(getStartTime(TimeUnit.MILLISECONDS)))
+                                        Log.i("-", "\tEnd: " + dateFormat.format(getEndTime(TimeUnit.MILLISECONDS)))
                                         for (field in dataType.fields) {
                                             // Log.i("-", "\tValue: " + getValue(field))
                                             return getValue(field).asInt()
