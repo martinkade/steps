@@ -22,7 +22,7 @@ class FitChallengeWeek extends FitChallenge {
 
   @override
   void initTargets() {
-    target = 30.0;
+    target = 210.0;
   }
 
   @override

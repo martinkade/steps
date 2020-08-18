@@ -165,7 +165,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                             padding: const EdgeInsets.only(top: 8.0),
                             child: LinearProgressIndicator(
                               value:
-                                  min(((_snapshot?.today() ?? 0) / 20.0), 1.0),
+                                  min(((_snapshot?.today() ?? 0) / 30.0), 1.0),
                             ),
                           )
                         ],
@@ -196,7 +196,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                             padding: const EdgeInsets.only(top: 8.0),
                             child: LinearProgressIndicator(
                               value:
-                                  min(((_snapshot?.week() ?? 0) / 140.0), 1.0),
+                                  min(((_snapshot?.week() ?? 0) / 210.0), 1.0),
                             ),
                           )
                         ],

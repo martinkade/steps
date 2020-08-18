@@ -1,10 +1,10 @@
 # Wander
 
-Wander geht es um mehr Bewegung im Alltag. Die Teilnehmer sammeln wöchentlich Punkte für ihr Team. Das beste Team der Woche wird belohnt.
+Bei Wander geht es um mehr Bewegung im Alltag. Die Teilnehmer sammeln wöchentlich Punkte für ihr Team. Das beste Team der Woche wird belohnt.
 
 Grundlage für die Punkte sind die 'Aktiven Minuten' aus Google Fit (Android) beziehungsweise Apple Health (iOS). Hier wird eins-zu-eins umgerechnet.
 
-Außerdem wird versucht, teamübergreifend eine bestimmte physische Distanz zurückzulegen. Dabei ergeben 5 Punkte einen Kilometer.
+Jeder Teilnehmer hat ein persönliches Tagesziel von 30 Punkten, also 30 Minuten Bewegung. Dementsprechend gibt es auch ein persönliches Wochenziel von 210 Punkten. Teamübergreifend wird versucht, eine bestimmte physische Distanz zurückzulegen. Dabei ergeben 5 Punkte einen Kilometer.
 
 ## Getting Started
 
