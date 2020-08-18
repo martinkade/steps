@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 import 'package:steps/components/dashboard/dashboard.item.dart';
 import 'package:steps/components/shared/localizer.dart';
+import 'package:steps/components/shared/progress.text.animated.dart';
 import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 import 'package:steps/model/repositories/repository.dart';
@@ -150,12 +151,11 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '${_snapshot?.today() ?? 0}',
-                            style: TextStyle(
-                              fontSize: 48.0,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          AnimatedProgressText(
+                            start: 0,
+                            end: _snapshot?.today() ?? 0,
+                            target: 30,
+                            fontSize: 48.0,
                           ),
                           Text(
                             Localizer.translate(
@@ -180,12 +180,11 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(top: 23.0),
-                            child: Text(
-                              '${_snapshot?.week() ?? 0}',
-                              style: TextStyle(
-                                fontSize: 28.0,
-                                fontWeight: FontWeight.normal,
-                              ),
+                            child: AnimatedProgressText(
+                              start: 0,
+                              end: _snapshot?.week() ?? 0,
+                              target: 210,
+                              fontSize: 32.0,
                             ),
                           ),
                           Text(
