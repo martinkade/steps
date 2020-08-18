@@ -1,16 +1,24 @@
-# steps
+# Die App
 
-A new Flutter project.
+In diesem Projekt geht es um mehr Bewegung im Alltag. Die Teilnehmer sammeln wöchentlich Punkte für ihr Team. Das beste Team der Woche wird belohnt.
+
+Grundlage für die Punkte sind die 'Aktiven Minuten' aus Google Fit (Android) beziehungsweise Apple Health (iOS). Hier wird eins-zu-eins umgerechnet.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Ein paar grundlegende Dinge, die dir den Einstieg in Flutter erleichtern werden:
 
-A few resources to get you started if this is your first Flutter project:
+- [Lab: Deine erste Flutter App](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: nützliche Flutter Beispiele](https://flutter.dev/docs/cookbook)
+- [Online-Dokumentation](https://flutter.dev/docs)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Teilnahme am Beta-Programm (Android)
+[Hier](https://play.google.com/apps/testing/com.mediabeam.fitness) kannst du dich für das Beta Programm registrieren und dir die App aus dem Google Play Store herunterladen. Du wirst automatisch benachrichtigt, sobald eine neue Version verfügbar ist.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Teilnahme am Beta-Programm (iOS)
+
+Kommt bald.
+
+## Projektsetup
+
+Kommt bald.
