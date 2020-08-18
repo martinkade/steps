@@ -1,8 +1,10 @@
-# Die App
+# Wander
 
-In diesem Projekt geht es um mehr Bewegung im Alltag. Die Teilnehmer sammeln wöchentlich Punkte für ihr Team. Das beste Team der Woche wird belohnt.
+Wander geht es um mehr Bewegung im Alltag. Die Teilnehmer sammeln wöchentlich Punkte für ihr Team. Das beste Team der Woche wird belohnt.
 
 Grundlage für die Punkte sind die 'Aktiven Minuten' aus Google Fit (Android) beziehungsweise Apple Health (iOS). Hier wird eins-zu-eins umgerechnet.
+
+Außerdem wird versucht, teamübergreifend eine bestimmte physische Distanz zurückzulegen. Dabei ergeben 5 Punkte einen Kilometer.
 
 ## Getting Started
 
