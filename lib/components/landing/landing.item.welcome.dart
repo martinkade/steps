@@ -24,11 +24,11 @@ class _LandingWelcomeItemState extends State<LandingWelcomeItem> {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+            padding: const EdgeInsets.only(top: 8.0),
             child: Center(
               child: SizedBox(
-                child: Image.asset('assets/images/rocket.png'),
-                width: 128.0,
+                child: Image.asset('assets/images/landing.png'),
+                width: 192.0,
                 height: 128.0,
               ),
             ),

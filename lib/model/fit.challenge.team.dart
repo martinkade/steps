@@ -22,11 +22,11 @@ class FitChallengeTeam extends FitChallenge {
 
   @override
   void initTargets() {
-    target = 1000.0;
+    target = 1000.0; // km
   }
 
   @override
   void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = ranking.absolute.toDouble();
+    progress = ranking.absolute.toDouble() / 5.0;
   }
 }

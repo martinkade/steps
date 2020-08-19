@@ -61,16 +61,16 @@ class _LandingState extends State<Landing> implements LandingDelegate {
       case 2:
         return Localizer.translate(context, 'lblLandingTitle3');
       default:
-        return Localizer.translate(context, 'appName');
+        return Localizer.translate(context, 'appName').toUpperCase();
     }
   }
 
   String _subtitleForIndex(int index) {
     switch (index) {
       case 1:
-        return Localizer.translate(context, 'appName');
+        return Localizer.translate(context, 'appName').toUpperCase();
       case 2:
-        return Localizer.translate(context, 'appName');
+        return Localizer.translate(context, 'appName').toUpperCase();
       default:
         return Localizer.translate(context, 'lblLandingTitle1');
     }
@@ -140,6 +140,19 @@ class _LandingState extends State<Landing> implements LandingDelegate {
   Widget build(BuildContext context) {
     final double cardWidth = MediaQuery.of(context).size.width - 24.0;
     final double cardHeight = cardWidth * 0.75;
+
+    final Widget madeWithLove = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('Made with'),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Icon(Icons.favorite),
+        ),
+        Text('in Ahaus')
+      ],
+    );
+
     final Widget contentWidget = Container(
       height: cardHeight + 16.0,
       child: ListView.builder(
@@ -209,6 +222,10 @@ class _LandingState extends State<Landing> implements LandingDelegate {
                     ),
                   ),
                   contentWidget,
+                  Container(
+                    child: Center(child: madeWithLove),
+                    height: 128.0,
+                  ),
                 ],
               ),
             ),
