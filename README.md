@@ -1,6 +1,6 @@
-# Wande
+# Wandr
 
-Bei Wande geht es um mehr Bewegung im Alltag. Die Teilnehmer sammeln wöchentlich Punkte für ihr Team. Das beste Team der Woche wird belohnt.
+Bei Wandr geht es um mehr Bewegung im Alltag. Die Teilnehmer sammeln wöchentlich Punkte für ihr Team. Das beste Team der Woche wird belohnt.
 
 Grundlage für die Punkte sind die 'Aktiven Minuten' aus Google Fit (Android) beziehungsweise Apple Health (iOS). Hier wird eins-zu-eins umgerechnet.
 

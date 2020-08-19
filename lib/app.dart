@@ -11,6 +11,7 @@ class App extends StatelessWidget {
         title: Localizer.translate(context, 'appName'),
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          fontFamily: 'Calibri',
           primarySwatch: Colors.blue,
           // This makes the visual density adapt to the platform that you run
           // the app on. For desktop platforms, the controls will be smaller and

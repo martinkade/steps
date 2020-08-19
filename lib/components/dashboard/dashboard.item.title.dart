@@ -20,10 +20,10 @@ class _DashboardTitleItemState extends State<DashboardTitleItem> {
     final Widget titleWidget = Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 36.0, 16.0, 32.0),
       child: Text(
-        widget.title,
+        widget.title.toUpperCase(),
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 20.0,
+          fontSize: 24.0,
           fontWeight: FontWeight.bold,
         ),
       ),

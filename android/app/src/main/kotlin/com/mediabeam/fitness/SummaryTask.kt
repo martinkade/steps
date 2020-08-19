@@ -36,7 +36,7 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
 
         val lastWeekStartMillis: Long = now.timeInMillis
         Log.i(SummaryTask::javaClass.name, "\tLast monday: $now")
-        now.set(Calendar.DATE, 17)
+        now.set(Calendar.DATE, 24)
         now.set(Calendar.MONTH, Calendar.AUGUST)
         now.set(Calendar.YEAR, 2020)
 
@@ -65,27 +65,35 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
     }
 
     private fun readSteps(from: Long, to: Long): Int {
-        val readRequest = DataReadRequest.Builder()
-                .setTimeRange(from, to, TimeUnit.MILLISECONDS)
-                .bucketByTime(365, TimeUnit.DAYS)
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                .enableServerQueries()
-                .setLimit(9999)
-                .build()
+        try {
+            val readRequest = DataReadRequest.Builder()
+                    .setTimeRange(from, to, TimeUnit.MILLISECONDS)
+                    .bucketByTime(365, TimeUnit.DAYS)
+                    .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                    .enableServerQueries()
+                    .setLimit(9999)
+                    .build()
 
-        return read(readRequest, DataType.TYPE_STEP_COUNT_DELTA)
+            return read(readRequest, DataType.TYPE_STEP_COUNT_DELTA)
+        } catch (e: Exception) {
+            return 0
+        }
     }
 
     private fun readActiveMinutes(from: Long, to: Long): Int {
-        val readRequest = DataReadRequest.Builder()
-                .setTimeRange(from, to, TimeUnit.MILLISECONDS)
-                .bucketByTime(365, TimeUnit.DAYS)
-                .aggregate(DataType.TYPE_MOVE_MINUTES, DataType.AGGREGATE_MOVE_MINUTES)
-                .enableServerQueries()
-                .setLimit(9999)
-                .build()
+        try {
+            val readRequest = DataReadRequest.Builder()
+                    .setTimeRange(from, to, TimeUnit.MILLISECONDS)
+                    .bucketByTime(365, TimeUnit.DAYS)
+                    .aggregate(DataType.TYPE_MOVE_MINUTES, DataType.AGGREGATE_MOVE_MINUTES)
+                    .enableServerQueries()
+                    .setLimit(9999)
+                    .build()
 
-        return read(readRequest, DataType.TYPE_MOVE_MINUTES)
+            return read(readRequest, DataType.TYPE_MOVE_MINUTES)
+        } catch (e: Exception) {
+            return 0
+        }
     }
 
     private fun read(request: DataReadRequest, dataType: DataType): Int {
@@ -104,9 +112,9 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
                                         return 0
                                     }
                                     dataPoints.first()?.apply {
-                                        Log.i("-", "\tType: " + dataType.name)
-                                        Log.i("-", "\tStart: " + dateFormat.format(getStartTime(TimeUnit.MILLISECONDS)))
-                                        Log.i("-", "\tEnd: " + dateFormat.format(getEndTime(TimeUnit.MILLISECONDS)))
+                                        // Log.i("-", "\tType: " + dataType.name)
+                                        // Log.i("-", "\tStart: " + dateFormat.format(getStartTime(TimeUnit.MILLISECONDS)))
+                                        // Log.i("-", "\tEnd: " + dateFormat.format(getEndTime(TimeUnit.MILLISECONDS)))
                                         for (field in dataType.fields) {
                                             // Log.i("-", "\tValue: " + getValue(field))
                                             return getValue(field).asInt()

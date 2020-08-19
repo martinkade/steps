@@ -11,11 +11,19 @@ class AnimatedProgressText extends StatefulWidget {
   final int target;
 
   ///
+  final String label;
+
+  ///
   final double fontSize;
 
   ///
   AnimatedProgressText(
-      {Key key, this.start, this.end, this.target, this.fontSize = 32.0})
+      {Key key,
+      this.start,
+      this.end,
+      this.target,
+      this.label,
+      this.fontSize = 32.0})
       : super(key: key);
 
   @override
@@ -31,13 +39,13 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
   AnimationController _controller;
 
   ///
-  String _displayValue;
+  double _displayValue;
 
   @override
   void initState() {
     super.initState();
 
-    _displayValue = widget.start.toString();
+    _displayValue = widget.start.toDouble();
     if (widget.end == 0) return;
 
     _startAnimation();
@@ -71,7 +79,7 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
     );
     _animation.addListener(() {
       setState(() {
-        _displayValue = _animation.value.toStringAsFixed(0);
+        _displayValue = _animation.value;
       });
     });
     _controller.forward();
@@ -85,20 +93,34 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
+    final double padding = widget.fontSize / 6.0;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          _displayValue,
-          style: TextStyle(
-            fontSize: widget.fontSize,
-            fontWeight: FontWeight.bold,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              _displayValue.toStringAsFixed(0),
+              style: TextStyle(
+                fontSize: widget.fontSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(padding, 0.0, 4.0, padding),
+              child: Text('/${widget.target}'),
+            )
+          ],
+        ),
+        Text(widget.label),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: LinearProgressIndicator(
+            value:
+                widget.end > 0 ? _displayValue / widget.target.toDouble() : 0.0,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('/${widget.target}'),
-        )
       ],
     );
   }

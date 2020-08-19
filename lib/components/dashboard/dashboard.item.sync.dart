@@ -141,64 +141,33 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AnimatedProgressText(
-                            start: 0,
-                            end: _snapshot?.today() ?? 0,
-                            target: 30,
-                            fontSize: 48.0,
-                          ),
-                          Text(
-                            Localizer.translate(
-                                context, 'lblDashboardUserStatsToday'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: LinearProgressIndicator(
-                              value:
-                                  min(((_snapshot?.today() ?? 0) / 30.0), 1.0),
-                            ),
-                          )
-                        ],
+                      child: AnimatedProgressText(
+                        start: 0,
+                        end: _snapshot?.today() ?? 0,
+                        target: 30,
+                        fontSize: 48.0,
+                        label: Localizer.translate(
+                            context, 'lblDashboardUserStatsToday'),
                       ),
                     ),
                   ),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 23.0),
-                            child: AnimatedProgressText(
-                              start: 0,
-                              end: _snapshot?.week() ?? 0,
-                              target: 210,
-                              fontSize: 32.0,
-                            ),
-                          ),
-                          Text(
-                            Localizer.translate(
-                                context, 'lblDashboardUserStatsWeek'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: LinearProgressIndicator(
-                              value:
-                                  min(((_snapshot?.week() ?? 0) / 210.0), 1.0),
-                            ),
-                          )
-                        ],
+                      child: AnimatedProgressText(
+                        start: 0,
+                        end: _snapshot?.week() ?? 0,
+                        target: 210,
+                        fontSize: 32.0,
+                        label: Localizer.translate(
+                            context, 'lblDashboardUserStatsWeek'),
                       ),
                     ),
                   ),
