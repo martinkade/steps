@@ -1,5 +1,6 @@
 class FitRanking {
   final List<FitRankingEntry> entries = List();
+  int absolute = 0;
   FitRanking._internal();
 
   static FitRanking createFromSnapshot(dynamic snapshot) {
@@ -16,6 +17,8 @@ class FitRanking {
       } else {
         summary.putIfAbsent(teamKey, () => value['week']);
       }
+
+      ranking.absolute += value['total'];
     });
 
     final List<String> keys = summary.keys.toList(growable: false);
