@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:steps/components/dashboard/dashboard.item.challenge.detail.dart';
 import 'package:steps/components/dashboard/dashboard.item.dart';
@@ -78,8 +80,9 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
 
   @override
   Widget build(BuildContext context) {
-    final double cardWidth = 312.0;
-    final double cardHeight = cardWidth * 0.75;
+    final double cardWidth =
+        min(MediaQuery.of(context).size.width - 24.0, 312.0);
+    final double cardHeight = max(cardWidth * 0.75, 256.0);
 
     final Widget loadingWidget = Container(
       child: Center(
@@ -89,7 +92,7 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
     );
 
     final Widget titleWidget = Padding(
-      padding: const EdgeInsets.fromLTRB(18.0, 22.0, 20, 4.0),
+      padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),
       child: Text(
         widget.title,
         style: TextStyle(

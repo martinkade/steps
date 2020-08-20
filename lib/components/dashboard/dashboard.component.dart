@@ -161,7 +161,7 @@ class _DashboardState extends State<Dashboard>
                 ClipPath(
                   clipper: BezierClipper(leftHeight: 0.9, rightHeight: 0.67),
                   child: Container(
-                    height: 192.0,
+                    height: 256.0,
                     color: Color.fromARGB(255, 255, 215, 0),
                   ),
                 ),

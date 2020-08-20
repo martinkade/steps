@@ -36,7 +36,7 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
 
         val lastWeekStartMillis: Long = now.timeInMillis
         Log.i(SummaryTask::javaClass.name, "\tLast monday: $now")
-        now.set(Calendar.DATE, 24)
+        now.set(Calendar.DATE, 17/*24*/)
         now.set(Calendar.MONTH, Calendar.AUGUST)
         now.set(Calendar.YEAR, 2020)
 

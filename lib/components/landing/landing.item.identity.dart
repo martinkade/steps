@@ -45,7 +45,7 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
     _inputController.dispose();
     super.dispose();
   }
-  
+
   bool _validate(String value) {
     final String text = value.toLowerCase();
     final bool valid =
@@ -88,20 +88,23 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
           child: Padding(
             padding:
                 const EdgeInsets.symmetric(vertical: 16.0, horizontal: 0.0),
-            child: TextField(
-              keyboardType: TextInputType.emailAddress,
-              controller: _inputController,
-              focusNode: _focusNode,
-              onChanged: (value) {
-                _validate(value);
-              },
-              onSubmitted: (value) {
-                _validate(value);
-              },
-              obscureText: false,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: Localizer.translate(context, 'lblEmail'),
+            child: AutofillGroup(
+              child: TextField(
+                keyboardType: TextInputType.emailAddress,
+                controller: _inputController,
+                autofillHints: [AutofillHints.email],
+                focusNode: _focusNode,
+                onChanged: (value) {
+                  _validate(value);
+                },
+                onSubmitted: (value) {
+                  _validate(value);
+                },
+                obscureText: false,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: Localizer.translate(context, 'lblEmail'),
+                ),
               ),
             ),
           ),

@@ -139,7 +139,7 @@ class _LandingState extends State<Landing> implements LandingDelegate {
   @override
   Widget build(BuildContext context) {
     final double cardWidth = MediaQuery.of(context).size.width - 24.0;
-    final double cardHeight = cardWidth * 0.75;
+    final double cardHeight = max(cardWidth * 0.75, 256.0);
 
     final Widget madeWithLove = Row(
       mainAxisSize: MainAxisSize.min,

@@ -38,7 +38,7 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
     );
 
     final Widget titleWidget = Padding(
-      padding: const EdgeInsets.fromLTRB(18.0, 22.0, 20, 4.0),
+      padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),
       child: Text(
         widget.title,
         style: TextStyle(

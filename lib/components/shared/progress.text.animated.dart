@@ -109,11 +109,25 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(padding, 0.0, 4.0, padding),
-              child: Text('/${widget.target}'),
-            )
+              child: Text(
+                '/${widget.target}',
+              ),
+            ),
+            Expanded(child: Container()),
+            widget.end >= widget.target
+                ? Icon(
+                    Icons.check_circle,
+                    size: 16.0,
+                    color: Colors.blue,
+                  )
+                : Container(),
           ],
         ),
-        Text(widget.label),
+        Text(
+          widget.label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: LinearProgressIndicator(

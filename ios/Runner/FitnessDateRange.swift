@@ -20,8 +20,8 @@ class FitnessDateRange: NSObject {
         let range = FitnessDateRange()
         range.startDate = Date().midnight
         range.endDate = Date()
-        NSLog("today: startDate=\(String(describing: range.startDate))")
-        NSLog("today: endDate=\(String(describing: range.endDate))")
+        
+        NSLog("today: \(range.description)")
         return range
     }
     
@@ -39,8 +39,8 @@ class FitnessDateRange: NSObject {
         
         range.startDate = calendar.date(from: startDateComponents)
         range.endDate = Date()
-        NSLog("week: startDate=\(String(describing: range.startDate))")
-        NSLog("week: endDate=\(String(describing: range.endDate))")
+        
+        NSLog("week: \(range.description)")
         return range
     }
     
@@ -51,8 +51,8 @@ class FitnessDateRange: NSObject {
         
         range.startDate = date.startOfWeek
         range.endDate = date.endOfWeek
-        NSLog("lastWeek: startDate=\(String(describing: range.startDate))")
-        NSLog("lastWeek: endDate=\(String(describing: range.endDate))")
+        
+        NSLog("lastWeek: \(range.description)")
         return range
     }
     
@@ -63,14 +63,28 @@ class FitnessDateRange: NSObject {
         calendar.timeZone = TimeZone.current
         
         var startDateComponents = DateComponents()
-        startDateComponents.day = 24
+        startDateComponents.day = 17//24
         startDateComponents.month = 8
         startDateComponents.year = 2020
         startDateComponents.calendar = calendar
         
         range.startDate = calendar.date(from: startDateComponents)
         range.endDate = Date()
+        
+        NSLog("allTime: \(range.description)")
         return range
+    }
+    
+    override var description: String {
+        get {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm"
+            formatter.timeZone = TimeZone.current
+            guard let startDate = startDate, let endDate = endDate else {
+                return "Missing start or end date"
+            }
+            return "\(formatter.string(from: startDate)) - \(formatter.string(from: endDate))"
+        }
     }
     
 }
@@ -113,6 +127,38 @@ extension Date {
             components.calendar = calendar
             
             return calendar.date(from: components)
+        }
+    }
+    
+    var isToday: Bool {
+        get {
+            var calendar = Calendar.current
+            calendar.timeZone = TimeZone.current
+            return calendar.isDateInToday(self)
+        }
+    }
+
+    var isThisWeek: Bool {
+        get {
+            let now = Date()
+            let nowStart = now.startOfWeek
+            let nowEnd = now.endOfWeek
+            guard let s = nowStart, let e = nowEnd else {
+                return false
+            }
+            return self.compare(s) == ComparisonResult.orderedDescending && self.compare(e) == ComparisonResult.orderedAscending
+        }
+    }
+    
+    var isLastWeek: Bool {
+        get {
+            let now = Date().addingTimeInterval(-3600 * 24 * 7)
+            let nowStart = now.startOfWeek
+            let nowEnd = now.endOfWeek
+            guard let s = nowStart, let e = nowEnd else {
+                return false
+            }
+            return self.compare(s) == ComparisonResult.orderedDescending && self.compare(e) == ComparisonResult.orderedAscending
         }
     }
     

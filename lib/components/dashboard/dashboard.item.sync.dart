@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 import 'package:steps/components/dashboard/dashboard.item.dart';
 import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/components/shared/progress.text.animated.dart';
+import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 import 'package:steps/model/repositories/repository.dart';
@@ -35,7 +34,7 @@ class DashboardSyncItem extends DashboardItem {
 class _DashboardSyncItemState extends State<DashboardSyncItem>
     implements FitnessRepositoryClient {
   ///
-  bool _loading = true;
+  bool _loading = false;
 
   ///
   bool _isAuthorized = false;
@@ -57,7 +56,33 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
   }
 
   void load() {
+    setState(() {
+      _loading = true;
+    });
     _repository.hasPermissions().then((authorized) {
+      if (!mounted) return;
+      _isAuthorized = authorized;
+
+      if (!authorized) {
+        setState(() {
+          _loading = false;
+        });
+      } else {
+        _repository.syncTodaysSteps(
+          userKey: widget.userKey,
+          teamName: widget.teamName,
+          client: this,
+          pushData: true,
+        );
+      }
+    });
+  }
+
+  void _requestPermission() {
+    setState(() {
+      _loading = true;
+    });
+    _repository.requestPermissions().then((authorized) {
       if (!mounted) return;
       _isAuthorized = authorized;
 
@@ -107,6 +132,18 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
       height: 96.0,
     );
 
+    final Widget titleWidget = Padding(
+      padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),
+      child: Text(
+        widget.title,
+        style: TextStyle(
+          fontSize: 16.0,
+          color: Colors.grey,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+
     final Widget unauthorizedWidget = Container(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -121,7 +158,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
               style: TextStyle(fontSize: 20.0),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 Platform.isIOS
                     ? Localizer.translate(
@@ -129,6 +166,18 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                     : Localizer.translate(
                         context, 'lblDashboardUserStatsConnectErrorGoogle'),
                 textAlign: TextAlign.center,
+              ),
+            ),
+            FlatButton(
+              onPressed: () {
+                _requestPermission();
+              },
+              child: Text(
+                Localizer.translate(context, 'lblActionRetry'),
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -151,7 +200,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                       child: AnimatedProgressText(
                         start: 0,
                         end: _snapshot?.today() ?? 0,
-                        target: 30,
+                        target: DAILY_TARGET_POINTS,
                         fontSize: 48.0,
                         label: Localizer.translate(
                             context, 'lblDashboardUserStatsToday'),
@@ -164,7 +213,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                       child: AnimatedProgressText(
                         start: 0,
                         end: _snapshot?.week() ?? 0,
-                        target: 210,
+                        target: DAILY_TARGET_POINTS * 7,
                         fontSize: 32.0,
                         label: Localizer.translate(
                             context, 'lblDashboardUserStatsWeek'),
@@ -177,17 +226,23 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
           )
         : unauthorizedWidget;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-      child: Card(
-        elevation: 8.0,
-        shadowColor: Colors.grey.withAlpha(50),
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        titleWidget,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+          child: Card(
+            elevation: 8.0,
+            shadowColor: Colors.grey.withAlpha(50),
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: _loading ? loadingWidget : contentWidget,
+          ),
         ),
-        child: _loading ? loadingWidget : contentWidget,
-      ),
+      ],
     );
   }
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/fit.snapshot.dart';
 
+const int DAILY_TARGET_POINTS = 50;
+
 abstract class FitChallenge {
   final String title;
   final String description;

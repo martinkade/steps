@@ -76,7 +76,7 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
                           size: 32.0,
                           color: Colors.green,
                         )
-                      : RaisedButton(
+                      : FlatButton(
                           onPressed: () {
                             _repository.requestPermissions().then((authorized) {
                               if (!mounted) return;

@@ -10,16 +10,16 @@
     "lblLandingText3Google": "In order to support your team, the app needs access to Google Fit. Please make sure beforehand that Google Fit is also installed on your device.",
 
     "lblDashboardUserStats": "Your points",
-    "lblDashboardUserStatsToday": "Your score today",
+    "lblDashboardUserStatsToday": "today",
     "lblDashboardUserStatsWeek": "this week",
-    "lblDashboardUserStatsConnectErrorTitle": "Too bad :(",
+    "lblDashboardUserStatsConnectErrorTitle": "Too bad 🤕",
     "lblDashboardUserStatsConnectErrorApple": "The app cannot access the data from Apple Health.",
     "lblDashboardUserStatsConnectErrorGoogle": "The app cannot access the data from Google Fit.",
     "lblDashboardActiveChallenges": "Active challenges",
     "lblDashboardTeamStandings": "Team of the week",
 
     "lblWeekChallengeTitle": "Personal weekly goal",
-    "lblWeekChallengeDescription": "Challenge accepted! Try to collect 210 points for your team every week.🤘",
+    "lblWeekChallengeDescription": "Challenge accepted! Try to collect 350 points for your team every week.🤘",
     "lblTeamChallengeTitle": "Our team challenge",
     "lblTeamChallengeDescription": "Will we be able to cover the distance from A to B together? 5 points result in one kilometer.",
 
@@ -28,5 +28,6 @@
     "lblActionForward": "Next",
     "lblActionDone": "Done",
     "lblActionGrant": "Grant access",
+    "lblActionRetry": "Retry",
     "lblEmail": "E-Mail address"
 }
