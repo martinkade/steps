@@ -133,7 +133,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
     );
 
     final Widget titleWidget = Padding(
-      padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),
+      padding: const EdgeInsets.fromLTRB(22.0, 0.0, 22.0, 4.0),
       child: Text(
         widget.title,
         style: TextStyle(
@@ -146,19 +146,22 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
 
     final Widget unauthorizedWidget = Container(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               Localizer.translate(
                   context, 'lblDashboardUserStatsConnectErrorTitle'),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20.0),
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 8.0),
               child: Text(
                 Platform.isIOS
                     ? Localizer.translate(
@@ -228,6 +231,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
       children: [
         titleWidget,
         Padding(

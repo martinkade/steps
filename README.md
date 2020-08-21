@@ -4,7 +4,7 @@ Bei Wandr geht es um mehr Bewegung im Alltag. Die Teilnehmer sammeln wöchentlic
 
 Grundlage für die Punkte sind die 'Aktiven Minuten' aus Google Fit (Android) beziehungsweise Apple Health (iOS). Hier wird eins-zu-eins umgerechnet.
 
-Jeder Teilnehmer hat ein persönliches Tagesziel von 30 Punkten, also 30 Minuten Bewegung. Dementsprechend gibt es auch ein persönliches Wochenziel von 210 Punkten. Teamübergreifend wird versucht, eine bestimmte physische Distanz zurückzulegen. Dabei ergeben 5 Punkte einen Kilometer.
+Jeder Teilnehmer hat ein persönliches Tagesziel von 75 Punkten, also 75 Minuten Bewegung oder 6000 Schritte (Faktor 80). Dementsprechend gibt es auch ein persönliches Wochenziel von 525 Punkten. Teamübergreifend wird versucht, eine bestimmte physische Distanz zurückzulegen. Dabei ergeben 10 Punkte einen Kilometer.
 
 ## Getting Started
 

@@ -51,6 +51,7 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
       children: [
         titleWidget,
         Padding(

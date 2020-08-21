@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:steps/components/shared/progress.text.animated.dart';
 import 'package:steps/model/fit.challenge.dart';
 
 class DashboardChallengeDetail extends StatefulWidget {
@@ -6,7 +7,11 @@ class DashboardChallengeDetail extends StatefulWidget {
   final FitChallenge challenge;
 
   ///
-  DashboardChallengeDetail({Key key, this.challenge}) : super(key: key);
+  final int index;
+
+  ///
+  DashboardChallengeDetail({Key key, this.challenge, this.index})
+      : super(key: key);
 
   @override
   _DashboardChallengeDetailState createState() =>
@@ -55,23 +60,32 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
               Expanded(
                 child: Container(),
               ),
-              Text(
-                widget.challenge.title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
+              AnimatedProgressText(
+                start: 0,
+                end: widget.challenge.progress.toInt(),
+                target: widget.challenge.target.toInt(),
+                fontSize: 32.0,
+                label: widget.challenge.label,
+                animated: false,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  widget.challenge.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
                 ),
               ),
               Text(
                 widget.challenge.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontWeight: FontWeight.normal),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: LinearProgressIndicator(
-                  value: widget.challenge.percent,
-                ),
-              )
             ],
           ),
         )

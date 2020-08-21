@@ -9,6 +9,10 @@ import 'package:steps/model/fit.challenge.week.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/fit.snapshot.dart';
 
+abstract class DashboardChallengeDelegate {
+  void onChallengeRequested(FitChallenge challenge, int index);
+}
+
 class DashboardChallengeItem extends DashboardItem {
   ///
   final String userKey;
@@ -23,14 +27,18 @@ class DashboardChallengeItem extends DashboardItem {
   final FitSnapshot snapshot;
 
   ///
-  DashboardChallengeItem(
-      {Key key,
-      String title,
-      this.ranking,
-      this.snapshot,
-      this.userKey,
-      this.teamName})
-      : super(key: key, title: title);
+  final DashboardChallengeDelegate delegate;
+
+  ///
+  DashboardChallengeItem({
+    Key key,
+    String title,
+    this.ranking,
+    this.snapshot,
+    this.userKey,
+    this.teamName,
+    this.delegate,
+  }) : super(key: key, title: title);
 
   @override
   _DashboardChallengeItemState createState() => _DashboardChallengeItemState();
@@ -58,8 +66,8 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
     super.didChangeDependencies();
 
     _challenges = [
-      FitChallengeWeek(context),
       FitChallengeTeam(context),
+      FitChallengeWeek(context),
     ];
   }
 
@@ -112,23 +120,29 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.all(0.0),
         itemBuilder: (context, index) {
+          final FitChallenge challenge = _challenges[index];
           return GestureDetector(
             child: Padding(
               padding: EdgeInsets.fromLTRB(
                   8.0, 0.0, index < _challenges.length - 1 ? 0.0 : 8.0, 8.0),
-              child: Card(
-                elevation: 8.0,
-                shadowColor: Colors.grey.withAlpha(50),
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+              child: Hero(
+                child: Card(
+                  elevation: 8.0,
+                  shadowColor: Colors.grey.withAlpha(50),
+                  clipBehavior: Clip.antiAlias,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Container(
+                    height: cardHeight,
+                    width: cardWidth,
+                    child: DashboardChallengeDetail(
+                      challenge: challenge,
+                      index: index,
+                    ),
+                  ),
                 ),
-                child: Container(
-                  height: cardHeight,
-                  width: cardWidth,
-                  child:
-                      DashboardChallengeDetail(challenge: _challenges[index]),
-                ),
+                tag: 'challenge-$index',
               ),
             ),
             onHorizontalDragEnd: (details) {
@@ -145,6 +159,9 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
                 );
               });
             },
+            onTap: () {
+              widget.delegate?.onChallengeRequested(challenge, index);
+            },
           );
         },
       ),
@@ -152,6 +169,7 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
       children: [
         titleWidget,
         widget.ranking == null

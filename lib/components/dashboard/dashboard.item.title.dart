@@ -18,7 +18,7 @@ class _DashboardTitleItemState extends State<DashboardTitleItem> {
   @override
   Widget build(BuildContext context) {
     final Widget titleWidget = Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 36.0, 16.0, 32.0),
+      padding: const EdgeInsets.fromLTRB(16.0, 44.0, 16.0, 36.0),
       child: SizedBox(
         child: Image.asset('assets/images/logo.png'),
         width: 256.0,

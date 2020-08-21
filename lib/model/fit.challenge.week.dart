@@ -11,6 +11,7 @@ class FitChallengeWeek extends FitChallenge {
           title: Localizer.translate(context, 'lblWeekChallengeTitle'),
           description:
               Localizer.translate(context, 'lblWeekChallengeDescription'),
+          label: Localizer.translate(context, 'lblDashboardUserStatsWeek'),
           imageAsset: 'assets/images/challenge1.jpg',
         );
 
@@ -23,6 +24,7 @@ class FitChallengeWeek extends FitChallenge {
   @override
   void initTargets() {
     target = DAILY_TARGET_POINTS * 7.0;
+    description = description.replaceFirst('%1', target.toStringAsFixed(0));
   }
 
   @override

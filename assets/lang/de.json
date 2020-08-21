@@ -15,13 +15,16 @@
     "lblDashboardUserStatsConnectErrorTitle": "Schade 🤕",
     "lblDashboardUserStatsConnectErrorApple": "Die App kann nicht auf die Daten aus Apple Health zugreifen.",
     "lblDashboardUserStatsConnectErrorGoogle": "Die App kann nicht auf die Daten aus Google Fit zugreifen.",
+    "lblDashboardInfo": "Wie funktioniert %1?",
+    "lblDashboardInfoTextApple": "%1 basiert auf einem Punktesystem. 80 Schritte aus Apple Health sind einen Punkt wert. Absolvierst du ein Training, dann erhälst du für jede Minute einen Punkt.",
+    "lblDashboardInfoTextGoogle": "%1 basiert auf einem Punktesystem. Die aktiven Minuten aus Google Fit werden dir 1:1 als Punkte gut geschrieben.",
     "lblDashboardActiveChallenges": "Aktuelle Challenges",
     "lblDashboardTeamStandings": "Team der Woche",
 
     "lblWeekChallengeTitle": "Persönliches Wochenziel",
-    "lblWeekChallengeDescription": "Herausforderung angenommen! Versuche jede Woche 350 Punkte für dein Team zu sammeln.🤘",
+    "lblWeekChallengeDescription": "Herausforderung angenommen! Versuche jede Woche %1 Punkte für dein Team zu sammeln.🤘",
     "lblTeamChallengeTitle": "Unsere Team-Challenge",
-    "lblTeamChallengeDescription": "Schaffen wir es gemeinsam die Distanz von A nach B zurück zu legen? 5 Punkte ergeben dabei einen Kilometer.",
+    "lblTeamChallengeDescription": "Schaffen wir es gemeinsam die Distanz von A nach B zurück zu legen? 10 Punkte ergeben dabei einen Kilometer.",
 
     "lblActionGetStarted": "Los gehts!",
     "lblActionBack": "Zurück",
@@ -29,5 +32,6 @@
     "lblActionDone": "Fertig",
     "lblActionGrant": "Erlauben",
     "lblActionRetry": "Erneut versuchen",
-    "lblEmail": "E-Mail Adresse"
+    "lblEmail": "E-Mail Adresse",
+    "lblKilometer": "Kilometer"
 }

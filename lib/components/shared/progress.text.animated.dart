@@ -17,14 +17,18 @@ class AnimatedProgressText extends StatefulWidget {
   final double fontSize;
 
   ///
-  AnimatedProgressText(
-      {Key key,
-      this.start,
-      this.end,
-      this.target,
-      this.label,
-      this.fontSize = 32.0})
-      : super(key: key);
+  final bool animated;
+
+  ///
+  AnimatedProgressText({
+    Key key,
+    this.start,
+    this.end,
+    this.target,
+    this.label,
+    this.fontSize = 32.0,
+    this.animated = true,
+  }) : super(key: key);
 
   @override
   _AnimatedProgressTextState createState() => _AnimatedProgressTextState();
@@ -63,8 +67,8 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
   void _startAnimation() {
     if (_controller != null) return;
 
-    _controller =
-        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    _controller = AnimationController(
+        duration: Duration(seconds: widget.animated ? 2 : 0), vsync: this);
     _animation = Tween<double>(
             begin: widget.start.toDouble(), end: widget.end.toDouble())
         .animate(
@@ -131,6 +135,7 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: LinearProgressIndicator(
+            backgroundColor: Colors.blue.withAlpha(50),
             value:
                 widget.end > 0 ? _displayValue / widget.target.toDouble() : 0.0,
           ),

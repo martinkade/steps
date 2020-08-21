@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/fit.snapshot.dart';
 
-const int DAILY_TARGET_POINTS = 50;
+const int DAILY_TARGET_POINTS = 75;
 
 abstract class FitChallenge {
   final String title;
-  final String description;
+  String description;
+  String label;
   final String imageAsset;
 
   double target = 1.0;
   double progress = 0.0;
   double get percent => progress / target;
 
-  FitChallenge(BuildContext context, {this.title, this.description, this.imageAsset}) {
+  FitChallenge(BuildContext context, {this.title, this.description, this.label, this.imageAsset}) {
     initTargets();
   }
 
