@@ -63,7 +63,7 @@ class FitnessDateRange: NSObject {
         calendar.timeZone = TimeZone.current
         
         var startDateComponents = DateComponents()
-        startDateComponents.day = 17//24
+        startDateComponents.day = 24
         startDateComponents.month = 8
         startDateComponents.year = 2020
         startDateComponents.calendar = calendar

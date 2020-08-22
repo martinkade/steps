@@ -10,11 +10,13 @@
     "lblLandingText3Google": "In order to support your team, the app needs access to Google Fit. Please make sure beforehand that Google Fit is also installed on your device.",
 
     "lblDashboardUserStats": "Your points",
-    "lblDashboardUserStatsToday": "today",
+    "lblDashboardUserStatsToday": "points today",
     "lblDashboardUserStatsWeek": "this week",
     "lblDashboardUserStatsConnectErrorTitle": "Too bad 🤕",
     "lblDashboardUserStatsConnectErrorApple": "The app cannot access the data from Apple Health.",
     "lblDashboardUserStatsConnectErrorGoogle": "The app cannot access the data from Google Fit.",
+    "lblDashboardMotivation1": "Here we go!",
+    "lblDashboardMotivation2": "Collect %1 points today to reach your daily goal.",
     "lblDashboardInfo": "How does %1 work?",
     "lblDashboardInfoTextApple": "%1 is based on a point system. 80 steps from Apple Health is worth one point. If you complete a training session, you will receive one point for every minute.",
     "lblDashboardInfoTextGoogle": "%1 is based on a point system. The active minutes from Google Fit will be credited to you 1: 1 as points.",
@@ -24,7 +26,7 @@
     "lblWeekChallengeTitle": "Personal weekly goal",
     "lblWeekChallengeDescription": "Challenge accepted! Try to collect %1 points for your team every week.🤘",
     "lblTeamChallengeTitle": "Our team challenge",
-    "lblTeamChallengeDescription": "Will we be able to cover the distance from A to B together? 10 points result in one kilometer.",
+    "lblTeamChallengeDescription": "Will we be able to cover the distance from A to B together? 10 points result in one kilometer. Start is Monday, August 24th, 2020.",
 
     "lblActionGetStarted": "Here we go!",
     "lblActionBack": "Back",

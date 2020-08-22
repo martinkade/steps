@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:steps/components/dashboard/dashboard.item.dart';
 import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/components/shared/progress.text.animated.dart';
+import 'package:steps/lifecycle.dart';
 import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
@@ -52,6 +53,16 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
   void initState() {
     super.initState();
 
+    WidgetsBinding.instance.addObserver(
+      LifecycleEventHandler(
+        resumeCallBack: () async {
+          if (_isAuthorized) {
+            _syncSteps();
+          }
+        },
+      ),
+    );
+
     load();
   }
 
@@ -68,12 +79,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
           _loading = false;
         });
       } else {
-        _repository.syncTodaysSteps(
-          userKey: widget.userKey,
-          teamName: widget.teamName,
-          client: this,
-          pushData: true,
-        );
+        _syncSteps();
       }
     });
   }
@@ -91,14 +97,25 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
           _loading = false;
         });
       } else {
-        _repository.syncTodaysSteps(
-          userKey: widget.userKey,
-          teamName: widget.teamName,
-          client: this,
-          pushData: true,
-        );
+        _syncSteps();
       }
     });
+  }
+
+  void _syncSteps() {
+    _repository.syncTodaysSteps(
+      userKey: widget.userKey,
+      teamName: widget.teamName,
+      client: this,
+      pushData: true,
+    );
+  }
+
+  int get _delta => DAILY_TARGET_POINTS - (_snapshot?.today() ?? 0);
+
+  bool get _showMotivation {
+    final int hour = DateTime.now().hour;
+    return _delta > 0 && hour >= 18;
   }
 
   @override
@@ -123,6 +140,52 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
     });
   }
 
+  Widget _motivationWidget(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Divider(
+            color: Colors.grey,
+          ),
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Icon(Icons.av_timer),
+            ),
+            Expanded(
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context).style,
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: Localizer.translate(
+                              context, 'lblDashboardMotivation1') +
+                          ' ',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextSpan(
+                      text: Localizer.translate(
+                              context, 'lblDashboardMotivation2')
+                          .replaceFirst('%1', '$_delta'),
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final Widget loadingWidget = Container(
@@ -132,7 +195,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
       height: 96.0,
     );
 
-    final Widget titleWidget = Padding(
+    /*final Widget titleWidget = Padding(
       padding: const EdgeInsets.fromLTRB(22.0, 0.0, 22.0, 4.0),
       child: Text(
         widget.title,
@@ -142,7 +205,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
           fontWeight: FontWeight.bold,
         ),
       ),
-    );
+    );*/
 
     final Widget unauthorizedWidget = Container(
       child: Padding(
@@ -192,37 +255,43 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
         ? Container(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: AnimatedProgressText(
-                        start: 0,
-                        end: _snapshot?.today() ?? 0,
-                        target: DAILY_TARGET_POINTS,
-                        fontSize: 48.0,
-                        label: Localizer.translate(
-                            context, 'lblDashboardUserStatsToday'),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: AnimatedProgressText(
+                            start: 0,
+                            end: _snapshot?.today() ?? 0,
+                            target: DAILY_TARGET_POINTS,
+                            fontSize: 48.0,
+                            label: Localizer.translate(
+                                context, 'lblDashboardUserStatsToday'),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: AnimatedProgressText(
-                        start: 0,
-                        end: _snapshot?.week() ?? 0,
-                        target: DAILY_TARGET_POINTS * 7,
-                        fontSize: 32.0,
-                        label: Localizer.translate(
-                            context, 'lblDashboardUserStatsWeek'),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: AnimatedProgressText(
+                            start: 0,
+                            end: _snapshot?.week() ?? 0,
+                            target: DAILY_TARGET_POINTS * 7,
+                            fontSize: 32.0,
+                            label: Localizer.translate(
+                                context, 'lblDashboardUserStatsWeek'),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
+                  _showMotivation ? _motivationWidget(context) : Container(),
                 ],
               ),
             ),
@@ -233,7 +302,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        titleWidget,
+        // titleWidget,
         Padding(
           padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
           child: Card(

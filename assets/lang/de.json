@@ -10,11 +10,13 @@
     "lblLandingText3Google": "Um dein Team unterstützen zu können, benötigt die App Zugriff auf Google Fit. Bitte stelle vorher sicher, dass Google Fit auch auf deinem Gerät installiert ist.",
     
     "lblDashboardUserStats": "Deine Punkte",
-    "lblDashboardUserStatsToday": "heute",
+    "lblDashboardUserStatsToday": "Punkte heute",
     "lblDashboardUserStatsWeek": "diese Woche",
     "lblDashboardUserStatsConnectErrorTitle": "Schade 🤕",
     "lblDashboardUserStatsConnectErrorApple": "Die App kann nicht auf die Daten aus Apple Health zugreifen.",
     "lblDashboardUserStatsConnectErrorGoogle": "Die App kann nicht auf die Daten aus Google Fit zugreifen.",
+    "lblDashboardMotivation1": "Dran bleiben!",
+    "lblDashboardMotivation2": "Sammle heute weitere %1 Punkte um dein Tagesziel zu erreichen.",
     "lblDashboardInfo": "Wie funktioniert %1?",
     "lblDashboardInfoTextApple": "%1 basiert auf einem Punktesystem. 80 Schritte aus Apple Health sind einen Punkt wert. Absolvierst du ein Training, dann erhälst du für jede Minute einen Punkt.",
     "lblDashboardInfoTextGoogle": "%1 basiert auf einem Punktesystem. Die aktiven Minuten aus Google Fit werden dir 1:1 als Punkte gut geschrieben.",
@@ -24,7 +26,7 @@
     "lblWeekChallengeTitle": "Persönliches Wochenziel",
     "lblWeekChallengeDescription": "Herausforderung angenommen! Versuche jede Woche %1 Punkte für dein Team zu sammeln.🤘",
     "lblTeamChallengeTitle": "Unsere Team-Challenge",
-    "lblTeamChallengeDescription": "Schaffen wir es gemeinsam die Distanz von A nach B zurück zu legen? 10 Punkte ergeben dabei einen Kilometer.",
+    "lblTeamChallengeDescription": "Schaffen wir es gemeinsam die Distanz von A nach B zurück zu legen? 10 Punkte ergeben dabei einen Kilometer. Start ist Montag, der 24. August 2020.",
 
     "lblActionGetStarted": "Los gehts!",
     "lblActionBack": "Zurück",
