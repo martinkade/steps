@@ -35,7 +35,7 @@ class AnimatedProgressText extends StatefulWidget {
 }
 
 class _AnimatedProgressTextState extends State<AnimatedProgressText>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   ///
   Animation<double> _animation;
 
@@ -45,10 +45,14 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
   ///
   double _displayValue;
 
+  ///
+  double _value;
+
   @override
   void initState() {
     super.initState();
 
+    _value = 0.0;
     _displayValue = widget.start.toDouble();
     if (widget.end == 0) return;
 
@@ -64,13 +68,14 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
     _startAnimation();
   }
 
-  void _startAnimation() {
-    if (_controller != null) return;
-
+  void _startAnimation() async {
     _controller = AnimationController(
-        duration: Duration(seconds: widget.animated ? 2 : 0), vsync: this);
+        duration: Duration(seconds: widget.animated ? 1 : 0), vsync: this);
     _animation = Tween<double>(
-            begin: widget.start.toDouble(), end: widget.end.toDouble())
+            begin: _value > 0.0 && _value <= widget.end.toDouble()
+                ? _value
+                : widget.start.toDouble(),
+            end: widget.end.toDouble())
         .animate(
       CurvedAnimation(
         parent: _controller,
@@ -86,7 +91,14 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
         _displayValue = _animation.value;
       });
     });
-    _controller.forward();
+    _animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _value = _animation.value;
+      }
+    });
+    try {
+      await _controller.forward().orCancel;
+    } on TickerCanceled {}
   }
 
   @override
@@ -118,10 +130,10 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
               ),
             ),
             Expanded(child: Container()),
-            widget.end >= widget.target
+            widget.end >= widget.target && (_animation?.isCompleted ?? true)
                 ? Icon(
-                    Icons.check_circle,
-                    size: 16.0,
+                    Icons.check_circle_outline,
+                    size: 24.0,
                     color: Colors.blue,
                   )
                 : Container(),
