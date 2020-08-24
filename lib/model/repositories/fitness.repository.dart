@@ -1,11 +1,16 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
+import 'package:steps/model/cache/fit.record.dao.dart';
+import 'package:steps/model/fit.record.dart';
 import 'package:steps/model/fit.snapshot.dart';
+import 'package:steps/model/preferences.dart';
 import 'package:steps/model/repositories/repository.dart';
 import 'package:steps/model/storage.dart';
 
+///
 abstract class FitnessRepositoryClient {
+  ///
   void fitnessRepositoryDidUpdate(FitnessRepository repository,
       {SyncState state, DateTime day, FitSnapshot snapshot});
 }
@@ -18,51 +23,60 @@ class FitnessRepository extends Repository {
 
   ///
   Future<bool> hasPermissions() async {
-    final bool isAuthenticated = await platform.invokeMethod('isAuthenticated');
-    return isAuthenticated;
+    try {
+      final bool isAuthenticated =
+          await platform.invokeMethod('isAuthenticated');
+      return isAuthenticated;
+    } on PlatformException catch (ex) {
+      print(ex.toString());
+    }
+    return false;
   }
 
   ///
   Future<bool> requestPermissions() async {
-    final bool isAuthenticated = await platform.invokeMethod('authenticate');
-    return isAuthenticated;
+    try {
+      final bool isAuthenticated = await platform.invokeMethod('authenticate');
+      return isAuthenticated;
+    } on PlatformException catch (ex) {
+      print(ex.toString());
+    }
+    return false;
   }
 
   ///
-  Future<void> syncTodaysSteps(
+  Future<void> syncPoints(
       {String userKey,
       String teamName,
       FitnessRepositoryClient client,
       bool pushData = false}) async {
-    Map<dynamic, dynamic> data = Map();
+    final FitSnapshot snapshot = FitSnapshot();
+    final bool isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
 
-    final DateTime endDate = DateTime.now();
-    final DateTime startDate =
-        DateTime(endDate.year, endDate.month, endDate.day);
-
+    final DateTime anchor = DateTime(2020, 8, 24);
+    final FitRecordDao dao = FitRecordDao();
+    final List<FitRecord> localData = await dao.fetch(from: anchor, onlyManualRecords: !isAutoSyncEnabled);
+    await dao.delete(records: localData, exclude: true);
+    snapshot.fillWithLocalData(localData);
     client.fitnessRepositoryDidUpdate(this,
-        state: SyncState.FETCHING_DATA, day: startDate);
+        state: SyncState.FETCHING_DATA, day: anchor, snapshot: snapshot);
 
     try {
-      data = await platform.invokeMethod('getFitnessMetrics');
-      print('Loaded local fitness data $data');
-    } on PlatformException catch (e) {
-      print(e.toString());
+      if (isAutoSyncEnabled && await hasPermissions()) {
+        final Map<dynamic, dynamic> data =
+            await platform.invokeMethod('getFitnessMetrics');
+        await snapshot.fillWithExternalData(dao, data);
+      }
+    } on PlatformException catch (ex) {
+      print(ex.toString());
     }
-
-    final FitSnapshot snapshot = FitSnapshot(data: data);
 
     if (pushData) {
       applySnapshot(snapshot, userKey: userKey, teamName: teamName);
     }
 
-    if (data.isEmpty) {
-      client.fitnessRepositoryDidUpdate(this,
-          state: SyncState.NO_DATA, day: startDate, snapshot: snapshot);
-    } else {
-      client.fitnessRepositoryDidUpdate(this,
-          state: SyncState.DATA_READY, day: startDate, snapshot: snapshot);
-    }
+    client.fitnessRepositoryDidUpdate(this,
+        state: SyncState.DATA_READY, day: anchor, snapshot: snapshot);
   }
 
   ///

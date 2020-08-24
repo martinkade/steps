@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:steps/components/landing/landing.item.dart';
 import 'package:steps/components/shared/localizer.dart';
+import 'package:steps/model/preferences.dart';
 import 'dart:io' show Platform;
 
 import 'package:steps/model/repositories/fitness.repository.dart';
@@ -25,16 +26,20 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
   void initState() {
     super.initState();
 
-    load();
+    _load();
   }
 
-  void load() {
+  void _load() {
     _repository.hasPermissions().then((authorized) {
       if (!mounted) return;
       setState(() {
         _isAuthorized = authorized;
       });
     });
+  }
+
+  void _enableAutoSync(bool enable) {
+    Preferences().setAutoSyncEnabled(enable);
   }
 
   @override
@@ -80,6 +85,7 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
                           onPressed: () {
                             _repository.requestPermissions().then((authorized) {
                               if (!mounted) return;
+                              _enableAutoSync(authorized);
                               setState(() {
                                 _isAuthorized = authorized;
                               });

@@ -17,53 +17,31 @@ class FitnessHandler: NSObject {
                 let queue = DispatchQueue.main
                 
                 var data = [String: Any?]()
-                var activeData = [String: Int]()
+                var activeData: [String: Int]?
+                var stepData: [String: Int]?
                 
                 let group = DispatchGroup()
                 
                 group.enter()
-                self.readTotalActiveMinutes(range: FitnessDateRange.today) { (minutes) in
+                self.readTotalStepsMinutes(range: FitnessDateRange.lastWeek) { history in
                     queue.async {
-                        activeData["today"] = minutes
+                        stepData = history
                         group.leave()
                     }
                 }
                 
                 group.enter()
-                self.readTotalActiveMinutes(range: FitnessDateRange.week) { (minutes) in
+                self.readWorkouts(range: FitnessDateRange.lastWeek) { history in
                     queue.async {
-                        activeData["week"] = minutes
-                        group.leave()
-                    }
-                }
-                
-                group.enter()
-                self.readTotalActiveMinutes(range: FitnessDateRange.lastWeek) { (minutes) in
-                    queue.async {
-                        activeData["lastWeek"] = minutes
-                        group.leave()
-                    }
-                }
-                
-                group.enter()
-                self.readTotalActiveMinutes(range: FitnessDateRange.allTime) { (minutes) in
-                    queue.async {
-                        activeData["total"] = minutes
+                        activeData = history
                         group.leave()
                     }
                 }
                 
                 group.notify(queue: queue) {
-                    self.readWorkouts(range: FitnessDateRange.allTime) { (minutes) in
-                        queue.async {
-                            activeData["today"] = (activeData["today"] ?? 0) + minutes[0]
-                            activeData["week"] = (activeData["week"] ?? 0) + minutes[1]
-                            activeData["lastWeek"] = (activeData["lastWeek"] ?? 0) + minutes[2]
-                            activeData["total"] = (activeData["total"] ?? 0) + minutes[3]
-                            data["activeMinutes"] = activeData
-                            result(data)
-                        }
-                    }
+                    data["steps"] = stepData
+                    data["activeMinutes"] = activeData
+                    result(data)
                 }
                 
             } else if call.method == "isAuthenticated" {
@@ -131,36 +109,51 @@ class FitnessHandler: NSObject {
         }
     }
     
-    private func readTotalActiveMinutes(range: FitnessDateRange, result: @escaping (Int) -> Void) {
+    private func readTotalStepsMinutes(range: FitnessDateRange, result: @escaping ([String: Int]) -> Void) {
         guard #available(iOS 9.3, *), let startDate = range.startDate, let endDate = range.endDate, let steps = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount) else {
-            result(0)
+            result([:])
             return
         }
-
-        let datePredicate = HKQuery.predicateForSamples(
-          withStart: startDate,
-          end: endDate,
-          options: [.strictStartDate]
-        )
         
-        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [datePredicate])
+        var interval = DateComponents()
+        interval.day = 1
         
-        let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate, options: .cumulativeSum) { (_, queryResult, error) in
-            guard let steps = queryResult?.sumQuantity()?.doubleValue(for: HKUnit.count()), error == nil else {
-                result(0)
+        let query = HKStatisticsCollectionQuery(quantityType: steps, quantitySamplePredicate: nil, options: .cumulativeSum, anchorDate: startDate, intervalComponents: interval)
+        
+        query.initialResultsHandler = { query, results, error in
+            guard let results = results, error == nil else {
+                result([:])
                 return
             }
-            NSLog("step count=\(steps)")
-            result(Int(steps / 80.0))
+            
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            var data = [String: Int]()
+            
+            var key: String = ""
+            var value: Int = 0
+            results.enumerateStatistics(from: startDate, to: endDate, with: { statistics, stop in
+                if let quantity = statistics.sumQuantity() {
+                    key = formatter.string(from: statistics.startDate)
+                    value = Int(quantity.doubleValue(for: HKUnit.count()))
+                    if let oldValue = data[key] {
+                        data[key] = oldValue + value
+                    } else {
+                        data[key] = value
+                    }
+                }
+            })
+            
+            result(data)
         }
         
         let store = HKHealthStore()
         store.execute(query)
     }
     
-    private func readWorkouts(range: FitnessDateRange, result: @escaping ([Int]) -> Void) {
+    private func readWorkouts(range: FitnessDateRange, result: @escaping ([String: Int]) -> Void) {
         guard #available(iOS 9.3, *), let startDate = range.startDate, let endDate = range.endDate else {
-            result([0, 0, 0, 0])
+            result([:])
             return
         }
         
@@ -180,34 +173,28 @@ class FitnessHandler: NSObject {
             limit: HKObjectQueryNoLimit,
             sortDescriptors: [sortDescriptor]) { (query, samples, error) in
                 guard let samples = samples as? [HKWorkout], error == nil else {
-                    result([0, 0, 0, 0])
+                    result([:])
                     return
                 }
                 
-                NSLog("found \(samples.count) workouts:")
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+                var data = [String: Int]()
                 
-                var today: Int = 0
-                var week: Int = 0
-                var lastWeek: Int = 0
-                var total: Int = 0
+                var key: String = ""
+                var value: Int = 0
                 
-                var minutes: Int
                 for workout in samples {
-                    minutes = Int(workout.duration / 60.0)
-                    NSLog("found workout \(workout.startDate) => \(minutes) minutes")
-                    if workout.startDate.isThisWeek {
-                        week += minutes
-                        if workout.startDate.isToday {
-                            today += minutes
-                        }
-                    } else if workout.startDate.isLastWeek {
-                        lastWeek += minutes
+                    key = formatter.string(from: workout.startDate)
+                    value = Int(workout.duration / 60.0)
+                    if let oldValue = data[key] {
+                        data[key] = oldValue + value
+                    } else {
+                        data[key] = value
                     }
-                    total += minutes
                 }
                 
-                NSLog("minutes=\([today, week, lastWeek, total])")
-                result([today, week, lastWeek, total])
+                result([:])
                 return
           }
 

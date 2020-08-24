@@ -6,11 +6,13 @@ import 'package:steps/components/shared/progress.text.animated.dart';
 import 'package:steps/lifecycle.dart';
 import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.snapshot.dart';
+import 'package:steps/model/preferences.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 import 'package:steps/model/repositories/repository.dart';
 
 abstract class DashboardSyncDelegate {
   void onFitnessDataUpadte(FitSnapshot snapshot);
+  void onSettingsRequested();
 }
 
 class DashboardSyncItem extends DashboardItem {
@@ -38,7 +40,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
   bool _loading = false;
 
   ///
-  bool _isAuthorized = false;
+  bool _autoSyncEnabled = true;
 
   ///
   final FitnessRepository _repository = FitnessRepository();
@@ -56,54 +58,40 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
     WidgetsBinding.instance.addObserver(
       LifecycleEventHandler(
         resumeCallBack: () async {
-          if (_isAuthorized) {
-            _syncSteps();
-          }
+          if (!mounted) return;
+          _syncSteps();
         },
       ),
     );
 
-    load();
+    _load();
   }
 
-  void load() {
+  void _load() {
     setState(() {
       _loading = true;
     });
-    _repository.hasPermissions().then((authorized) {
-      if (!mounted) return;
-      _isAuthorized = authorized;
-
-      if (!authorized) {
-        setState(() {
-          _loading = false;
-        });
-      } else {
-        _syncSteps();
-      }
-    });
-  }
-
-  void _requestPermission() {
-    setState(() {
-      _loading = true;
-    });
-    _repository.requestPermissions().then((authorized) {
-      if (!mounted) return;
-      _isAuthorized = authorized;
-
-      if (!authorized) {
-        setState(() {
-          _loading = false;
-        });
-      } else {
-        _syncSteps();
-      }
-    });
+    _syncSteps();
   }
 
   void _syncSteps() {
-    _repository.syncTodaysSteps(
+    Preferences().isAutoSyncEnabled().then((enabled) {
+      if (!mounted) return;
+      if (enabled) {
+        _repository.hasPermissions().then((authorized) {
+          if (!mounted) return;
+          setState(() {
+            _autoSyncEnabled = authorized;
+          });
+        });
+      } else {
+        setState(() {
+          _autoSyncEnabled = false;
+        });
+      }
+    });
+
+    _repository.syncPoints(
       userKey: widget.userKey,
       teamName: widget.teamName,
       client: this,
@@ -115,7 +103,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
 
   bool get _showMotivation {
     final int hour = DateTime.now().hour;
-    return _delta > 0 && hour >= 18;
+    return _delta != DAILY_TARGET_POINTS && _delta > 0 && hour >= 18;
   }
 
   @override
@@ -186,6 +174,42 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
     );
   }
 
+  Widget _autoSyncWidget(BuildContext context) {
+    return GestureDetector(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Divider(
+                color: Colors.grey,
+              ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: Icon(Icons.sync_disabled),
+                ),
+                Expanded(
+                  child: Text(
+                    Localizer.translate(
+                        context,
+                        Platform.isIOS
+                            ? 'lblDashboardUserStatsAutoSyncOffApple'
+                            : 'lblDashboardUserStatsAutoSyncOffGoogle'),
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+        onTap: () {
+          widget.delegate?.onSettingsRequested();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final Widget loadingWidget = Container(
@@ -195,127 +219,64 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
       height: 96.0,
     );
 
-    /*final Widget titleWidget = Padding(
-      padding: const EdgeInsets.fromLTRB(22.0, 0.0, 22.0, 4.0),
-      child: Text(
-        widget.title,
-        style: TextStyle(
-          fontSize: 16.0,
-          color: Colors.grey,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );*/
-
-    final Widget unauthorizedWidget = Container(
+    final Widget contentWidget = Container(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              Localizer.translate(
-                  context, 'lblDashboardUserStatsConnectErrorTitle'),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 8.0),
-              child: Text(
-                Platform.isIOS
-                    ? Localizer.translate(
-                        context, 'lblDashboardUserStatsConnectErrorApple')
-                    : Localizer.translate(
-                        context, 'lblDashboardUserStatsConnectErrorGoogle'),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            FlatButton(
-              onPressed: () {
-                _requestPermission();
-              },
-              child: Text(
-                Localizer.translate(context, 'lblActionRetry'),
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: AnimatedProgressText(
+                      start: 0,
+                      end: _snapshot?.today() ?? 0,
+                      target: DAILY_TARGET_POINTS,
+                      fontSize: 48.0,
+                      label: Localizer.translate(
+                          context, 'lblDashboardUserStatsToday'),
+                    ),
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: AnimatedProgressText(
+                      start: 0,
+                      end: _snapshot?.week() ?? 0,
+                      target: DAILY_TARGET_POINTS * 7,
+                      fontSize: 32.0,
+                      label: Localizer.translate(
+                          context, 'lblDashboardUserStatsWeek'),
+                    ),
+                  ),
+                ),
+              ],
             ),
+            _showMotivation
+                ? _motivationWidget(context)
+                : (!_autoSyncEnabled ? _autoSyncWidget(context) : Container()),
           ],
         ),
       ),
     );
 
-    final Widget contentWidget = _isAuthorized
-        ? Container(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: AnimatedProgressText(
-                            start: 0,
-                            end: _snapshot?.today() ?? 0,
-                            target: DAILY_TARGET_POINTS,
-                            fontSize: 48.0,
-                            label: Localizer.translate(
-                                context, 'lblDashboardUserStatsToday'),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: AnimatedProgressText(
-                            start: 0,
-                            end: _snapshot?.week() ?? 0,
-                            target: DAILY_TARGET_POINTS * 7,
-                            fontSize: 32.0,
-                            label: Localizer.translate(
-                                context, 'lblDashboardUserStatsWeek'),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  _showMotivation ? _motivationWidget(context) : Container(),
-                ],
-              ),
-            ),
-          )
-        : unauthorizedWidget;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        // titleWidget,
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-          child: Card(
-            elevation: 8.0,
-            shadowColor: Colors.grey.withAlpha(50),
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: _loading ? loadingWidget : contentWidget,
-          ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+      child: Card(
+        elevation: 8.0,
+        shadowColor: Colors.grey.withAlpha(50),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
         ),
-      ],
+        child: _loading ? loadingWidget : contentWidget,
+      ),
     );
   }
 }

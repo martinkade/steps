@@ -47,10 +47,10 @@ class FitnessDateRange: NSObject {
     class var lastWeek: FitnessDateRange {
         let range = FitnessDateRange()
         
-        let date = Date().addingTimeInterval(-3600 * 24 * 7)
+        let date = Date()
         
-        range.startDate = date.startOfWeek
-        range.endDate = date.endOfWeek
+        range.startDate = date.addingTimeInterval(-3600 * 24 * 7).startOfWeek
+        range.endDate = date
         
         NSLog("lastWeek: \(range.description)")
         return range

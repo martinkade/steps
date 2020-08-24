@@ -10,6 +10,7 @@ import 'package:steps/components/dashboard/dashboard.item.ranking.dart';
 import 'package:steps/components/dashboard/dashboard.item.sync.dart';
 import 'package:steps/components/dashboard/dashboard.item.title.dart';
 import 'package:steps/components/landing/landing.component.dart';
+import 'package:steps/components/settings/settings.component.dart';
 import 'package:steps/components/shared/bezier.clipper.dart';
 import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/model/fit.challenge.dart';
@@ -29,7 +30,10 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard>
-    implements DashboardSyncDelegate, DashboardChallengeDelegate {
+    implements
+        DashboardTitleDelegate,
+        DashboardSyncDelegate,
+        DashboardChallengeDelegate {
   ///
   String _userName;
 
@@ -126,6 +130,16 @@ class _DashboardState extends State<Dashboard>
   }
 
   @override
+  void onSettingsRequested() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Settings(),
+      ),
+    );
+  }
+
+  @override
   void onChallengeRequested(FitChallenge challenge, int index) {
     Navigator.push(
       context,
@@ -153,6 +167,7 @@ class _DashboardState extends State<Dashboard>
           case 0:
             return DashboardTitleItem(
               title: Localizer.translate(context, 'appName'),
+              delegate: this,
             );
           case 1:
             return DashboardSyncItem(

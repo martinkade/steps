@@ -7,10 +7,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.DataType
+import com.google.android.gms.fitness.data.Field
 import com.google.android.gms.fitness.request.DataReadRequest
 import com.google.android.gms.tasks.Tasks
 import io.flutter.plugin.common.MethodChannel
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.HashMap
@@ -20,42 +22,22 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
         val now = Calendar.getInstance(Locale.GERMANY)
         now.time = Date()
 
+        val dateFormat: DateFormat = DateFormat.getDateTimeInstance()
+
         val nowMillis = now.timeInMillis
-        Log.i(SummaryTask::javaClass.name, "\tNow: $now")
+        Log.i("-", "\tnowMillis: " + dateFormat.format(now.time))
         now.set(Calendar.HOUR_OF_DAY, 0)
         now.set(Calendar.MINUTE, 0)
         now.set(Calendar.SECOND, 0)
-
-        val todayMillis: Long = now.timeInMillis
-        Log.i(SummaryTask::javaClass.name, "\tToday: $now")
         now.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
-
-        val weekStartMillis: Long = now.timeInMillis
-        Log.i(SummaryTask::javaClass.name, "\tMonday: $now")
-        now.set(Calendar.DATE, -7)
+        now.add(Calendar.DATE, -7)
 
         val lastWeekStartMillis: Long = now.timeInMillis
-        Log.i(SummaryTask::javaClass.name, "\tLast monday: $now")
-        now.set(Calendar.DATE, 24)
-        now.set(Calendar.MONTH, Calendar.AUGUST)
-        now.set(Calendar.YEAR, 2020)
-
-        val startMillis: Long = now.timeInMillis
-        Log.i(SummaryTask::javaClass.name, "\tAll time: $now")
+        Log.i("-", "\tlastWeekStartMillis: " + dateFormat.format(now.time))
 
         val data = HashMap<String, Any>()
-        // val stepData = HashMap<String, Int>()
-        // stepData["today"] = readSteps(todayMillis, nowMillis)
-        // stepData["week"] = readSteps(weekStartMillis, nowMillis)
-        // stepData["lastWeek"] = readSteps(lastWeekStartMillis, weekStartMillis)
-        // stepData["total"] = readSteps(startMillis, nowMillis)
-        // data["steps"] = stepData
-        val activeData = HashMap<String, Int>()
-        activeData["today"] = readActiveMinutes(todayMillis, nowMillis)
-        activeData["week"] = readActiveMinutes(weekStartMillis, nowMillis)
-        activeData["lastWeek"] = readActiveMinutes(lastWeekStartMillis, weekStartMillis)
-        activeData["total"] = readActiveMinutes(startMillis, nowMillis)
-        data["activeMinutes"] = activeData
+        data["steps"] = readSteps(lastWeekStartMillis, nowMillis)
+        data["activeMinutes"] = readActiveMinutes(lastWeekStartMillis, nowMillis)
         return data
     }
 
@@ -64,39 +46,41 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
         result?.success(data)
     }
 
-    private fun readSteps(from: Long, to: Long): Int {
+    private fun readSteps(from: Long, to: Long): Map<String, Int> {
         try {
             val readRequest = DataReadRequest.Builder()
-                    .setTimeRange(from, to, TimeUnit.MILLISECONDS)
-                    .bucketByTime(365, TimeUnit.DAYS)
                     .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                    .bucketByTime(1, TimeUnit.DAYS)
+                    .setTimeRange(from, to, TimeUnit.MILLISECONDS)
                     .enableServerQueries()
                     .setLimit(9999)
                     .build()
 
-            return read(readRequest, DataType.TYPE_STEP_COUNT_DELTA)
-        } catch (e: Exception) {
-            return 0
+            return read(readRequest, DataType.TYPE_STEP_COUNT_DELTA, Field.FIELD_STEPS)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
         }
+        return HashMap()
     }
 
-    private fun readActiveMinutes(from: Long, to: Long): Int {
+    private fun readActiveMinutes(from: Long, to: Long): Map<String, Int> {
         try {
             val readRequest = DataReadRequest.Builder()
-                    .setTimeRange(from, to, TimeUnit.MILLISECONDS)
-                    .bucketByTime(365, TimeUnit.DAYS)
                     .aggregate(DataType.TYPE_MOVE_MINUTES, DataType.AGGREGATE_MOVE_MINUTES)
+                    .bucketByTime(1, TimeUnit.DAYS)
+                    .setTimeRange(from, to, TimeUnit.MILLISECONDS)
                     .enableServerQueries()
                     .setLimit(9999)
                     .build()
 
-            return read(readRequest, DataType.TYPE_MOVE_MINUTES)
-        } catch (e: Exception) {
-            return 0
+            return read(readRequest, DataType.TYPE_MOVE_MINUTES, Field.FIELD_DURATION)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
         }
+        return HashMap()
     }
 
-    private fun read(request: DataReadRequest, dataType: DataType): Int {
+    private fun read(request: DataReadRequest, dataType: DataType, field: Field): Map<String, Int> {
         val account = GoogleSignIn
                 .getAccountForExtension(context, options)
 
@@ -105,32 +89,40 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
                 Tasks.await(this, 5, TimeUnit.SECONDS).apply {
                     result?.apply {
                         if (status.isSuccess) {
-                            val dateFormat: DateFormat = DateFormat.getDateTimeInstance()
-                            buckets?.first()?.apply {
-                                getDataSet(dataType)?.apply {
-                                    if (dataPoints.isEmpty()) {
-                                        return 0
-                                    }
-                                    dataPoints.first()?.apply {
-                                        // Log.i("-", "\tType: " + dataType.name)
-                                        // Log.i("-", "\tStart: " + dateFormat.format(getStartTime(TimeUnit.MILLISECONDS)))
-                                        // Log.i("-", "\tEnd: " + dateFormat.format(getEndTime(TimeUnit.MILLISECONDS)))
-                                        for (field in dataType.fields) {
-                                            // Log.i("-", "\tValue: " + getValue(field))
-                                            return getValue(field).asInt()
+                            var map = HashMap<String, Int>()
+                            val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                            // Log.i("-", "\tBucket count: ${buckets.size}")
+
+                            buckets.forEach { bucket ->
+                                bucket.getDataSet(dataType)?.apply {
+                                    // Log.i("-", "\tData source: ${dataSource.appPackageName} with ${dataPoints.size} points")
+                                    if (dataPoints.isEmpty()) return HashMap()
+
+                                    var key: String
+                                    var value: Int
+                                    dataPoints.forEach {
+                                        key = dateFormat.format(it.getStartTime(TimeUnit.MILLISECONDS))
+
+                                        // Log.i("-", "\tType: " + it.dataType.name)
+                                        // Log.i("-", "\tStart: " + dateFormat.format(it.getStartTime(TimeUnit.MILLISECONDS)))
+                                        // Log.i("-", "\tEnd: " + dateFormat.format(it.getEndTime(TimeUnit.MILLISECONDS)))
+                                        value = it.getValue(field).asInt()
+                                        // Log.i("-", "\tValue: $value")
+
+                                        when (val oldValue = map[key]) {
+                                            null -> map[key] = value
+                                            else -> map[key] = oldValue + value
                                         }
                                     }
                                 }
                             }
-                            return 0
-                        } else {
-                            return -1
-                        }
+                            return map
+                        } else return HashMap()
                     }
                 }
             }
         }
 
-        return -1
+        return HashMap()
     }
 }

@@ -6,7 +6,7 @@ class Storage {
   FirebaseApp _app;
   static final Storage _instance = Storage._internal();
   factory Storage() => _instance;
-  Storage._internal() {}
+  Storage._internal();
 
   Future<FirebaseApp> access() async {
     if (_app == null) {

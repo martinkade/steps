@@ -26,11 +26,7 @@ class DashboardInfoDialogContent extends StatelessWidget {
                       height: 128.0,
                     ),
                     Text(
-                      Localizer.translate(
-                              context,
-                              Platform.isIOS
-                                  ? 'lblDashboardInfoTextApple'
-                                  : 'lblDashboardInfoTextGoogle')
+                      Localizer.translate(context, 'lblDashboardInfoText')
                           .replaceAll(
                         '%1',
                         Localizer.translate(context, 'appName').toUpperCase(),
