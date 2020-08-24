@@ -9,6 +9,7 @@ import 'package:steps/components/dashboard/dashboard.item.info.dialog.dart';
 import 'package:steps/components/dashboard/dashboard.item.ranking.dart';
 import 'package:steps/components/dashboard/dashboard.item.sync.dart';
 import 'package:steps/components/dashboard/dashboard.item.title.dart';
+import 'package:steps/components/history/history.component.dart';
 import 'package:steps/components/landing/landing.component.dart';
 import 'package:steps/components/settings/settings.component.dart';
 import 'package:steps/components/shared/bezier.clipper.dart';
@@ -33,6 +34,7 @@ class _DashboardState extends State<Dashboard>
     implements
         DashboardTitleDelegate,
         DashboardSyncDelegate,
+        DashboardInfoItemDelegate,
         DashboardChallengeDelegate {
   ///
   String _userName;
@@ -104,7 +106,39 @@ class _DashboardState extends State<Dashboard>
     });
   }
 
-  void _showInfo(BuildContext context) {
+  @override
+  void onFitnessDataUpadte(FitSnapshot snapshot) {
+    if (!mounted) return;
+    setState(() {
+      _fitSnapshot = snapshot;
+    });
+  }
+
+  @override
+  void onHistoryRequested() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => History(),
+      ),
+    );
+  }
+
+  @override
+  void onNewRecordRequested() {}
+
+  @override
+  void onSettingsRequested() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Settings(),
+      ),
+    );
+  }
+
+  @override
+  void onInfoRequested() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -119,24 +153,6 @@ class _DashboardState extends State<Dashboard>
             ),
           );
         });
-  }
-
-  @override
-  void onFitnessDataUpadte(FitSnapshot snapshot) {
-    if (!mounted) return;
-    setState(() {
-      _fitSnapshot = snapshot;
-    });
-  }
-
-  @override
-  void onSettingsRequested() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Settings(),
-      ),
-    );
   }
 
   @override
@@ -177,11 +193,8 @@ class _DashboardState extends State<Dashboard>
               teamName: _teamName,
             );
           case 2:
-            return GestureDetector(
-              child: DashboardInfoItem(),
-              onTap: () {
-                _showInfo(context);
-              },
+            return DashboardInfoItem(
+              delegate: this,
             );
           case 3:
             return DashboardChallengeItem(
@@ -207,6 +220,7 @@ class _DashboardState extends State<Dashboard>
     );
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 255, 215, 0),
       body: SafeArea(
         child: _userName == null || _teamName == null
             ? Container(
@@ -214,17 +228,21 @@ class _DashboardState extends State<Dashboard>
                   child: CircularProgressIndicator(),
                 ),
               )
-            : Stack(
-                children: [
-                  ClipPath(
-                    clipper: BezierClipper(leftHeight: 0.9, rightHeight: 0.67),
-                    child: Container(
-                      height: 256.0,
-                      color: Color.fromARGB(255, 255, 215, 0),
+            : Container(
+                color: Colors.white,
+                child: Stack(
+                  children: [
+                    ClipPath(
+                      clipper:
+                          BezierClipper(leftHeight: 0.9, rightHeight: 0.67),
+                      child: Container(
+                        height: 256.0,
+                        color: Color.fromARGB(255, 255, 215, 0),
+                      ),
                     ),
-                  ),
-                  listWidget
-                ],
+                    listWidget
+                  ],
+                ),
               ),
       ),
     );

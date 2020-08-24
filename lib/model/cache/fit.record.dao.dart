@@ -101,4 +101,20 @@ class FitRecordDao extends FitDao {
     }
     return records;
   }
+
+  ///
+  Future<List<FitRecord>> fetchAll() async {
+    final Database db = await StructuredCache().getDb();
+    final List<Map<String, dynamic>> result = await db.rawQuery(
+        'SELECT * FROM ${FitRecordDao.TBL_NAME} ' +
+            'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC');
+    FitRecord record;
+    final List<FitRecord> records = List();
+    for (Map<String, dynamic> cursor in result) {
+      record = FitRecord();
+      record.initWithCursor(cursor);
+      records.add(record);
+    }
+    return records;
+  }
 }

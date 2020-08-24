@@ -186,52 +186,58 @@ class _LandingState extends State<Landing> implements LandingDelegate {
     );
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 255, 215, 0),
       body: SafeArea(
-        child: Stack(
-          children: [
-            ClipPath(
-              clipper: BezierClipper(leftHeight: 0.9, rightHeight: 0.67),
-              child: Container(
-                height: 312.0,
-                color: Color.fromARGB(255, 255, 215, 0),
-              ),
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(22.0, 64.0, 22.0, 0.0),
-                      child: Text(
-                        _subtitle,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(22.0, 0.0, 22.0, 24.0),
-                      child: Text(
-                        _title,
-                        style: TextStyle(
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    contentWidget,
-                    Container(
-                      child: Center(child: madeWithLove),
-                      height: 128.0,
-                    ),
-                  ],
+        child: Container(
+          color: Colors.white,
+          child: Stack(
+            children: [
+              ClipPath(
+                clipper: BezierClipper(leftHeight: 0.9, rightHeight: 0.67),
+                child: Container(
+                  height: 312.0,
+                  color: Color.fromARGB(255, 255, 215, 0),
                 ),
               ),
-            ),
-          ],
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(22.0, 64.0, 22.0, 0.0),
+                        child: Text(
+                          _subtitle,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(22.0, 0.0, 22.0, 24.0),
+                        child: Text(
+                          _title,
+                          style: TextStyle(
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      contentWidget,
+                      Container(
+                        child: Center(child: madeWithLove),
+                        height: 128.0,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

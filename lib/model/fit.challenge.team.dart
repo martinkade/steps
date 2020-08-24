@@ -11,7 +11,7 @@ class FitChallengeTeam extends FitChallenge {
           title: Localizer.translate(context, 'lblTeamChallengeTitle'),
           description:
               Localizer.translate(context, 'lblTeamChallengeDescription'),
-          label: Localizer.translate(context, 'lblKilometer'),
+          label: Localizer.translate(context, 'lblUnitKilometer'),
           imageAsset: 'assets/images/challenge2.jpg',
         );
 

@@ -1,4 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/model/cache/fit.record.dao.dart';
+import 'package:intl/intl.dart';
+import 'package:steps/model/calendar.dart';
 
 class FitRecord {
   static const int SOURCE_MANUAL = 0;
@@ -53,5 +57,36 @@ class FitRecord {
   String get idString => timestamp.toString();
 
   ///
-  DateTime get dateTime => DateTime.fromMicrosecondsSinceEpoch(timestamp);
+  DateTime get dateTime => DateTime.fromMillisecondsSinceEpoch(timestamp);
+
+  ///
+  String relativeDate(BuildContext context, {Calendar calendar, DateTime now}) {
+    final DateTime date = dateTime;
+    if (calendar.isToday(date, now)) {
+      return Localizer.translate(context, 'lblToday');
+    } else if (calendar.isYesterday(date, now)) {
+      return Localizer.translate(context, 'lblYesterday');
+    }
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+
+  String typeString(BuildContext context) {
+    switch (type) {
+      case TYPE_ACTIVE_MINUTES:
+        return Localizer.translate(context, 'lblUnitActiveMinutes');
+      default:
+        return Localizer.translate(context, 'lblUnitSteps');
+    }
+  }
+
+  ///
+  String title(BuildContext context) {
+    if (source == SOURCE_MANUAL) {
+      return name ?? Localizer.translate(context, 'lblHistoryDataManual');
+    } else if (source == SOURCE_GOOGLE_FIT) {
+      return Localizer.translate(context, 'lblHistoryDataGoogle');
+    } else {
+      return Localizer.translate(context, 'lblHistoryDataApple');
+    }
+  }
 }

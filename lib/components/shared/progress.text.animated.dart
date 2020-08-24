@@ -69,6 +69,10 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
   }
 
   void _startAnimation() async {
+    if (_controller != null && _controller.isAnimating) {
+      _controller.reset();
+    }
+
     _controller = AnimationController(
         duration: Duration(seconds: widget.animated ? 1 : 0), vsync: this);
     _animation = Tween<double>(

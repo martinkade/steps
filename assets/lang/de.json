@@ -20,12 +20,20 @@
     "lblDashboardInfoText": "%1 basiert auf einem Punktesystem. 80 Schritte sind einen Punkt wert. Aktive Minuten werden dir 1:1 als Punkte gut geschrieben.",
     "lblDashboardActiveChallenges": "Aktuelle Challenges",
     "lblDashboardTeamStandings": "Team der Woche",
+    "lblDashboardActionHistory": "Verlauf",
+    "lblDashboardActionNewRecord": "Neuer Eintrag",
+    "lblDashboardActionSettings": "Einstellungen",
 
     "lblWeekChallengeTitle": "Persönliches Wochenziel",
     "lblWeekChallengeDescription": "Herausforderung angenommen! Versuche jede Woche %1 Punkte für dein Team zu sammeln.🤘",
     "lblTeamChallengeTitle": "Unsere Team-Challenge",
     "lblTeamChallengeDescription": "Schaffen wir es gemeinsam die Distanz von A nach B zurück zu legen? 10 Punkte ergeben dabei einen Kilometer. Start ist Montag, der 24. August 2020.",
     
+    "lblHistory": "Verlauf",
+    "lblHistoryDataApple": "Daten aus Apple Health",
+    "lblHistoryDataGoogle": "Daten aus Google Fit",
+    "lblHistoryDataManual": "Manueller Eintrag",
+
     "lblSettings": "Einstellungen",
     "lblSettingsDataSource": "Datenquelle",
     "lblSettingsDataSourceApple": "Apple Health als Datenquelle verwenden",
@@ -39,5 +47,10 @@
     "lblActionGrant": "Erlauben",
     "lblActionRetry": "Erneut versuchen",
     "lblEmail": "E-Mail Adresse",
-    "lblKilometer": "Kilometer"
+    "lblUnitKilometer": "Kilometer",
+    "lblUnitActiveMinutes": "aktive Minuten",
+    "lblUnitSteps": "Schritte",
+    "lblUnitPoints": "Punkte",
+    "lblToday": "heute",
+    "lblYesterday": "gestern"
 }

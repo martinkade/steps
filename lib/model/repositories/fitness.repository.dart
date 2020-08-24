@@ -45,6 +45,14 @@ class FitnessRepository extends Repository {
   }
 
   ///
+  Future<List<FitRecord>> fetchHistory() async {
+    // final bool isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
+    // final DateTime anchor = DateTime(2020, 8, 24);
+    final FitRecordDao dao = FitRecordDao();
+    return await dao.fetchAll();
+  }
+
+  ///
   Future<void> syncPoints(
       {String userKey,
       String teamName,
@@ -55,7 +63,8 @@ class FitnessRepository extends Repository {
 
     final DateTime anchor = DateTime(2020, 8, 24);
     final FitRecordDao dao = FitRecordDao();
-    final List<FitRecord> localData = await dao.fetch(from: anchor, onlyManualRecords: !isAutoSyncEnabled);
+    final List<FitRecord> localData =
+        await dao.fetch(from: anchor, onlyManualRecords: !isAutoSyncEnabled);
     await dao.delete(records: localData, exclude: true);
     snapshot.fillWithLocalData(localData);
     client.fitnessRepositoryDidUpdate(this,
@@ -70,6 +79,11 @@ class FitnessRepository extends Repository {
     } on PlatformException catch (ex) {
       print(ex.toString());
     }
+
+    localData.clear();
+    localData.addAll(
+        await dao.fetch(from: anchor, onlyManualRecords: !isAutoSyncEnabled));
+    snapshot.fillWithLocalData(localData);
 
     if (pushData) {
       applySnapshot(snapshot, userKey: userKey, teamName: teamName);

@@ -1,4 +1,5 @@
 import 'package:steps/model/cache/fit.record.dao.dart';
+import 'package:steps/model/calendar.dart';
 import 'package:steps/model/fit.record.dart';
 import 'dart:io' show Platform;
 
@@ -10,7 +11,14 @@ class FitSnapshot {
   FitSnapshot();
 
   ///
+  void _reset() {
+    data.clear();
+  }
+
+  ///
   void fillWithLocalData(List<FitRecord> records) {
+    _reset();
+
     int today = 0;
     int yesterday = 0;
     int week = 0;
@@ -21,6 +29,7 @@ class FitSnapshot {
     DateTime date;
     final DateTime anchor = DateTime(2020, 8, 24);
     final DateTime now = DateTime.now();
+    final Calendar calendar = Calendar();
     records.forEach((record) {
       date = DateTime.fromMillisecondsSinceEpoch(record.timestamp);
       if (date.isAfter(anchor) || date.isAtSameMomentAs(anchor)) {
@@ -28,16 +37,16 @@ class FitSnapshot {
             ? record.value
             : record.value ~/ 80;
         total += points;
-        if (isThisWeek(date, now)) {
+        if (calendar.isThisWeek(date, now)) {
           week += points;
-          if (isToday(date, now)) {
+          if (calendar.isToday(date, now)) {
             today += points;
-          } else if (isYesterday(date, now)) {
+          } else if (calendar.isYesterday(date, now)) {
             yesterday += points;
           }
-        } else if (isLastWeek(date, now)) {
+        } else if (calendar.isLastWeek(date, now)) {
           lastWeek += points;
-          if (isYesterday(date, now)) {
+          if (calendar.isYesterday(date, now)) {
             yesterday += points;
           }
         }
@@ -86,26 +95,41 @@ class FitSnapshot {
     DateTime id;
     FitRecord record;
     final List<FitRecord> records = List();
-    data['steps']?.forEach((key, value) {
-      id = DateTime.parse(key);
-      record = FitRecord(dateTime: id);
-      record.fill(
-          source: source, value: value.toInt(), type: FitRecord.TYPE_STEPS);
-      records.add(record);
-    });
-    data['activeMinutes']?.forEach((key, value) {
-      id = DateTime.parse(key);
-      record = FitRecord(dateTime: id);
-      record.fill(
+    if (source == FitRecord.SOURCE_GOOGLE_FIT) {
+      data['activeMinutes']?.forEach((key, value) {
+        id = DateTime.parse(key);
+        record = FitRecord(dateTime: id);
+        record.fill(
           source: source,
           value: value.toInt(),
-          type: FitRecord.TYPE_ACTIVE_MINUTES);
-      records.add(record);
-    });
+          type: FitRecord.TYPE_ACTIVE_MINUTES,
+        );
+        records.add(record);
+      });
+    } else {
+      data['activeMinutes']?.forEach((key, value) {
+        id = DateTime.parse(key);
+        record = FitRecord(dateTime: id);
+        record.fill(
+          source: source,
+          value: value.toInt(),
+          type: FitRecord.TYPE_ACTIVE_MINUTES,
+        );
+        records.add(record);
+      });
+      data['steps']?.forEach((key, value) {
+        id = DateTime.parse(key).add(Duration(seconds: 1));
+        record = FitRecord(dateTime: id);
+        record.fill(
+          source: source,
+          value: value.toInt(),
+          type: FitRecord.TYPE_STEPS,
+        );
+        records.add(record);
+      });
+    }
 
     await dao.insertOrReplace(records: records);
-
-    fillWithLocalData(records);
   }
 
   ///
@@ -144,61 +168,5 @@ class FitSnapshot {
   ///
   num total() {
     return data['total'] ?? 0;
-  }
-
-  ///
-  bool isToday(DateTime moment, DateTime now) {
-    return moment.year == now.year &&
-        moment.month == now.month &&
-        moment.day == now.day;
-  }
-
-  ///
-  bool isYesterday(DateTime moment, DateTime now) {
-    final DateTime yesterday = now.subtract(Duration(days: 1));
-    return moment.year == yesterday.year &&
-        moment.month == yesterday.month &&
-        moment.day == yesterday.day;
-  }
-
-  ///
-  bool isThisWeek(DateTime moment, DateTime now) {
-    final DateTime weekStart = now.subtract(
-      Duration(
-        days: now.weekday - 1,
-        hours: now.hour,
-        minutes: now.minute,
-        seconds: now.second,
-        milliseconds: now.millisecond,
-        microseconds: now.microsecond,
-      ),
-    );
-    return moment.isAfter(weekStart) || moment.isAtSameMomentAs(weekStart);
-  }
-
-  ///
-  bool isLastWeek(DateTime moment, DateTime now) {
-    final DateTime weekStart = now.subtract(
-      Duration(
-        days: now.weekday - 1 + 7,
-        hours: now.hour,
-        minutes: now.minute,
-        seconds: now.second,
-        milliseconds: now.millisecond,
-        microseconds: now.microsecond,
-      ),
-    );
-    final DateTime weekEnd = now.subtract(
-      Duration(
-        days: now.weekday - 1,
-        hours: now.hour,
-        minutes: now.minute,
-        seconds: now.second,
-        milliseconds: now.millisecond,
-        microseconds: now.microsecond,
-      ),
-    );
-    return (moment.isAfter(weekStart) || moment.isAtSameMomentAs(weekStart)) &&
-        moment.isBefore(weekEnd);
   }
 }

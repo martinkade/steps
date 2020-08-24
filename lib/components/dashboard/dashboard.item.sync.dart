@@ -216,7 +216,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
       child: Center(
         child: CircularProgressIndicator(),
       ),
-      height: 96.0,
+      height: 128.0,
     );
 
     final Widget contentWidget = Container(
