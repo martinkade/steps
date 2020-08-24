@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io' show Platform;
 import 'package:steps/components/dashboard/dashboard.item.dart';
 import 'package:steps/components/shared/localizer.dart';
@@ -8,6 +9,8 @@ import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 import 'package:steps/model/repositories/repository.dart';
+
+import 'dashboard.item.settings.dialog.dart';
 
 abstract class DashboardSyncDelegate {
   void onFitnessDataUpadte(FitSnapshot snapshot);
@@ -47,11 +50,25 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
   FitSnapshot _snapshot;
 
   ///
+  List<int> activity_level = [55, 65, 75, 85];
+
+  ///
   SyncState _fitnessSyncState = SyncState.NOT_FETCHED;
 
   @override
   void initState() {
     super.initState();
+
+    SharedPreferences.getInstance().then((preferences) {
+      final int dailyTargetPoints = preferences.getInt('dailyTargetPoints');
+      if (!mounted) return;
+
+      if (dailyTargetPoints != null) {
+        setState(() {
+          DAILY_TARGET_POINTS = dailyTargetPoints;
+        });
+      }
+    });
 
     WidgetsBinding.instance.addObserver(
       LifecycleEventHandler(
@@ -116,6 +133,31 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
   bool get _showMotivation {
     final int hour = DateTime.now().hour;
     return _delta > 0 && hour >= 18;
+  }
+
+  void _showUserStatsSettings(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: DashboardSettingsDialogContent(
+                setDailyTargetPoints: (int level) {
+                  SharedPreferences.getInstance().then((preferences) {
+                    if (!mounted) return;
+                    preferences.setInt(
+                        'dailyTargetPoints', activity_level[level]);
+                    DAILY_TARGET_POINTS = preferences.getInt('dailyTargetPoints');
+                  });
+
+                  Navigator.of(context).pop();
+                  this.setState(() {});
+                },
+                activity_level: activity_level),
+          );
+        });
   }
 
   @override
@@ -253,49 +295,62 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
 
     final Widget contentWidget = _isAuthorized
         ? Container(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: AnimatedProgressText(
-                            start: 0,
-                            end: _snapshot?.today() ?? 0,
-                            target: DAILY_TARGET_POINTS,
-                            fontSize: 48.0,
-                            label: Localizer.translate(
-                                context, 'lblDashboardUserStatsToday'),
+            child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: AnimatedProgressText(
+                              start: 0,
+                              end: _snapshot?.today() ?? 0,
+                              target: DAILY_TARGET_POINTS,
+                              fontSize: 48.0,
+                              label: Localizer.translate(
+                                  context, 'lblDashboardUserStatsToday'),
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: AnimatedProgressText(
-                            start: 0,
-                            end: _snapshot?.week() ?? 0,
-                            target: DAILY_TARGET_POINTS * 7,
-                            fontSize: 32.0,
-                            label: Localizer.translate(
-                                context, 'lblDashboardUserStatsWeek'),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: AnimatedProgressText(
+                              start: 0,
+                              end: _snapshot?.week() ?? 0,
+                              target: DAILY_TARGET_POINTS * 7,
+                              fontSize: 32.0,
+                              label: Localizer.translate(
+                                  context, 'lblDashboardUserStatsWeek'),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  _showMotivation ? _motivationWidget(context) : Container(),
-                ],
+                      ],
+                    ),
+                    _showMotivation ? _motivationWidget(context) : Container(),
+                  ],
+                ),
               ),
-            ),
-          )
+              Positioned(
+                top: 0,
+                right: 0,
+                child: IconButton(
+                  onPressed: () {
+                    _showUserStatsSettings(this.context);
+                  },
+                  icon: Icon(Icons.settings, color: Colors.grey),
+                ),
+              ),
+            ],
+          ))
         : unauthorizedWidget;
 
     return Column(

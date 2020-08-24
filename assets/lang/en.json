@@ -15,6 +15,14 @@
     "lblDashboardUserStatsConnectErrorTitle": "Too bad 🤕",
     "lblDashboardUserStatsConnectErrorApple": "The app cannot access the data from Apple Health.",
     "lblDashboardUserStatsConnectErrorGoogle": "The app cannot access the data from Google Fit.",
+
+    "lblDashboardSettingsTitle": "Adjust your daily goal ",
+    "lblDashboardSettingsText": "Choose your level of activity!",
+    "lblDashboardSettingsOption0": "Not very active",
+    "lblDashboardSettingsOption1": "Slightly active",
+    "lblDashboardSettingsOption2": "Active",
+    "lblDashboardSettingsOption3": "Very active",
+
     "lblDashboardMotivation1": "Here we go!",
     "lblDashboardMotivation2": "Collect %1 points today to reach your daily goal.",
     "lblDashboardInfo": "How does %1 work?",
