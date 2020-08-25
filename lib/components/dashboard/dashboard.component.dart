@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,6 +54,9 @@ class _DashboardState extends State<Dashboard>
   ///
   StreamSubscription<Event> _rankingSubscription;
 
+  ///
+  final key = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +68,8 @@ class _DashboardState extends State<Dashboard>
       if (userValue != null) {
         setState(() {
           _userName = userValue.split('@').first?.replaceAll('.', '_');
+          print('init data for kUser=$_userName');
+          _userName = _md5(_userName);
           _teamName = 'Team mediaBEAM';
         });
 
@@ -71,6 +78,10 @@ class _DashboardState extends State<Dashboard>
         _land();
       }
     });
+  }
+
+  String _md5(String value) {
+    return md5.convert(utf8.encode(value)).toString();
   }
 
   void _land() {
@@ -122,7 +133,9 @@ class _DashboardState extends State<Dashboard>
       MaterialPageRoute(
         builder: (context) => History(),
       ),
-    );
+    ).then((_) {
+      (key.currentState as DashboardSyncItemState)?.reload();
+    });
   }
 
   @override
@@ -133,9 +146,7 @@ class _DashboardState extends State<Dashboard>
         builder: (context) => HistoryAdd(),
       ),
     ).then((_) {
-      setState(() {
-        print('return from onNewRecordRequested: TODO: syncSteps()');
-      });
+      (key.currentState as DashboardSyncItemState)?.reload();
     });
   }
 
@@ -147,9 +158,7 @@ class _DashboardState extends State<Dashboard>
         builder: (context) => Settings(),
       ),
     ).then((_) {
-      setState(() {
-        // print('return from onSettingsRequested: TODO: syncSteps()');
-      });
+      (key.currentState as DashboardSyncItemState)?.reload();
     });
   }
 
@@ -207,6 +216,7 @@ class _DashboardState extends State<Dashboard>
                 onHistoryRequested();
               },
               child: DashboardSyncItem(
+                key: key,
                 title: Localizer.translate(context, 'lblDashboardUserStats'),
                 delegate: this,
                 userKey: _userName,

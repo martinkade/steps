@@ -17,10 +17,10 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
   TextEditingController _inputController;
 
   ///
-  String _email;
+  FocusNode _focusNode;
 
   ///
-  FocusNode _focusNode;
+  String _email;
 
   @override
   void initState() {

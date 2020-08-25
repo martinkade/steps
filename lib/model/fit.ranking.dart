@@ -1,23 +1,33 @@
+import 'package:steps/model/calendar.dart';
+
 class FitRanking {
   final List<FitRankingEntry> entries = List();
   int absolute = 0;
   FitRanking._internal();
 
   static FitRanking createFromSnapshot(dynamic snapshot) {
-    FitRanking ranking = FitRanking._internal();
+    final FitRanking ranking = FitRanking._internal();
 
-    Map<String, num> summary = Map();
+    final Map<String, num> summary = Map();
+    final Calendar calendar = Calendar();
+    final DateTime now = DateTime.now();
 
     String teamKey;
+    int timestampKey;
     snapshot.value.forEach((key, value) {
       // key is user
       teamKey = value['team'];
-      if (summary.containsKey(teamKey)) {
-        summary.update(teamKey, (v) => v + value['week']);
-      } else {
-        summary.putIfAbsent(teamKey, () => value['week']);
+      timestampKey = value['timestamp']?.toInt() ?? 0;
+      // sum user's weekly points if sync timestamp is within current week
+      if (timestampKey == 0 ||
+          calendar.isThisWeek(
+              DateTime.fromMillisecondsSinceEpoch(timestampKey), now)) {
+        if (summary.containsKey(teamKey)) {
+          summary.update(teamKey, (v) => v + value['week']);
+        } else {
+          summary.putIfAbsent(teamKey, () => value['week']);
+        }
       }
-
       ranking.absolute += value['total'];
     });
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:steps/components/history/history.component.add.dart';
 import 'package:steps/components/history/history.item.record.dart';
 import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/components/shared/page.default.dart';
@@ -24,12 +25,31 @@ class _HistoryState extends State<History> {
   void initState() {
     super.initState();
 
+    _load();
+  }
+
+  void _load() {
     _repository.fetchHistory().then((records) {
       if (!mounted) return;
       _records.clear();
       setState(() {
         _records.addAll(records);
       });
+    });
+  }
+
+  void _editRecord(FitRecord record) {
+    if (record.source != FitRecord.SOURCE_MANUAL) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HistoryAdd(
+          oldRecord: record,
+        ),
+      ),
+    ).then((_) {
+      _load();
     });
   }
 
@@ -40,9 +60,14 @@ class _HistoryState extends State<History> {
         itemCount: _records.length,
         itemBuilder: (context, index) {
           final FitRecord record = _records[index];
-          return HistoryRecordItem(
-            record: record,
-            isLastItem: index + 1 == _records.length,
+          return GestureDetector(
+            child: HistoryRecordItem(
+              record: record,
+              isLastItem: index + 1 == _records.length,
+            ),
+            onTap: () {
+              _editRecord(record);
+            },
           );
         },
       ),

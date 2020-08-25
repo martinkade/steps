@@ -91,11 +91,14 @@ class _SettingsGoalItemState extends State<SettingsGoalItem> {
                     ],
                   ),
                 ),
-                Text(
-                  '$_goalDaily',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    '$_goalDaily',
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],

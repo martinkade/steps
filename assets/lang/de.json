@@ -32,6 +32,7 @@
     
     "lblHistory": "Mein Verlauf",
     "lblHistoryAdd": "Neuer Eintrag",
+    "lblHistoryEdit": "Eintrag bearbeiten",
     "lblHistoryDataApple": "Daten aus Apple Health",
     "lblHistoryDataGoogle": "Daten aus Google Fit",
     "lblHistoryDataManual": "Manueller Eintrag",
@@ -43,7 +44,7 @@
     "lblSettingsDataSourceInfo": "Wenn du diese Funktion aktivierst, werden deine Daten automatisch aus der entsprechenden Quelle ermittelt.",
     "lblSettingsGoals": "Ziele",
     "lblSettingsGoalDailyTitle": "Dein Tagesziel",
-    "lblSettingsGoalDailyInfo": "Beschreibung des Tagesziels",
+    "lblSettingsGoalDailyInfo": "Überlege dir, wie viele Punkte du täglich erreichen möchtest um die Motivation aufrecht zu erhalten.",
     
     "lblDashboardSettingsTitle": "Tagesziel anpassen",
     "lblDashboardSettingsText": "Wähle dein Aktivitätsniveau!",
@@ -56,6 +57,7 @@
     "lblActionBack": "Zurück",
     "lblActionForward": "Weiter",
     "lblActionDone": "Fertig",
+    "lblActionDelete": "Löschen",
     "lblActionGrant": "Erlauben",
     "lblActionRetry": "Erneut versuchen",
     "lblEmail": "E-Mail Adresse",

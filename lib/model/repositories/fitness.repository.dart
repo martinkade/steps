@@ -53,6 +53,18 @@ class FitnessRepository extends Repository {
   }
 
   ///
+  Future<void> addRecord(FitRecord record) async {
+    final FitRecordDao dao = FitRecordDao();
+    return dao.insertOrReplace(records: [record]);
+  }
+
+  ///
+  Future<void> deleteRecord(FitRecord record) async {
+    final FitRecordDao dao = FitRecordDao();
+    return dao.delete(records: [record]);
+  }
+
+  ///
   Future<void> syncPoints(
       {String userKey,
       String teamName,

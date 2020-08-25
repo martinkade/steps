@@ -142,6 +142,7 @@ class FitSnapshot {
         MapEntry('week', week()),
         MapEntry('lastWeek', lastWeek()),
         MapEntry('total', total()),
+        MapEntry('timestamp', DateTime.now().millisecondsSinceEpoch),
       ],
     );
   }

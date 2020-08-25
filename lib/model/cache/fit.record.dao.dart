@@ -86,11 +86,11 @@ class FitRecordDao extends FitDao {
     final Database db = await StructuredCache().getDb();
     final String statement = onlyManualRecords
         ? 'SELECT * FROM ${FitRecordDao.TBL_NAME} ' +
-            'WHERE ${FitRecordDao.COL_TIMESTAMP} >= ${from.millisecondsSinceEpoch} AND ${FitRecordDao.COL_SOURCE} = ${FitRecord.SOURCE_MANUAL} '
-                'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC'
+            'WHERE ${FitRecordDao.COL_TIMESTAMP} >= ${from.millisecondsSinceEpoch} AND ${FitRecordDao.COL_SOURCE} = ${FitRecord.SOURCE_MANUAL} ' +
+            'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC'
         : 'SELECT * FROM ${FitRecordDao.TBL_NAME} ' +
-            'WHERE ${FitRecordDao.COL_TIMESTAMP} >= ${from.millisecondsSinceEpoch} AND ${FitRecordDao.COL_SOURCE} > ${FitRecord.SOURCE_MANUAL} '
-                'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC';
+            'WHERE ${FitRecordDao.COL_TIMESTAMP} >= ${from.millisecondsSinceEpoch} ' +
+            'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC';
     final List<Map<String, dynamic>> result = await db.rawQuery(statement);
     FitRecord record;
     final List<FitRecord> records = List();

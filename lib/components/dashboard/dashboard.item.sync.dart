@@ -31,10 +31,10 @@ class DashboardSyncItem extends DashboardItem {
       : super(key: key, title: title);
 
   @override
-  _DashboardSyncItemState createState() => _DashboardSyncItemState();
+  DashboardSyncItemState createState() => DashboardSyncItemState();
 }
 
-class _DashboardSyncItemState extends State<DashboardSyncItem>
+class DashboardSyncItemState extends State<DashboardSyncItem>
     implements FitnessRepositoryClient {
   ///
   bool _loading = false;
@@ -68,6 +68,10 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
     );
 
     _load();
+  }
+
+  void reload() {
+    _syncSteps();
   }
 
   void _load() {
