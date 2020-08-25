@@ -23,7 +23,11 @@ class _HistoryAddState extends State<HistoryAdd> {
   @override
   Widget build(BuildContext context) {
     return DefaultPage(
-      child: Container(),
+      child: Container(
+        child: Center(
+          child: Text('Kommt in der nächsten Version :)'),
+        ),
+      ),
       title: Localizer.translate(context, 'lblHistoryAdd'),
     );
   }
