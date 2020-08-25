@@ -191,6 +191,7 @@ class _LandingState extends State<Landing> implements LandingDelegate {
         child: Container(
           color: Colors.white,
           child: Stack(
+            fit: StackFit.expand,
             children: [
               ClipPath(
                 clipper: BezierClipper(leftHeight: 0.9, rightHeight: 0.67),
