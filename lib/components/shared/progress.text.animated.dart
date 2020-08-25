@@ -54,7 +54,6 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
 
     _value = 0.0;
     _displayValue = widget.start.toDouble();
-    if (widget.end == 0) return;
 
     _startAnimation();
   }
@@ -62,8 +61,6 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
   @override
   void didUpdateWidget(AnimatedProgressText oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-    if (widget.end == 0) return;
 
     _startAnimation();
   }
@@ -76,7 +73,7 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
     _controller = AnimationController(
         duration: Duration(seconds: widget.animated ? 1 : 0), vsync: this);
     _animation = Tween<double>(
-            begin: _value > 0.0 && _value <= widget.end.toDouble()
+            begin: _value == widget.end.toDouble()
                 ? _value
                 : widget.start.toDouble(),
             end: widget.end.toDouble())

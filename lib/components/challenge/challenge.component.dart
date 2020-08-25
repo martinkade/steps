@@ -33,6 +33,7 @@ class _ChallengeState extends State<Challenge> {
         child: Container(
           color: Colors.white,
           child: Stack(
+            fit: StackFit.expand,
             children: [
               ClipPath(
                 clipper: BezierClipper(leftHeight: 0.9, rightHeight: 0.67),
@@ -72,9 +73,11 @@ class _ChallengeState extends State<Challenge> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Container(
-                                      child: Icon(
-                                        Icons.arrow_back,
-                                        size: 32.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Icon(
+                                          Icons.arrow_back,
+                                        ),
                                       ),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,

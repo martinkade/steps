@@ -186,11 +186,16 @@ class _DashboardState extends State<Dashboard>
               delegate: this,
             );
           case 1:
-            return DashboardSyncItem(
-              title: Localizer.translate(context, 'lblDashboardUserStats'),
-              delegate: this,
-              userKey: _userName,
-              teamName: _teamName,
+            return GestureDetector(
+              onTap: () {
+                onHistoryRequested();
+              },
+              child: DashboardSyncItem(
+                title: Localizer.translate(context, 'lblDashboardUserStats'),
+                delegate: this,
+                userKey: _userName,
+                teamName: _teamName,
+              ),
             );
           case 2:
             return DashboardInfoItem(

@@ -39,7 +39,7 @@ class DashboardInfoItem extends StatelessWidget {
                     DashboardAction(
                       title: Localizer.translate(
                           context, 'lblDashboardActionHistory'),
-                      icon: Icons.history,
+                      icon: Icons.account_circle,
                       onTap: () {
                         delegate?.onHistoryRequested();
                       },
@@ -47,7 +47,7 @@ class DashboardInfoItem extends StatelessWidget {
                     DashboardAction(
                       title: Localizer.translate(
                           context, 'lblDashboardActionNewRecord'),
-                      icon: Icons.add_circle_outline,
+                      icon: Icons.add_circle,
                       onTap: () {
                         delegate?.onNewRecordRequested();
                       },
@@ -115,10 +115,7 @@ class DashboardAction extends StatelessWidget {
         width: width,
         child: Column(
           children: [
-            Icon(
-              icon,
-              size: 32.0,
-            ),
+            Icon(icon),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(

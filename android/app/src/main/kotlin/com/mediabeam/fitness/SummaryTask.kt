@@ -25,7 +25,7 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
         val dateFormat: DateFormat = DateFormat.getDateTimeInstance()
 
         val nowMillis = now.timeInMillis
-        Log.i("-", "\tnowMillis: " + dateFormat.format(now.time))
+        Log.i("-", "\tnow:\t\t\t" + dateFormat.format(now.time))
         now.set(Calendar.HOUR_OF_DAY, 0)
         now.set(Calendar.MINUTE, 0)
         now.set(Calendar.SECOND, 0)
@@ -33,7 +33,7 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
         now.add(Calendar.DATE, -7)
 
         val lastWeekStartMillis: Long = now.timeInMillis
-        Log.i("-", "\tlastWeekStartMillis: " + dateFormat.format(now.time))
+        Log.i("-", "\tlastWeekStart:\t" + dateFormat.format(now.time))
 
         val data = HashMap<String, Any>()
         data["steps"] = readSteps(lastWeekStartMillis, nowMillis)
@@ -88,26 +88,20 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
             readData(request).apply {
                 Tasks.await(this, 5, TimeUnit.SECONDS).apply {
                     result?.apply {
+                        var map = HashMap<String, Int>()
                         if (status.isSuccess) {
-                            var map = HashMap<String, Int>()
                             val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-                            // Log.i("-", "\tBucket count: ${buckets.size}")
 
                             buckets.forEach { bucket ->
                                 bucket.getDataSet(dataType)?.apply {
-                                    // Log.i("-", "\tData source: ${dataSource.appPackageName} with ${dataPoints.size} points")
-                                    if (dataPoints.isEmpty()) return HashMap()
 
                                     var key: String
                                     var value: Int
                                     dataPoints.forEach {
                                         key = dateFormat.format(it.getStartTime(TimeUnit.MILLISECONDS))
-
-                                        // Log.i("-", "\tType: " + it.dataType.name)
-                                        // Log.i("-", "\tStart: " + dateFormat.format(it.getStartTime(TimeUnit.MILLISECONDS)))
-                                        // Log.i("-", "\tEnd: " + dateFormat.format(it.getEndTime(TimeUnit.MILLISECONDS)))
+                                        Log.i("-", "\tkey:\t$key")
                                         value = it.getValue(field).asInt()
-                                        // Log.i("-", "\tValue: $value")
+                                        Log.i("-", "\tvalue:\t$value")
 
                                         when (val oldValue = map[key]) {
                                             null -> map[key] = value
@@ -117,7 +111,7 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
                                 }
                             }
                             return map
-                        } else return HashMap()
+                        } else return map
                     }
                 }
             }

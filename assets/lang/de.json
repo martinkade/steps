@@ -20,7 +20,7 @@
     "lblDashboardInfoText": "%1 basiert auf einem Punktesystem. 80 Schritte sind einen Punkt wert. Aktive Minuten werden dir 1:1 als Punkte gut geschrieben.",
     "lblDashboardActiveChallenges": "Aktuelle Challenges",
     "lblDashboardTeamStandings": "Team der Woche",
-    "lblDashboardActionHistory": "Verlauf",
+    "lblDashboardActionHistory": "Mein Verlauf",
     "lblDashboardActionNewRecord": "Neuer Eintrag",
     "lblDashboardActionSettings": "Einstellungen",
 
@@ -29,7 +29,7 @@
     "lblTeamChallengeTitle": "Unsere Team-Challenge",
     "lblTeamChallengeDescription": "Schaffen wir es gemeinsam die Distanz von A nach B zurück zu legen? 10 Punkte ergeben dabei einen Kilometer. Start ist Montag, der 24. August 2020.",
     
-    "lblHistory": "Verlauf",
+    "lblHistory": "Mein Verlauf",
     "lblHistoryDataApple": "Daten aus Apple Health",
     "lblHistoryDataGoogle": "Daten aus Google Fit",
     "lblHistoryDataManual": "Manueller Eintrag",

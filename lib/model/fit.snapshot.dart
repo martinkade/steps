@@ -92,6 +92,7 @@ class FitSnapshot {
     final int source = Platform.isIOS
         ? FitRecord.SOURCE_APPLE_HEALTH
         : FitRecord.SOURCE_GOOGLE_FIT;
+    print('import external data: $data');
     DateTime id;
     FitRecord record;
     final List<FitRecord> records = List();

@@ -20,7 +20,7 @@
     "lblDashboardInfoText": "%1 is based on a point system. 80 steps is worth one point. Active minutes will be credited to you 1: 1 as points.",
     "lblDashboardActiveChallenges": "Active challenges",
     "lblDashboardTeamStandings": "Team of the week",
-    "lblDashboardActionHistory": "History",
+    "lblDashboardActionHistory": "My history",
     "lblDashboardActionNewRecord": "New record",
     "lblDashboardActionSettings": "Settings",
 
@@ -29,7 +29,7 @@
     "lblTeamChallengeTitle": "Our team challenge",
     "lblTeamChallengeDescription": "Will we be able to cover the distance from A to B together? 10 points result in one kilometer. Start is Monday, August 24th, 2020.",
     
-    "lblHistory": "History",
+    "lblHistory": "My history",
     "lblHistoryDataApple": "Apple Health data",
     "lblHistoryDataGoogle": "Google Fit data",
     "lblHistoryDataManual": "manual record",
