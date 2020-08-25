@@ -9,6 +9,7 @@ import 'package:steps/components/dashboard/dashboard.item.info.dialog.dart';
 import 'package:steps/components/dashboard/dashboard.item.ranking.dart';
 import 'package:steps/components/dashboard/dashboard.item.sync.dart';
 import 'package:steps/components/dashboard/dashboard.item.title.dart';
+import 'package:steps/components/history/history.component.add.dart';
 import 'package:steps/components/history/history.component.dart';
 import 'package:steps/components/landing/landing.component.dart';
 import 'package:steps/components/settings/settings.component.dart';
@@ -125,7 +126,14 @@ class _DashboardState extends State<Dashboard>
   }
 
   @override
-  void onNewRecordRequested() {}
+  void onNewRecordRequested() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HistoryAdd(),
+      ),
+    );
+  }
 
   @override
   void onSettingsRequested() {

@@ -25,7 +25,7 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
         val dateFormat: DateFormat = DateFormat.getDateTimeInstance()
 
         val nowMillis = now.timeInMillis
-        Log.i("-", "\tnow:\t\t\t" + dateFormat.format(now.time))
+        Log.i("-", "\tnow: " + dateFormat.format(now.time))
         now.set(Calendar.HOUR_OF_DAY, 0)
         now.set(Calendar.MINUTE, 0)
         now.set(Calendar.SECOND, 0)
@@ -33,7 +33,7 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
         now.add(Calendar.DATE, -7)
 
         val lastWeekStartMillis: Long = now.timeInMillis
-        Log.i("-", "\tlastWeekStart:\t" + dateFormat.format(now.time))
+        Log.i("-", "\tlastWeekStart: " + dateFormat.format(now.time))
 
         val data = HashMap<String, Any>()
         data["steps"] = readSteps(lastWeekStartMillis, nowMillis)
@@ -99,9 +99,9 @@ class SummaryTask(private val context: Context, private val options: FitnessOpti
                                     var value: Int
                                     dataPoints.forEach {
                                         key = dateFormat.format(it.getStartTime(TimeUnit.MILLISECONDS))
-                                        Log.i("-", "\tkey:\t$key")
+                                        // Log.i("-", "\tkey:\t$key")
                                         value = it.getValue(field).asInt()
-                                        Log.i("-", "\tvalue:\t$value")
+                                        // Log.i("-", "\tvalue:\t$value")
 
                                         when (val oldValue = map[key]) {
                                             null -> map[key] = value

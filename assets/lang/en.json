@@ -30,6 +30,7 @@
     "lblTeamChallengeDescription": "Will we be able to cover the distance from A to B together? 10 points result in one kilometer. Start is Monday, August 24th, 2020.",
     
     "lblHistory": "My history",
+    "lblHistoryAdd": "New record",
     "lblHistoryDataApple": "Apple Health data",
     "lblHistoryDataGoogle": "Google Fit data",
     "lblHistoryDataManual": "manual record",
