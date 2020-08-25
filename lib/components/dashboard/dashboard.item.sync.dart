@@ -51,6 +51,9 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
   ///
   SyncState _fitnessSyncState = SyncState.NOT_FETCHED;
 
+  ///
+  int _goalDaily = DAILY_TARGET_POINTS;
+
   @override
   void initState() {
     super.initState();
@@ -75,6 +78,10 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
   }
 
   void _syncSteps() {
+    Preferences().getDailyGoal().then((value) {
+      if (!mounted) return;
+      _goalDaily = value;
+    });
     Preferences().isAutoSyncEnabled().then((enabled) {
       if (!mounted) return;
       if (enabled) {
@@ -99,11 +106,11 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
     );
   }
 
-  int get _delta => DAILY_TARGET_POINTS - (_snapshot?.today() ?? 0);
+  int get _delta => _goalDaily - (_snapshot?.today() ?? 0);
 
   bool get _showMotivation {
     final int hour = DateTime.now().hour;
-    return _delta != DAILY_TARGET_POINTS && _delta > 0 && hour >= 18;
+    return _delta != _goalDaily && _delta > 0 && hour >= 18;
   }
 
   @override
@@ -236,7 +243,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                     child: AnimatedProgressText(
                       start: 0,
                       end: _snapshot?.today() ?? 0,
-                      target: DAILY_TARGET_POINTS,
+                      target: _goalDaily,
                       fontSize: 48.0,
                       label: Localizer.translate(
                           context, 'lblDashboardUserStatsToday'),
@@ -249,7 +256,7 @@ class _DashboardSyncItemState extends State<DashboardSyncItem>
                     child: AnimatedProgressText(
                       start: 0,
                       end: _snapshot?.week() ?? 0,
-                      target: DAILY_TARGET_POINTS * 7,
+                      target: _goalDaily * 7,
                       fontSize: 32.0,
                       label: Localizer.translate(
                           context, 'lblDashboardUserStatsWeek'),

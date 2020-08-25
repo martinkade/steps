@@ -15,9 +15,8 @@ class SettingsSyncItem extends SettingsItem {
   final SettingsSyncDelegate delegate;
 
   ///
-  SettingsSyncItem(
-      {Key key, String title, String description, String label, this.delegate})
-      : super(key: key, title: title, description: description, label: label);
+  SettingsSyncItem({Key key, String title, this.delegate})
+      : super(key: key, title: title);
 
   @override
   _SettingsSyncItemState createState() => _SettingsSyncItemState();

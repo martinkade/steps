@@ -3,6 +3,7 @@ import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/fit.snapshot.dart';
+import 'package:steps/model/preferences.dart';
 
 class FitChallengeWeek extends FitChallenge {
   FitChallengeWeek(BuildContext context)
@@ -23,6 +24,10 @@ class FitChallengeWeek extends FitChallenge {
 
   @override
   void initTargets() {
+    Preferences().getDailyGoal().then((value) {
+      target = value * 7.0;
+      description = description.replaceFirst('%1', target.toStringAsFixed(0));
+    });
     target = DAILY_TARGET_POINTS * 7.0;
     description = description.replaceFirst('%1', target.toStringAsFixed(0));
   }

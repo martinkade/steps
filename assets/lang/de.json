@@ -14,6 +14,7 @@
     "lblDashboardUserStatsWeek": "diese Woche",
     "lblDashboardUserStatsAutoSyncOffApple": "Die automatische Synchronisation mit Apple Health ist deaktiviert. Das kannst du in den Einstellungen ändern.",
     "lblDashboardUserStatsAutoSyncOffGoogle": "Die automatische Synchronisation mit Google Fit ist deaktiviert. Das kannst du in den Einstellungen ändern.",
+
     "lblDashboardMotivation1": "Dran bleiben!",
     "lblDashboardMotivation2": "Sammle heute weitere %1 Punkte um dein Tagesziel zu erreichen.",
     "lblDashboardInfo": "Wie funktioniert %1?",
@@ -40,6 +41,16 @@
     "lblSettingsDataSourceApple": "Apple Health als Datenquelle verwenden",
     "lblSettingsDataSourceGoogle": "Google Fit als Datenquelle verwenden",
     "lblSettingsDataSourceInfo": "Wenn du diese Funktion aktivierst, werden deine Daten automatisch aus der entsprechenden Quelle ermittelt.",
+    "lblSettingsGoals": "Ziele",
+    "lblSettingsGoalDailyTitle": "Dein Tagesziel",
+    "lblSettingsGoalDailyInfo": "Beschreibung des Tagesziels",
+    
+    "lblDashboardSettingsTitle": "Tagesziel anpassen",
+    "lblDashboardSettingsText": "Wähle dein Aktivitätsniveau!",
+    "lblDashboardSettingsOption0": "Nicht sehr aktiv",
+    "lblDashboardSettingsOption1": "Etwas aktiv",
+    "lblDashboardSettingsOption2": "Aktiv",
+    "lblDashboardSettingsOption3": "Sehr Aktiv",
 
     "lblActionGetStarted": "Los gehts!",
     "lblActionBack": "Zurück",

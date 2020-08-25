@@ -132,7 +132,11 @@ class _DashboardState extends State<Dashboard>
       MaterialPageRoute(
         builder: (context) => HistoryAdd(),
       ),
-    );
+    ).then((_) {
+      setState(() {
+        print('return from onNewRecordRequested: TODO: syncSteps()');
+      });
+    });
   }
 
   @override
@@ -142,7 +146,11 @@ class _DashboardState extends State<Dashboard>
       MaterialPageRoute(
         builder: (context) => Settings(),
       ),
-    );
+    ).then((_) {
+      setState(() {
+        // print('return from onSettingsRequested: TODO: syncSteps()');
+      });
+    });
   }
 
   @override

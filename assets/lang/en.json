@@ -40,6 +40,16 @@
     "lblSettingsDataSourceApple": "Use Apple Health as a data source",
     "lblSettingsDataSourceGoogle": "Use Google Fit as a data source",
     "lblSettingsDataSourceInfo": "If you activate this function, your data will automatically be determined from the corresponding source.",
+    "lblSettingsGoals": "Goals",
+    "lblSettingsGoalDailyTitle": "Your daily goal",
+    "lblSettingsGoalDailyInfo": "Description of your daily goal",
+    
+    "lblDashboardSettingsTitle": "Adjust your daily goal ",
+    "lblDashboardSettingsText": "Choose your level of activity!",
+    "lblDashboardSettingsOption0": "Not very active",
+    "lblDashboardSettingsOption1": "Slightly active",
+    "lblDashboardSettingsOption2": "Active",
+    "lblDashboardSettingsOption3": "Very active",
 
     "lblActionGetStarted": "Here we go!",
     "lblActionBack": "Back",
