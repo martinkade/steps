@@ -6,8 +6,10 @@ import 'package:steps/model/fit.challenge.dart';
 class DashboardSettingsDialogContent extends StatelessWidget {
   final Function setDailyTargetPoints;
   final List<int> activityLevels;
+  final int selectedLevel;
 
-  DashboardSettingsDialogContent({this.setDailyTargetPoints, this.activityLevels});
+  DashboardSettingsDialogContent(
+      {this.setDailyTargetPoints, this.activityLevels, this.selectedLevel});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class DashboardSettingsDialogContent extends StatelessWidget {
                         Localizer.translate(
                             context, 'lblDashboardSettingsText'),
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 25.0),
+                        style: TextStyle(fontSize: 24.0),
                       ),
                     ),
                     ListView.builder(
@@ -50,23 +52,24 @@ class DashboardSettingsDialogContent extends StatelessWidget {
                                       index.toString()),
                               style: TextStyle(
                                 fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
+                                fontWeight:
+                                    selectedLevel == activityLevels[index]
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
                               ),
                             ),
                             splashColor: Colors.blue.withAlpha(50),
-                            color: DAILY_TARGET_POINTS ==
-                                activityLevels[index]
+                            color: selectedLevel == activityLevels[index]
                                 ? Colors.blue.withAlpha(50)
                                 : Colors.white,
                             shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: DAILY_TARGET_POINTS ==
-                                            activityLevels[index]
-                                        ? Colors.blue.withAlpha(50)
-                                        : Colors.grey,
-                                    width: 1,
-                                    style: BorderStyle.solid),
-                                borderRadius: BorderRadius.circular(5)),
+                              side: BorderSide(
+                                color: Colors.grey,
+                                width: 1.0,
+                                style: BorderStyle.solid,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
                             onPressed: () {
                               setDailyTargetPoints(index);
                             },

@@ -33,6 +33,8 @@
     "lblHistory": "Mein Verlauf",
     "lblHistoryAdd": "Neuer Eintrag",
     "lblHistoryEdit": "Eintrag bearbeiten",
+    "lblHistoryName": "Name",
+    "lblHistoryDate": "Datum",
     "lblHistoryDataApple": "Daten aus Apple Health",
     "lblHistoryDataGoogle": "Daten aus Google Fit",
     "lblHistoryDataManual": "Manueller Eintrag",
@@ -50,7 +52,7 @@
     "lblDashboardSettingsText": "Wähle dein Aktivitätsniveau!",
     "lblDashboardSettingsOption0": "Nicht sehr aktiv",
     "lblDashboardSettingsOption1": "Etwas aktiv",
-    "lblDashboardSettingsOption2": "Aktiv",
+    "lblDashboardSettingsOption2": "Aktiv (empfohlen)",
     "lblDashboardSettingsOption3": "Sehr Aktiv",
 
     "lblActionGetStarted": "Los gehts!",

@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:steps/components/settings/dashboard.item.settings.dialog.dart';
 import 'package:steps/components/settings/settings.item.dart';
 
 import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/preferences.dart';
 
-abstract class SettingsGoalDelegate {
-  void onDailyGoalRequested();
-}
-
 class SettingsGoalItem extends SettingsItem {
   ///
-  final SettingsGoalDelegate delegate;
-
-  ///
-  SettingsGoalItem({Key key, String title, this.delegate})
-      : super(key: key, title: title);
+  SettingsGoalItem({Key key, String title}) : super(key: key, title: title);
 
   @override
   _SettingsGoalItemState createState() => _SettingsGoalItemState();
@@ -23,19 +16,21 @@ class SettingsGoalItem extends SettingsItem {
 
 class _SettingsGoalItemState extends State<SettingsGoalItem> {
   ///
-  int _goalDaily = DAILY_TARGET_POINTS;
+  final List<int> _activityLevels = [
+    DAILY_TARGET_POINTS - 20,
+    DAILY_TARGET_POINTS - 10,
+    DAILY_TARGET_POINTS,
+    DAILY_TARGET_POINTS + 10,
+  ];
+
+  ///
+  int _activityLevel;
 
   @override
   void initState() {
     super.initState();
 
-    _load();
-  }
-
-  @override
-  void didUpdateWidget(SettingsGoalItem oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
+    _activityLevel = DAILY_TARGET_POINTS;
     _load();
   }
 
@@ -43,8 +38,33 @@ class _SettingsGoalItemState extends State<SettingsGoalItem> {
     Preferences().getDailyGoal().then((value) {
       if (!mounted) return;
       setState(() {
-        _goalDaily = value;
+        _activityLevel = value;
       });
+    });
+  }
+
+  void _pickActivityLevel(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: DashboardSettingsDialogContent(
+              setDailyTargetPoints: (level) {
+                final int newLevel = _activityLevels[level];
+                _activityLevel = newLevel;
+                Preferences().setDailyGoal(newLevel).then((_) {
+                  Navigator.of(context).pop();
+                });
+              },
+              activityLevels: _activityLevels,
+              selectedLevel: _activityLevel,
+            ),
+          );
+        }).then((_) {
+      setState(() {});
     });
   }
 
@@ -94,7 +114,7 @@ class _SettingsGoalItemState extends State<SettingsGoalItem> {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
-                    '$_goalDaily',
+                    '$_activityLevel',
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -104,7 +124,7 @@ class _SettingsGoalItemState extends State<SettingsGoalItem> {
               ],
             ),
             onTap: () {
-              widget.delegate?.onDailyGoalRequested();
+              _pickActivityLevel(context);
             },
           )
         ],

@@ -67,7 +67,7 @@ class FitRecord {
     } else if (calendar.isYesterday(date, now)) {
       return Localizer.translate(context, 'lblYesterday');
     }
-    return DateFormat('yyyy-MM-dd').format(date);
+    return DateFormat('dd.MM.yyyy').format(date);
   }
 
   String typeString(BuildContext context) {

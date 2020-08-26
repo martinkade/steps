@@ -67,7 +67,7 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
 
     _challenges = [
       FitChallengeTeam(context),
-      FitChallengeWeek(context),
+      // FitChallengeWeek(context),
     ];
   }
 
@@ -89,8 +89,8 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
   @override
   Widget build(BuildContext context) {
     final double cardWidth =
-        min(MediaQuery.of(context).size.width - 24.0, 312.0);
-    final double cardHeight = max(cardWidth * 0.75, 256.0);
+        min(MediaQuery.of(context).size.width - 24.0, 360.0);
+    final double cardHeight = max(cardWidth * 0.67, 241.0);
 
     final Widget loadingWidget = Container(
       child: Center(

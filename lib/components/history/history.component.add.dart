@@ -4,6 +4,7 @@ import 'package:steps/components/shared/page.default.dart';
 import 'package:steps/components/shared/segmented.control.dart';
 import 'package:steps/model/fit.record.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
+import 'package:intl/intl.dart';
 
 class HistoryAdd extends StatefulWidget {
   ///
@@ -33,7 +34,16 @@ class _HistoryAddState extends State<HistoryAdd> {
   FocusNode _nameFocusNode;
 
   ///
+  TextEditingController _dateInputController;
+
+  ///
+  FocusNode _dateFocusNode;
+
+  ///
   int _selectedModeIndex;
+
+  ///
+  DateTime _selectedDate;
 
   @override
   void initState() {
@@ -43,14 +53,22 @@ class _HistoryAddState extends State<HistoryAdd> {
     _valueFocusNode = FocusNode();
     _nameInputController = TextEditingController();
     _nameFocusNode = FocusNode();
+    _dateInputController = TextEditingController();
+    _dateFocusNode = FocusNode();
 
     if (widget.oldRecord != null) {
       _selectedModeIndex =
           widget.oldRecord.type == FitRecord.TYPE_ACTIVE_MINUTES ? 0 : 1;
+      _selectedDate = widget.oldRecord.dateTime;
       _nameInputController.text = widget.oldRecord.name;
       _valueInputController.text = widget.oldRecord.value.toString();
+      _dateInputController.text =
+          DateFormat('dd.MM.yyyy').format(_selectedDate);
     } else {
       _selectedModeIndex = 0;
+      _selectedDate = DateTime.now();
+      _dateInputController.text =
+          DateFormat('dd.MM.yyyy').format(_selectedDate);
     }
   }
 
@@ -62,11 +80,11 @@ class _HistoryAddState extends State<HistoryAdd> {
   void _save() {
     final int value = int.tryParse(_valueInputController.text) ?? 0;
     final String name = _nameInputController.text;
-    print('$value with name=$name');
+    final DateTime date = _selectedDate;
+    print('$value with name=$name and date $date');
     if (value <= 0) return;
 
-    final FitRecord record =
-        widget.oldRecord ?? FitRecord(dateTime: DateTime.now());
+    final FitRecord record = FitRecord(dateTime: date);
     record.fill(
       source: FitRecord.SOURCE_MANUAL,
       value: value,
@@ -76,7 +94,7 @@ class _HistoryAddState extends State<HistoryAdd> {
       name: name.isEmpty ? null : name,
     );
 
-    _repository.addRecord(record).then((_) {
+    _repository.addRecord(record, oldRecord: widget.oldRecord).then((_) {
       if (!mounted) return;
       Navigator.of(context).pop();
     });
@@ -91,12 +109,32 @@ class _HistoryAddState extends State<HistoryAdd> {
     });
   }
 
+  void _pickDate(BuildContext context) {
+    final DateTime date = _selectedDate;
+    showDatePicker(
+            context: context,
+            initialDate: date,
+            firstDate: date.subtract(Duration(days: date.day)),
+            lastDate: date)
+        .then((value) {
+      if (value != null) {
+        _selectedDate = value;
+        _dateInputController.text =
+            DateFormat('dd.MM.yyyy').format(_selectedDate);
+      }
+      _dateFocusNode.unfocus();
+      _valueFocusNode.requestFocus();
+    });
+  }
+
   @override
   void dispose() {
     _valueFocusNode.dispose();
     _valueInputController.dispose();
     _nameFocusNode.dispose();
     _nameInputController.dispose();
+    _dateFocusNode.dispose();
+    _dateInputController.dispose();
     super.dispose();
   }
 
@@ -140,40 +178,72 @@ class _HistoryAddState extends State<HistoryAdd> {
                     obscureText: false,
                     onSubmitted: (value) {
                       _nameFocusNode.unfocus();
-                      _valueFocusNode.requestFocus();
+                      _dateFocusNode.requestFocus();
                     },
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Name',
+                      labelText: Localizer.translate(context, 'lblHistoryName'),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                    vertical: 16.0,
-                  ),
-                  child: TextField(
-                    keyboardType: TextInputType.numberWithOptions(),
-                    controller: _valueInputController,
-                    focusNode: _valueFocusNode,
-                    textInputAction: TextInputAction.done,
-                    onChanged: (value) {
-                      _validate(value);
-                    },
-                    onSubmitted: (value) {
-                      if (_validate(value)) {
-                        _save();
-                      }
-                    },
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: _selectedModeIndex == 0
-                          ? Localizer.translate(context, 'lblUnitActiveMinutes')
-                          : Localizer.translate(context, 'lblUnitSteps'),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 16.0,
+                        ),
+                        child: TextField(
+                          controller: _dateInputController,
+                          focusNode: _dateFocusNode,
+                          readOnly: true,
+                          onTap: () {
+                            _pickDate(context);
+                          },
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText:
+                                Localizer.translate(context, 'lblHistoryDate'),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 16.0,
+                        ),
+                        child: TextField(
+                          keyboardType: TextInputType.numberWithOptions(),
+                          controller: _valueInputController,
+                          focusNode: _valueFocusNode,
+                          textInputAction: TextInputAction.done,
+                          onChanged: (value) {
+                            _validate(value);
+                          },
+                          onSubmitted: (value) {
+                            if (_validate(value)) {
+                              _save();
+                            }
+                          },
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: _selectedModeIndex == 0
+                                ? Localizer.translate(
+                                    context, 'lblUnitActiveMinutes')
+                                : Localizer.translate(context, 'lblUnitSteps'),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
