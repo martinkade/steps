@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="appName">WANDR</string>
+
+    <string name="lblNotificationChannelResults">Challenge-Ergebnisse</string>
+    <string name="lblNotificationChannelResultsInfo">Werde benachrichtigt, sobald Challenge-Ergebnisse verfügbar sind</string>
+
+    <string name="lblNotificationWeeklyResults">Ergebnisse verfügbar</string>
+    <string name="lblNotificationWeeklyResultsInfo">Tippe um die Ergebnisse der wöchentlichen Challenge abzurufen</string>
+
+</resources>

@@ -17,7 +17,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.HashMap
 
-class SummaryTask(private val context: Context, private val options: FitnessOptions, private val result: MethodChannel.Result?) : AsyncTask<Void, Void, Map<String, Any?>>() {
+class FitSummaryTask(private val context: Context, private val options: FitnessOptions, private val result: MethodChannel.Result?) : AsyncTask<Void, Void, Map<String, Any?>>() {
     override fun doInBackground(vararg p0: Void?): Map<String, Any?> {
         val now = Calendar.getInstance(Locale.GERMANY)
         now.time = Date()

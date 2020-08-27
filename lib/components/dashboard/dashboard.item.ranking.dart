@@ -111,16 +111,28 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
         Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 displayOptions.length == 0
                     ? Container()
-                    : SegmentedControl(
-                        onChange: (model) {
-                          setState(() {
-                            _selectedModeIndex = model.index;
-                          });
-                        },
-                        options: displayOptions,
+                    : Card(
+                        elevation: 8.0,
+                        shadowColor: Colors.grey.withAlpha(50),
+                        clipBehavior: Clip.antiAlias,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: SegmentedControl(
+                          elevation: 0.0,
+                          onChange: (model) {
+                            setState(() {
+                              _selectedModeIndex = model.index;
+                            });
+                          },
+                          options: displayOptions,
+                        ),
                       ),
                 Card(
                   elevation: 8.0,

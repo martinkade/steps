@@ -1,9 +1,11 @@
 package com.mediabeam.fitness
 
-import android.app.Activity
+import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
+import android.os.Bundle
 import androidx.annotation.NonNull
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -13,6 +15,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import java.util.*
 
 // https://developers.google.com/fit/datatypes/activity
 class MainActivity : FlutterActivity() {
@@ -21,6 +24,7 @@ class MainActivity : FlutterActivity() {
         const val CHANNEL = "com.mediabeam/fitness"
         const val REQUEST_CODE_DATA_AUTH = 1
         const val REQUEST_CODE_AUTH = 2
+        const val REQUEST_CODE_ALARM = 3
     }
 
     private var pendingCall: MethodCall? = null
@@ -68,6 +72,15 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        createNotificationChannel()
+
+        // scheduleTestNotification()
+        scheduleWeeklyResultNotification()
+    }
+
     private fun handleDataCall(pendingCall: MethodCall?, pendingResult: MethodChannel.Result?) {
         val call = pendingCall
         this.pendingCall = null
@@ -75,7 +88,7 @@ class MainActivity : FlutterActivity() {
         val result = pendingResult
         this.pendingResult = null
 
-        val task = SummaryTask(this, fitnessOptions, result)
+        val task = FitSummaryTask(this, fitnessOptions, result)
         task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR)
     }
 
@@ -131,6 +144,49 @@ class MainActivity : FlutterActivity() {
             s
         } else {
             Character.toUpperCase(first).toString() + s.substring(1)
+        }
+    }
+
+    private fun scheduleTestNotification() {
+        val currentDate: Calendar = Calendar.getInstance()
+        currentDate.add(Calendar.SECOND, 10)
+
+        val intent = Intent(this, JobCommandReceiver::class.java)
+        intent.putExtra("notification_type", 1)
+        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_ALARM, intent, 0)
+        val am: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            am.setExact(AlarmManager.RTC_WAKEUP, currentDate.timeInMillis, pendingIntent)
+        }
+    }
+
+    private fun scheduleWeeklyResultNotification() {
+        val currentDate: Calendar = Calendar.getInstance()
+        while (currentDate.get(Calendar.DAY_OF_WEEK) !== Calendar.MONDAY) {
+            currentDate.add(Calendar.DATE, 1)
+        }
+        currentDate.set(Calendar.HOUR_OF_DAY, 9)
+        currentDate.set(Calendar.MINUTE, 0)
+        currentDate.set(Calendar.SECOND, 0)
+        currentDate.set(Calendar.MILLISECOND, 0)
+
+        val intent = Intent(this, JobCommandReceiver::class.java)
+        intent.putExtra("notification_type", 1)
+        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_ALARM, intent, 0)
+        val am: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        am.setRepeating(AlarmManager.RTC_WAKEUP, currentDate.timeInMillis, AlarmManager.INTERVAL_DAY * 7, pendingIntent)
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.lblNotificationChannelResults)
+            val descriptionText = getString(R.string.lblNotificationChannelResultsInfo)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("com.mediabeam.fitness.notification.results", name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 }

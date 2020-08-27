@@ -20,7 +20,7 @@ class DashboardSettingsDialogContent extends StatelessWidget {
           children: [
             Text(
               Localizer.translate(context, 'lblDashboardSettingsTitle'),
-              textAlign: TextAlign.start,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
@@ -30,7 +30,7 @@ class DashboardSettingsDialogContent extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 12.0),
               child: Text(
                 Localizer.translate(context, 'lblDashboardSettingsText'),
-                textAlign: TextAlign.start,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20.0,
                 ),

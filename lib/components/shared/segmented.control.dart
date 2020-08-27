@@ -8,7 +8,10 @@ class SegmentedControl extends StatefulWidget {
   final Function onChange;
 
   ///
-  SegmentedControl({Key key, this.options, this.onChange}) : super(key: key);
+  final double elevation;
+
+  ///
+  SegmentedControl({Key key, this.options, this.onChange, this.elevation = 8.0}) : super(key: key);
 
   @override
   _SegmentedControlState createState() => _SegmentedControlState();
@@ -34,7 +37,7 @@ class _SegmentedControlState extends State<SegmentedControl> {
         .toList();
 
     return Card(
-      elevation: 8.0,
+      elevation: widget.elevation,
       shadowColor: Colors.grey.withAlpha(50),
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
