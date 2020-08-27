@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:steps/components/dashboard/dashboard.item.dart';
+import 'package:steps/components/shared/localizer.dart';
+import 'package:steps/components/shared/segmented.control.dart';
 import 'package:steps/model/fit.ranking.dart';
 
 class DashboardRankingItem extends DashboardItem {
@@ -22,10 +24,51 @@ class DashboardRankingItem extends DashboardItem {
 }
 
 class _DashboardRankingItemState extends State<DashboardRankingItem> {
+  ///
+  Map<String, List<FitRankingEntry>> _boards;
+
+  ///
+  int _selectedModeIndex;
 
   @override
   void initState() {
     super.initState();
+
+    _selectedModeIndex = 0;
+    _boards = widget.ranking?.entries ?? Map();
+  }
+
+  @override
+  void didUpdateWidget(DashboardRankingItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _boards = widget.ranking?.entries ?? Map();
+  }
+
+  List<OptionModel> _displayOptions(BuildContext context) {
+    int index = 0;
+    String title;
+    final List<OptionModel> options = List();
+    _boards.forEach((optionKey, value) {
+      if (optionKey == 'today') {
+        title = Localizer.translate(context, 'lblToday');
+      } else if (optionKey == 'yesterday') {
+        title = Localizer.translate(context, 'lblYesterday');
+      } else if (optionKey == 'week') {
+        title = Localizer.translate(context, 'lblWeek');
+      } else {
+        title = Localizer.translate(context, 'lblLastWeek');
+      }
+      options.add(
+        OptionModel(
+          index: index,
+          isSelected: _selectedModeIndex == index,
+          title: title,
+        ),
+      );
+      index++;
+    });
+    return options;
   }
 
   @override
@@ -34,7 +77,16 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
       child: Center(
         child: CircularProgressIndicator(),
       ),
-      height: 96.0,
+      height: 192.0,
+    );
+
+    final Widget placeholderWidget = Container(
+      child: Center(
+        child: Text(
+          Localizer.translate(context, 'lblNotAvailable'),
+        ),
+      ),
+      height: 196.0,
     );
 
     final Widget titleWidget = Padding(
@@ -49,115 +101,166 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
       ),
     );
 
+    final List<OptionModel> displayOptions = _displayOptions(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
         titleWidget,
         Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-          child: Card(
-            elevation: 8.0,
-            shadowColor: Colors.grey.withAlpha(50),
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: widget.ranking == null
-                ? loadingWidget
-                : ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: widget.ranking?.entries?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final item = widget.ranking?.entries[index];
-                      Color color;
-                      switch (index) {
-                        case 0:
-                          color = Color.fromARGB(255, 255, 215, 0);
-                          break;
-                        case 1:
-                          color = Color.fromARGB(255, 192, 192, 192);
-                          break;
-                        case 2:
-                          color = Color.fromARGB(255, 205, 127, 50);
-                          break;
-                        default:
-                          color = Color.fromARGB(255, 235, 235, 235);
-                          break;
-                      }
-                      return Container(
-                        color: item.name == widget.teamName
-                            ? Colors.blue.withAlpha(50)
-                            : Colors.transparent,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  16.0, 8.0, 8.0, 8.0),
-                              child: Container(
-                                child: Center(
-                                  child: Text(
-                                    '${index + 1}',
-                                    style: TextStyle(
-                                      fontWeight: item.name == widget.teamName
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      fontSize: 16.0,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                width: 32.0,
-                                height: 32.0,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(16.0),
-                                  ),
-                                  color: color,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    8.0, 8.0, 8.0, 8.0),
-                                child: Text(
-                                  item.name,
-                                  style: TextStyle(
-                                    fontWeight: item.name == widget.teamName
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                    fontSize: 16.0,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  8.0, 8.0, 16.0, 8.0),
-                              child: Text(
-                                item.value,
-                                style: TextStyle(
-                                  fontWeight: item.name == widget.teamName
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  fontSize: 16.0,
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+            child: Column(
+              children: [
+                displayOptions.length == 0
+                    ? Container()
+                    : SegmentedControl(
+                        onChange: (model) {
+                          setState(() {
+                            _selectedModeIndex = model.index;
+                          });
+                        },
+                        options: displayOptions,
+                      ),
+                Card(
+                  elevation: 8.0,
+                  shadowColor: Colors.grey.withAlpha(50),
+                  clipBehavior: Clip.antiAlias,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-          ),
-        )
+                  child: widget.ranking == null
+                      ? loadingWidget
+                      : displayOptions.length == 0
+                          ? placeholderWidget
+                          : DashboardRankingList(
+                              list: _boards[
+                                  _boards.keys.toList()[_selectedModeIndex]],
+                              teamName: widget.teamName,
+                            ),
+                ),
+              ],
+            ))
       ],
     );
+  }
+}
+
+class DashboardRankingList extends StatelessWidget {
+  ///
+  final List<FitRankingEntry> list;
+
+  ///
+  final String teamName;
+
+  ///
+  DashboardRankingList({Key key, this.list, this.teamName}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget placeholderWidget = Container(
+      child: Center(
+        child: Text(
+          Localizer.translate(context, 'lblNotAvailable'),
+        ),
+      ),
+      height: 164.0,
+    );
+
+    return list.length == 0
+        ? placeholderWidget
+        : Container(
+            constraints: BoxConstraints(
+              minHeight: 164.0,
+            ),
+            child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                final FitRankingEntry item = list[index];
+                Color color;
+                switch (index) {
+                  case 0:
+                    color = Color.fromARGB(255, 255, 215, 0);
+                    break;
+                  case 1:
+                    color = Color.fromARGB(255, 192, 192, 192);
+                    break;
+                  case 2:
+                    color = Color.fromARGB(255, 205, 127, 50);
+                    break;
+                  default:
+                    color = Color.fromARGB(255, 235, 235, 235);
+                    break;
+                }
+                return Container(
+                  color: item.name == teamName
+                      ? Colors.blue.withAlpha(50)
+                      : Colors.transparent,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 8.0),
+                        child: Container(
+                          child: Center(
+                            child: Text(
+                              '${index + 1}',
+                              style: TextStyle(
+                                fontWeight: item.name == teamName
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                fontSize: 16.0,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          width: 32.0,
+                          height: 32.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(16.0),
+                            ),
+                            color: color,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+                          child: Text(
+                            item.name,
+                            style: TextStyle(
+                              fontWeight: item.name == teamName
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              fontSize: 16.0,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 8.0, 16.0, 8.0),
+                        child: Text(
+                          item.value,
+                          style: TextStyle(
+                            fontWeight: item.name == teamName
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            fontSize: 16.0,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
   }
 }

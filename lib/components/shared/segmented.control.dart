@@ -40,11 +40,14 @@ class _SegmentedControlState extends State<SegmentedControl> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: options,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: options,
+        ),
       ),
     );
   }
@@ -64,27 +67,24 @@ class SegmentedControlOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        child: Container(
-          color: model.isSelected
-              ? Color.fromARGB(255, 255, 215, 0)
-              : Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              model.title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight:
-                    model.isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
+    return GestureDetector(
+      child: Container(
+        color:
+            model.isSelected ? Color.fromARGB(255, 255, 215, 0) : Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          child: Text(
+            model.title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight:
+                  model.isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
         ),
-        onTap: onTap,
       ),
+      onTap: onTap,
     );
   }
 }

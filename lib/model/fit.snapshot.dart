@@ -1,5 +1,6 @@
 import 'package:steps/model/cache/fit.record.dao.dart';
 import 'package:steps/model/calendar.dart';
+import 'package:steps/model/fit.plugin.dart';
 import 'package:steps/model/fit.record.dart';
 import 'dart:io' show Platform;
 
@@ -134,7 +135,7 @@ class FitSnapshot {
   }
 
   ///
-  Map<String, num> persist() {
+  Future<Map<String, dynamic>> persist() async {
     return Map.fromEntries(
       [
         MapEntry('today', today()),
@@ -143,6 +144,8 @@ class FitSnapshot {
         MapEntry('lastWeek', lastWeek()),
         MapEntry('total', total()),
         MapEntry('timestamp', DateTime.now().millisecondsSinceEpoch),
+        MapEntry('device', await FitPlugin.getDeviceInfo()),
+        MapEntry('client', await FitPlugin.getAppInfo()),
       ],
     );
   }

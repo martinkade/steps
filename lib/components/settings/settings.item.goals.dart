@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/settings/dashboard.item.settings.dialog.dart';
+import 'package:steps/components/settings/settings.item.goals.dialog.dart';
 import 'package:steps/components/settings/settings.item.dart';
 
 import 'package:steps/components/shared/localizer.dart';
@@ -84,11 +84,11 @@ class _SettingsGoalItemState extends State<SettingsGoalItem> {
 
     final Widget contentWidget = Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          GestureDetector(
-            child: Row(
+      child: GestureDetector(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
@@ -107,7 +107,7 @@ class _SettingsGoalItemState extends State<SettingsGoalItem> {
                         Localizer.translate(
                             context, 'lblSettingsGoalDailyInfo'),
                         style: TextStyle(fontSize: 16.0),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -123,11 +123,19 @@ class _SettingsGoalItemState extends State<SettingsGoalItem> {
                 ),
               ],
             ),
-            onTap: () {
-              _pickActivityLevel(context);
-            },
-          )
-        ],
+            Text(
+              Localizer.translate(context, 'lblActionAdjust'),
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.end,
+            ),
+          ],
+        ),
+        onTap: () {
+          _pickActivityLevel(context);
+        },
       ),
     );
 

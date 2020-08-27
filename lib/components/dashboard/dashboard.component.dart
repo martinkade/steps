@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:steps/components/challenge/challenge.component.dart';
 import 'package:steps/components/dashboard/dashboard.item.challenge.dart';
+import 'package:steps/components/dashboard/dashboard.item.footer.dart';
 import 'package:steps/components/dashboard/dashboard.item.info.dart';
 import 'package:steps/components/dashboard/dashboard.item.info.dialog.dart';
 import 'package:steps/components/dashboard/dashboard.item.ranking.dart';
@@ -202,7 +203,8 @@ class _DashboardState extends State<Dashboard>
   @override
   Widget build(BuildContext context) {
     final Widget listWidget = ListView.builder(
-      itemCount: 5,
+      physics: BouncingScrollPhysics(),
+      itemCount: 6,
       itemBuilder: (context, index) {
         switch (index) {
           case 0:
@@ -245,7 +247,9 @@ class _DashboardState extends State<Dashboard>
               teamName: _teamName,
             );
           default:
-            return Container();
+            return DashboardFooterItem(
+              title: Localizer.translate(context, 'appName'),
+            );
         }
       },
     );

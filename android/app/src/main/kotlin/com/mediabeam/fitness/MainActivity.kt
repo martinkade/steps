@@ -3,6 +3,7 @@ package com.mediabeam.fitness
 import android.app.Activity
 import android.content.Intent
 import android.os.AsyncTask
+import android.os.Build
 import androidx.annotation.NonNull
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -57,6 +58,10 @@ class MainActivity : FlutterActivity() {
                 } else {
                     result.success(true)
                 }
+            } else if (call.method == "getDeviceInfo") {
+                result.success(getDeviceInfo() ?: "unknown")
+            } else if (call.method == "getAppInfo") {
+                result.success(getAppInfo() ?: "unknown")
             } else {
                 result.notImplemented()
             }
@@ -98,6 +103,34 @@ class MainActivity : FlutterActivity() {
             } else if (requestCode == REQUEST_CODE_AUTH) {
                 handleAuthCall(pendingCall, pendingResult, false)
             }
+        }
+    }
+
+    private fun getAppInfo(): String? {
+        val versionName: String = BuildConfig.VERSION_NAME
+        val versionCode: Int = BuildConfig.VERSION_CODE
+        return "$versionName ($versionCode)"
+    }
+
+    private fun getDeviceInfo(): String? {
+        val manufacturer: String = Build.MANUFACTURER
+        val model: String = Build.MODEL
+        return if (model.startsWith(manufacturer)) {
+            "${capitalize(model)} Android ${Build.VERSION.RELEASE}"
+        } else {
+            "${capitalize(manufacturer)} $model, Android ${Build.VERSION.RELEASE}"
+        }
+    }
+
+    private fun capitalize(s: String?): String {
+        if (s == null || s.isEmpty()) {
+            return ""
+        }
+        val first = s[0]
+        return if (Character.isUpperCase(first)) {
+            s
+        } else {
+            Character.toUpperCase(first).toString() + s.substring(1)
         }
     }
 }

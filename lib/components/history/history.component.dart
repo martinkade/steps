@@ -55,22 +55,32 @@ class _HistoryState extends State<History> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultPage(
-      child: ListView.builder(
-        itemCount: _records.length,
-        itemBuilder: (context, index) {
-          final FitRecord record = _records[index];
-          return GestureDetector(
-            child: HistoryRecordItem(
-              record: record,
-              isLastItem: index + 1 == _records.length,
-            ),
-            onTap: () {
-              _editRecord(record);
-            },
-          );
-        },
+    final Widget placeholderWidget = Container(
+      child: Center(
+        child: Text(
+          Localizer.translate(context, 'lblNotAvailable'),
+        ),
       ),
+    );
+
+    return DefaultPage(
+      child: _records.length == 0
+          ? placeholderWidget
+          : ListView.builder(
+              itemCount: _records.length,
+              itemBuilder: (context, index) {
+                final FitRecord record = _records[index];
+                return GestureDetector(
+                  child: HistoryRecordItem(
+                    record: record,
+                    isLastItem: index + 1 == _records.length,
+                  ),
+                  onTap: () {
+                    _editRecord(record);
+                  },
+                );
+              },
+            ),
       title: Localizer.translate(context, 'lblHistory'),
     );
   }

@@ -56,6 +56,16 @@ class FitnessHandler: NSObject {
                         result(authorized)
                     }
                 }
+            } else if call.method == "getDeviceInfo" {
+                let device = UIDevice.current.model
+                let os = UIDevice.current.systemVersion
+                result(String(format: "%@, iOS/iPadOS %@", device, os))
+            } else if call.method == "getAppInfo" {
+                guard let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String, let buildNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String else {
+                    result("unknown")
+                    return
+                }
+                result(String(format: "%@ (%@)", versionNumber, buildNumber))
             } else {
                 result(FlutterMethodNotImplemented)
             }

@@ -120,6 +120,7 @@ class DashboardAction extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
                 title,
+                textAlign: TextAlign.center,
               ),
             ),
           ],

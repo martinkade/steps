@@ -15,8 +15,6 @@ abstract class FitnessRepositoryClient {
       {SyncState state, DateTime day, FitSnapshot snapshot});
 }
 
-/// https://flutter.dev/docs/development/platform-integration/platform-channels
-/// https://developers.google.com/fit/android/get-api-key
 class FitnessRepository extends Repository {
   ///
   static const platform = const MethodChannel('com.mediabeam/fitness');
@@ -111,14 +109,14 @@ class FitnessRepository extends Repository {
   ///
   Future<void> applySnapshot(FitSnapshot snapshot,
       {String userKey, String teamName}) async {
-    Storage().access().then((instance) {
+    Storage().access().then((instance) async {
       final FirebaseDatabase db = FirebaseDatabase(app: instance);
       db.setPersistenceEnabled(true);
       db.setPersistenceCacheSizeBytes(1024 * 1024);
 
       final Map<String, dynamic> snapshotData = Map();
       snapshotData.putIfAbsent('team', () => teamName);
-      snapshotData.addAll(snapshot.persist());
+      snapshotData.addAll(await snapshot.persist());
 
       db.reference().child('users').child(userKey).set(snapshotData);
     });
