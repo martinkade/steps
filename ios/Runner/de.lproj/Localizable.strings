@@ -1,0 +1,10 @@
+/* 
+  File.strings
+  Runner
+
+  Created by mediaBEAM on 27.08.20.
+  
+*/
+
+"lblNotificationWeeklyResults" = "Ergebnisse verfügbar";
+"lblNotificationWeeklyResultsInfo" = "Tippe um die Ergebnisse der wöchentlichen Challenge abzurufen";
