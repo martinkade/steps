@@ -24,10 +24,8 @@
     "lblDashboardActionNewRecord": "New record",
     "lblDashboardActionSettings": "Settings",
 
-    "lblWeekChallengeTitle": "Personal weekly goal",
-    "lblWeekChallengeDescription": "Challenge accepted! Try to collect %1 points for your team every week.🤘",
     "lblTeamChallengeTitle": "Our team challenge",
-    "lblTeamChallengeDescription": "Will we be able to cover the distance from A to B together? 10 points result in one kilometer. Start is Monday, August 24th, 2020.",
+    "lblTeamChallengeDescription": "WANDR is a team challenge in which everyone completes a virtual trail together with active minutes or steps. The first goal is Kreuztal (165 km), here Markus treats us to an ice cream. We continue to Nice (1044 km), visit Thomas ;-)\nOnly you can see your daily active minutes or steps, but everyone can see how much of the distance the team has already made. Cheering welcome. Here we go!",
     
     "lblHistory": "My history",
     "lblHistoryAdd": "New record",
@@ -63,6 +61,7 @@
     "lblActionRetry": "Retry",
     "lblActionAdjust": "Adjust",
     "lblNotAvailable": "not available 🤕",
+    "lblNoRecordsAfter": "no records found",
     "lblEmail": "E-Mail address",
     "lblUnitKilometer": "Kilometer",
     "lblUnitActiveMinutes": "active minutes",

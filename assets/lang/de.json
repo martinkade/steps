@@ -25,10 +25,8 @@
     "lblDashboardActionNewRecord": "Neuer Eintrag",
     "lblDashboardActionSettings": "Einstellungen",
 
-    "lblWeekChallengeTitle": "Persönliches Wochenziel",
-    "lblWeekChallengeDescription": "Herausforderung angenommen! Versuche jede Woche %1 Punkte für dein Team zu sammeln.🤘",
     "lblTeamChallengeTitle": "Unsere Team-Challenge",
-    "lblTeamChallengeDescription": "Schaffen wir es gemeinsam die Distanz von A nach B zurück zu legen? 10 Punkte ergeben dabei einen Kilometer. Start ist Montag, der 24. August 2020.",
+    "lblTeamChallengeDescription": "WANDR ist eine Team-Challenge, bei der alle zusammen durch aktive Minuten oder Schritte einen virtuellen Trail absolvieren. Erstes Ziel ist Kreuztal (165 km), hier spendiert uns Markus ein Eis. Weiter gehts nach Nizza (1044 km), Thomas besuchen ;-)\nNur du siehst deine täglichen aktiven Minuten bzw. Schritte, aber jeder kann sehen wie viel der Strecke das Team schon geschafft hat. Anfeuern erwünscht. Los gehts!",
     
     "lblHistory": "Mein Verlauf",
     "lblHistoryAdd": "Neuer Eintrag",
@@ -64,6 +62,7 @@
     "lblActionRetry": "Erneut versuchen",
     "lblActionAdjust": "Anpassen",
     "lblNotAvailable": "nicht verfügbar 🤕",
+    "lblNoRecords": "keine Einträge gefunden",
     "lblEmail": "E-Mail Adresse",
     "lblUnitKilometer": "Kilometer",
     "lblUnitActiveMinutes": "aktive Minuten",

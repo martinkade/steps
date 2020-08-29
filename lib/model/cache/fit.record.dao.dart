@@ -82,7 +82,8 @@ class FitRecordDao extends FitDao {
   }
 
   ///
-  Future<List<FitRecord>> fetch({DateTime from, bool onlyManualRecords}) async {
+  Future<List<FitRecord>> fetch(
+      {@required DateTime from, bool onlyManualRecords}) async {
     final Database db = await StructuredCache().getDb();
     final String statement = onlyManualRecords
         ? 'SELECT * FROM ${FitRecordDao.TBL_NAME} ' +
@@ -103,10 +104,11 @@ class FitRecordDao extends FitDao {
   }
 
   ///
-  Future<List<FitRecord>> fetchAll() async {
+  Future<List<FitRecord>> fetchAll({DateTime from}) async {
     final Database db = await StructuredCache().getDb();
     final List<Map<String, dynamic>> result = await db.rawQuery(
         'SELECT * FROM ${FitRecordDao.TBL_NAME} ' +
+            'WHERE ${FitRecordDao.COL_TIMESTAMP} >= ${from?.millisecondsSinceEpoch ?? 0} ' +
             'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC');
     FitRecord record;
     final List<FitRecord> records = List();

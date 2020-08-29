@@ -3,7 +3,9 @@ import 'package:steps/components/history/history.component.add.dart';
 import 'package:steps/components/history/history.item.record.dart';
 import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/components/shared/page.default.dart';
+import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.record.dart';
+import 'package:intl/intl.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 
 class History extends StatefulWidget {
@@ -57,8 +59,11 @@ class _HistoryState extends State<History> {
   Widget build(BuildContext context) {
     final Widget placeholderWidget = Container(
       child: Center(
-        child: Text(
-          Localizer.translate(context, 'lblNotAvailable'),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            Localizer.translate(context, 'lblNoRecordsAfter'),
+          ),
         ),
       ),
     );

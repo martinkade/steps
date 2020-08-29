@@ -12,7 +12,7 @@ class FitChallengeTeam extends FitChallenge {
           description:
               Localizer.translate(context, 'lblTeamChallengeDescription'),
           label: Localizer.translate(context, 'lblUnitKilometer'),
-          imageAsset: 'assets/images/challenge2.jpg',
+          imageAsset: 'assets/images/challenge1.jpg',
         );
 
   @override
@@ -23,11 +23,11 @@ class FitChallengeTeam extends FitChallenge {
 
   @override
   void initTargets() {
-    target = 1000.0; // km
+    target = 1044.0; // km
   }
 
   @override
   void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = ranking.absolute.toDouble() / 10.0;
+    progress = ranking.absolute.toDouble() / 12.0;
   }
 }

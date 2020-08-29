@@ -44,8 +44,6 @@ class FitnessRepository extends Repository {
 
   ///
   Future<List<FitRecord>> fetchHistory() async {
-    // final bool isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
-    // final DateTime anchor = DateTime(2020, 8, 24);
     final FitRecordDao dao = FitRecordDao();
     return await dao.fetchAll();
   }
@@ -71,7 +69,7 @@ class FitnessRepository extends Repository {
       String teamName,
       FitnessRepositoryClient client,
       bool pushData = false}) async {
-    final FitSnapshot snapshot = FitSnapshot();
+    FitSnapshot snapshot = FitSnapshot();
     final bool isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
 
     final DateTime anchor = DateTime(2020, 8, 24);
@@ -79,7 +77,7 @@ class FitnessRepository extends Repository {
     final List<FitRecord> localData =
         await dao.fetch(from: anchor, onlyManualRecords: !isAutoSyncEnabled);
     await dao.delete(records: localData, exclude: true);
-    snapshot.fillWithLocalData(localData);
+    snapshot.fillWithLocalData(localData, anchor: anchor);
     client.fitnessRepositoryDidUpdate(this,
         state: SyncState.FETCHING_DATA, day: anchor, snapshot: snapshot);
 
@@ -96,14 +94,17 @@ class FitnessRepository extends Repository {
     localData.clear();
     localData.addAll(
         await dao.fetch(from: anchor, onlyManualRecords: !isAutoSyncEnabled));
-    snapshot.fillWithLocalData(localData);
-
-    if (pushData) {
-      applySnapshot(snapshot, userKey: userKey, teamName: teamName);
-    }
+    snapshot.fillWithLocalData(localData, anchor: anchor);
 
     client.fitnessRepositoryDidUpdate(this,
         state: SyncState.DATA_READY, day: anchor, snapshot: snapshot);
+
+    // restrict server data to start on august, 30
+    snapshot = FitSnapshot();
+    snapshot.fillWithLocalData(localData, anchor: DateTime(2020, 8, 30));
+    if (pushData) {
+      applySnapshot(snapshot, userKey: userKey, teamName: teamName);
+    }
   }
 
   ///

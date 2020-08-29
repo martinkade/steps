@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:steps/model/cache/fit.record.dao.dart';
 import 'package:steps/model/calendar.dart';
 import 'package:steps/model/fit.plugin.dart';
@@ -17,7 +18,7 @@ class FitSnapshot {
   }
 
   ///
-  void fillWithLocalData(List<FitRecord> records) {
+  void fillWithLocalData(List<FitRecord> records, {@required DateTime anchor}) {
     _reset();
 
     int today = 0;
@@ -28,7 +29,6 @@ class FitSnapshot {
 
     int points;
     DateTime date;
-    final DateTime anchor = DateTime(2020, 8, 24);
     final DateTime now = DateTime.now();
     final Calendar calendar = Calendar();
     records.forEach((record) {
@@ -83,8 +83,6 @@ class FitSnapshot {
     } else {
       data['total'] = data['total'] + total;
     }
-
-    print('$data');
   }
 
   ///
@@ -93,7 +91,7 @@ class FitSnapshot {
     final int source = Platform.isIOS
         ? FitRecord.SOURCE_APPLE_HEALTH
         : FitRecord.SOURCE_GOOGLE_FIT;
-    print('import external data: $data');
+    print('Import external data: $data');
     DateTime id;
     FitRecord record;
     final List<FitRecord> records = List();

@@ -77,6 +77,26 @@ class FitRanking {
         } else {
           summary.putIfAbsent(categoryKey, () => categoryValue);
         }
+      } else if (timestampKey != 0 && calendar.isLastWeek(timestamp, now)) {
+        // last week
+        categoryKey = 'lastWeek';
+        if (summary.containsKey(categoryKey)) {
+          categoryValue = summary[categoryKey];
+        } else {
+          categoryValue = Map();
+        }
+
+        if (categoryValue.containsKey(teamKey)) {
+          categoryValue.update(teamKey, (v) => v + value['week']);
+        } else {
+          categoryValue.putIfAbsent(teamKey, () => value['week']);
+        }
+
+        if (summary.containsKey(categoryKey)) {
+          summary.update(categoryKey, (v) => categoryValue);
+        } else {
+          summary.putIfAbsent(categoryKey, () => categoryValue);
+        }
       }
       // - sum user's today points if sync timestamp is today
       // - sum user's yesterday points if sync timestamp is today
@@ -113,6 +133,26 @@ class FitRanking {
           categoryValue.update(teamKey, (v) => v + value[categoryKey]);
         } else {
           categoryValue.putIfAbsent(teamKey, () => value[categoryKey]);
+        }
+
+        if (summary.containsKey(categoryKey)) {
+          summary.update(categoryKey, (v) => categoryValue);
+        } else {
+          summary.putIfAbsent(categoryKey, () => categoryValue);
+        }
+      } else if (timestampKey > 0 && calendar.isYesterday(timestamp, now)) {
+        // yesterday
+        categoryKey = 'yesterday';
+        if (summary.containsKey(categoryKey)) {
+          categoryValue = summary[categoryKey];
+        } else {
+          categoryValue = Map();
+        }
+
+        if (categoryValue.containsKey(teamKey)) {
+          categoryValue.update(teamKey, (v) => v + value['today']);
+        } else {
+          categoryValue.putIfAbsent(teamKey, () => value['today']);
         }
 
         if (summary.containsKey(categoryKey)) {

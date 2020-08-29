@@ -42,7 +42,10 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
   void didUpdateWidget(DashboardRankingItem oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _boards = widget.ranking?.entries ?? Map();
+    setState(() {
+      _boards = widget.ranking?.entries ?? Map();
+      print('Update team ranking: $_boards');
+    });
   }
 
   List<OptionModel> _displayOptions(BuildContext context) {

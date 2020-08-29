@@ -26,7 +26,7 @@ abstract class FitChallenge {
   void load({FitSnapshot snapshot, FitRanking ranking}) {
     if ((requiresRankingData && ranking == null) ||
         (requiresSnapshotData && snapshot == null)) return;
-    print('load challenge data from snapshot=$snapshot and ranking=$ranking');
+    // print('load challenge data from snapshot=$snapshot and ranking=$ranking');
     evaluate(snapshot: snapshot, ranking: ranking);
   }
 

@@ -5,7 +5,6 @@ import 'package:steps/components/dashboard/dashboard.item.challenge.detail.dart'
 import 'package:steps/components/dashboard/dashboard.item.dart';
 import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.challenge.team.dart';
-import 'package:steps/model/fit.challenge.week.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/fit.snapshot.dart';
 
@@ -67,7 +66,6 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
 
     _challenges = [
       FitChallengeTeam(context),
-      // FitChallengeWeek(context),
     ];
   }
 
@@ -75,6 +73,7 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
   void didUpdateWidget(DashboardChallengeItem oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    print('Update team challenges: $_challenges');
     _challenges.forEach((challenge) {
       challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
     });
@@ -88,9 +87,9 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
 
   @override
   Widget build(BuildContext context) {
-    final double cardWidth =
-        min(MediaQuery.of(context).size.width - 24.0, 360.0);
-    final double cardHeight = max(cardWidth * 0.67, 241.0);
+    final double cardWidth = min(MediaQuery.of(context).size.width - 24.0,
+        (_challenges?.length ?? 0) > 1 ? 360.0 : 412.0);
+    final double cardHeight = cardWidth * 0.67; // max(cardWidth * 0.67, 241.0);
 
     final Widget loadingWidget = Container(
       child: Center(

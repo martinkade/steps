@@ -69,7 +69,7 @@ class _DashboardState extends State<Dashboard>
       if (userValue != null) {
         setState(() {
           _userName = userValue.split('@').first?.replaceAll('.', '_');
-          print('init data for kUser=$_userName');
+          print('Init data for kUser=$_userName');
           _userName = _md5(_userName);
           _teamName = 'Team mediaBEAM';
         });
