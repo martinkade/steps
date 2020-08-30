@@ -12,10 +12,16 @@ class App extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Calibri',
+          brightness: Brightness.light,
           primarySwatch: Colors.blue,
-          // This makes the visual density adapt to the platform that you run
-          // the app on. For desktop platforms, the controls will be smaller and
-          // closer together (more dense) than on mobile platforms.
+          accentColor: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        darkTheme: ThemeData(
+          fontFamily: 'Calibri',
+          brightness: Brightness.dark,
+          primarySwatch: Colors.yellow,
+          accentColor: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: Dashboard(

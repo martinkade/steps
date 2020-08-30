@@ -135,7 +135,7 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
                 ? Icon(
                     Icons.check_circle_outline,
                     size: 24.0,
-                    color: Colors.blue,
+                    color: Theme.of(context).colorScheme.primary,
                   )
                 : Container(),
           ],
@@ -148,7 +148,8 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: LinearProgressIndicator(
-            backgroundColor: Colors.blue.withAlpha(50),
+            backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(50),
+            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
             value:
                 widget.end > 0 ? _displayValue / widget.target.toDouble() : 0.0,
           ),

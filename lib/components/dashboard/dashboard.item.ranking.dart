@@ -194,24 +194,9 @@ class DashboardRankingList extends StatelessWidget {
               itemCount: list.length,
               itemBuilder: (context, index) {
                 final FitRankingEntry item = list[index];
-                Color color;
-                switch (index) {
-                  case 0:
-                    color = Color.fromARGB(255, 255, 215, 0);
-                    break;
-                  case 1:
-                    color = Color.fromARGB(255, 192, 192, 192);
-                    break;
-                  case 2:
-                    color = Color.fromARGB(255, 205, 127, 50);
-                    break;
-                  default:
-                    color = Color.fromARGB(255, 235, 235, 235);
-                    break;
-                }
                 return Container(
                   color: item.name == teamName
-                      ? Colors.blue.withAlpha(50)
+                      ? Theme.of(context).colorScheme.primary.withAlpha(50)
                       : Colors.transparent,
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
@@ -238,7 +223,9 @@ class DashboardRankingList extends StatelessWidget {
                             borderRadius: BorderRadius.all(
                               Radius.circular(16.0),
                             ),
-                            color: color,
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
                         ),
                       ),

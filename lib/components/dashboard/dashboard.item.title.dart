@@ -29,7 +29,10 @@ class _DashboardTitleItemState extends State<DashboardTitleItem> {
       padding: const EdgeInsets.fromLTRB(24.0, 44.0, 24.0, 36.0),
       child: Center(
         child: SizedBox(
-          child: Image.asset('assets/images/logo.png'),
+          child: Image.asset(
+            'assets/images/logo.png',
+            color: Theme.of(context).textTheme.bodyText1.color,
+          ),
           width: 192.0,
           height: 36.0,
         ),

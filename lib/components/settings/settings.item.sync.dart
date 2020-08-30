@@ -119,6 +119,7 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
               ),
               Switch(
                 value: _autoSyncEnabled,
+                activeColor: Theme.of(context).colorScheme.primary,
                 onChanged: (active) {
                   _toggleAutoSync(active);
                 },

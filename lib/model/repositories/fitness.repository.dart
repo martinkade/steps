@@ -99,9 +99,9 @@ class FitnessRepository extends Repository {
     client.fitnessRepositoryDidUpdate(this,
         state: SyncState.DATA_READY, day: anchor, snapshot: snapshot);
 
-    // restrict server data to start on august, 30
+    // restrict server data to start on august, 31
     snapshot = FitSnapshot();
-    snapshot.fillWithLocalData(localData, anchor: DateTime(2020, 8, 30));
+    snapshot.fillWithLocalData(localData, anchor: DateTime(2020, 8, 31));
     if (pushData) {
       applySnapshot(snapshot, userKey: userKey, teamName: teamName);
     }

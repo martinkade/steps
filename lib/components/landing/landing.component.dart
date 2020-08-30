@@ -186,10 +186,12 @@ class _LandingState extends State<Landing> implements LandingDelegate {
     );
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 215, 0),
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? Colors.yellow
+          : Colors.black,
       body: SafeArea(
         child: Container(
-          color: Colors.white,
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -197,7 +199,9 @@ class _LandingState extends State<Landing> implements LandingDelegate {
                 clipper: BezierClipper(leftHeight: 0.9, rightHeight: 0.67),
                 child: Container(
                   height: 312.0,
-                  color: Color.fromARGB(255, 255, 215, 0),
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.yellow
+                      : Colors.black,
                 ),
               ),
               SingleChildScrollView(

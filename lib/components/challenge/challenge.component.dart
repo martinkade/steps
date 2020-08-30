@@ -28,10 +28,12 @@ class _ChallengeState extends State<Challenge> {
     final double width = MediaQuery.of(context).size.width - 32.0;
     final double height = width * 0.67;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 215, 0),
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? Colors.yellow
+          : Colors.black,
       body: SafeArea(
         child: Container(
-          color: Colors.white,
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -39,7 +41,9 @@ class _ChallengeState extends State<Challenge> {
                 clipper: BezierClipper(leftHeight: 0.9, rightHeight: 0.67),
                 child: Container(
                   height: 256.0,
-                  color: Color.fromARGB(255, 255, 215, 0),
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.yellow
+                      : Colors.black,
                 ),
               ),
               SingleChildScrollView(
@@ -81,7 +85,7 @@ class _ChallengeState extends State<Challenge> {
                                       ),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Colors.white,
+                                        color: Theme.of(context).scaffoldBackgroundColor,
                                       ),
                                     ),
                                   ),

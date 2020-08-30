@@ -27,7 +27,7 @@ class DashboardInfoItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Container(
-          color: Colors.blue.withAlpha(50),
+          color: Theme.of(context).colorScheme.primary.withAlpha(50),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

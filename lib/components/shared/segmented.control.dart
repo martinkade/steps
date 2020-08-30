@@ -11,7 +11,8 @@ class SegmentedControl extends StatefulWidget {
   final double elevation;
 
   ///
-  SegmentedControl({Key key, this.options, this.onChange, this.elevation = 8.0}) : super(key: key);
+  SegmentedControl({Key key, this.options, this.onChange, this.elevation = 8.0})
+      : super(key: key);
 
   @override
   _SegmentedControlState createState() => _SegmentedControlState();
@@ -72,8 +73,9 @@ class SegmentedControlOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        color:
-            model.isSelected ? Color.fromARGB(255, 255, 215, 0) : Colors.white,
+        color: model.isSelected
+            ? Theme.of(context).colorScheme.primary.withAlpha(50)
+            : Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           child: Text(

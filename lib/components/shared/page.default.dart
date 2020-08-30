@@ -13,25 +13,24 @@ class DefaultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.black,
+          color: Theme.of(context).textTheme.bodyText1.color,
         ),
-        backgroundColor: Color.fromARGB(255, 255, 215, 0),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 24.0,
-            color: Colors.black,
+            color: Theme.of(context).textTheme.bodyText1.color,
           ),
         ),
       ),
       body: SafeArea(
         child: Container(
-          color: Colors.white,
           child: child,
+          color: Theme.of(context).scaffoldBackgroundColor,
         ),
       ),
     );

@@ -27,7 +27,7 @@ class _LandingWelcomeItemState extends State<LandingWelcomeItem> {
             padding: const EdgeInsets.only(top: 8.0),
             child: Center(
               child: SizedBox(
-                child: Image.asset('assets/images/landing.png'),
+                child: Image.asset('assets/images/landing.png', color: Theme.of(context).textTheme.bodyText1.color),
                 width: 192.0,
                 height: 128.0,
               ),

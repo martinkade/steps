@@ -30,6 +30,9 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final Color overlayColor = Theme.of(context).brightness == Brightness.light
+        ? Colors.white
+        : Colors.black;
     return Stack(
       children: [
         Container(
@@ -43,7 +46,7 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.white.withAlpha(10), Colors.white.withAlpha(205)],
+              colors: [overlayColor.withAlpha(10), overlayColor.withAlpha(205)],
               stops: [0.1, 0.9],
               begin: Alignment.topRight,
               end: Alignment.bottomCenter,

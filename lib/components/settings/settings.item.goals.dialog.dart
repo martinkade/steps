@@ -52,13 +52,13 @@ class DashboardSettingsDialogContent extends StatelessWidget {
                               : FontWeight.normal,
                         ),
                       ),
-                      splashColor: Colors.blue.withAlpha(50),
+                      splashColor: Theme.of(context).colorScheme.primary.withAlpha(50),
                       color: selectedLevel == activityLevels[index]
-                          ? Colors.blue.withAlpha(50)
-                          : Colors.white,
+                          ? Theme.of(context).colorScheme.primary.withAlpha(50)
+                          : Colors.transparent,
                       shape: RoundedRectangleBorder(
                         side: BorderSide(
-                          color: Colors.grey,
+                          color: Theme.of(context).textTheme.bodyText1.color,
                           width: 1.0,
                           style: BorderStyle.solid,
                         ),

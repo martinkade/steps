@@ -196,7 +196,7 @@ class _DashboardState extends State<Dashboard>
 
   @override
   void dispose() {
-    _rankingSubscription.cancel();
+    _rankingSubscription?.cancel();
     super.dispose();
   }
 
@@ -255,7 +255,9 @@ class _DashboardState extends State<Dashboard>
     );
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 215, 0),
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? Colors.yellow
+          : Colors.black,
       body: SafeArea(
         child: _userName == null || _teamName == null
             ? Container(
@@ -264,7 +266,7 @@ class _DashboardState extends State<Dashboard>
                 ),
               )
             : Container(
-                color: Colors.white,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 child: Stack(
                   children: [
                     ClipPath(
@@ -272,7 +274,9 @@ class _DashboardState extends State<Dashboard>
                           BezierClipper(leftHeight: 0.9, rightHeight: 0.67),
                       child: Container(
                         height: 256.0,
-                        color: Color.fromARGB(255, 255, 215, 0),
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.yellow
+                            : Colors.black,
                       ),
                     ),
                     listWidget
