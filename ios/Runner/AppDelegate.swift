@@ -19,11 +19,13 @@ import Flutter
         let result = super.application(application, didFinishLaunchingWithOptions: launchOptions)
         
         if #available(iOS 10.0, *) {
+            /*
             authorizeNotifications { granted in
                 if granted {
                     self.scheduleWeeklyNotification()
                 }
             }
+             */
         }
         
         return result
@@ -78,7 +80,7 @@ extension AppDelegate {
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         
-        let uuidString = UUID().uuidString
+        let uuidString = "af68938f-eca7-4651-87b5-0d15eb3d8d88" // UUID().uuidString
         let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
         
         let notificationCenter = UNUserNotificationCenter.current()

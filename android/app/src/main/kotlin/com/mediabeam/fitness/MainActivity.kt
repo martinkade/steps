@@ -174,7 +174,7 @@ class MainActivity : FlutterActivity() {
         intent.putExtra("notification_type", 1)
         val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_ALARM, intent, 0)
         val am: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        am.setRepeating(AlarmManager.RTC_WAKEUP, currentDate.timeInMillis, AlarmManager.INTERVAL_DAY * 7, pendingIntent)
+        // am.setRepeating(AlarmManager.RTC_WAKEUP, currentDate.timeInMillis, AlarmManager.INTERVAL_DAY * 7, pendingIntent)
     }
 
     private fun createNotificationChannel() {

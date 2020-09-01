@@ -72,6 +72,7 @@ class FitnessRepository extends Repository {
     FitSnapshot snapshot = FitSnapshot();
     final bool isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
 
+    // restrict local data to start on august, 24
     final DateTime anchor = DateTime(2020, 8, 24);
     final FitRecordDao dao = FitRecordDao();
     final List<FitRecord> localData =

@@ -35,6 +35,8 @@ class FitRanking {
         print('!!! user $key is outdated, not synced within last 7 days');
       }
 
+      print('[INFO] sync user $key ($timestamp) with app version ${value['client']} on ${value['device']}');
+
       // - sum user's weekly points if sync timestamp is within current week
       // - sum user's last weeks points if sync timestamp is within current week
       if (timestampKey != 0 && calendar.isThisWeek(timestamp, now)) {
