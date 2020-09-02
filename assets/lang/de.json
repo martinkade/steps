@@ -36,6 +36,7 @@
     "lblHistoryDataApple": "Daten aus Apple Health",
     "lblHistoryDataGoogle": "Daten aus Google Fit",
     "lblHistoryDataManual": "Manueller Eintrag",
+    "lblHistorySummary": "Super! Du hast insgesamt schon %1 Punkte gesammelt. Das entspricht einer Strecke von umgerechnet %2 Kilometern. Weiter so. 💪",
 
     "lblSettings": "Einstellungen",
     "lblSettingsDataSource": "Datenquelle",
@@ -71,5 +72,7 @@
     "lblToday": "heute",
     "lblYesterday": "gestern",
     "lblWeek": "Woche",
-    "lblLastWeek": "letzte Woche"
+    "lblLastWeek": "letzte Woche",
+    "lblOverall": "insgesamt",
+    "lblActiveUsers": "aktive Nutzer"
 }

@@ -35,6 +35,7 @@
     "lblHistoryDataApple": "Apple Health data",
     "lblHistoryDataGoogle": "Google Fit data",
     "lblHistoryDataManual": "manual record",
+    "lblHistorySummary": "Excellent! You have already collected %1 points in total. This corresponds to a distance of the equivalent of %2 kilometers. Keep it up. 💪",
 
     "lblSettings": "Settings",
     "lblSettingsDataSource": "Data source",
@@ -70,5 +71,7 @@
     "lblToday": "today",
     "lblYesterday": "yesterday",
     "lblWeek": "week",
-    "lblLastWeek": "last week"
+    "lblLastWeek": "last week",
+    "lblOverall": "all in all",
+    "lblActiveUsers": "active users"
 }

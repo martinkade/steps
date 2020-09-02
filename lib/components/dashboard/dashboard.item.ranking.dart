@@ -44,7 +44,7 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
 
     setState(() {
       _boards = widget.ranking?.entries ?? Map();
-      print('Update team ranking: $_boards');
+      print('Update team ranking with ${_boards.length} boards: $_boards');
     });
   }
 
@@ -59,8 +59,10 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
         title = Localizer.translate(context, 'lblYesterday');
       } else if (optionKey == 'week') {
         title = Localizer.translate(context, 'lblWeek');
-      } else {
+      } else if (optionKey == 'lastWeek') {
         title = Localizer.translate(context, 'lblLastWeek');
+      } else {
+        title = Localizer.translate(context, 'lblOverall');
       }
       options.add(
         OptionModel(
@@ -127,14 +129,20 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: SegmentedControl(
-                          elevation: 0.0,
-                          onChange: (model) {
-                            setState(() {
-                              _selectedModeIndex = model.index;
-                            });
-                          },
-                          options: displayOptions,
+                        child: Container(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(50),
+                          child: SegmentedControl(
+                            elevation: 0.0,
+                            onChange: (model) {
+                              setState(() {
+                                _selectedModeIndex = model.index;
+                              });
+                            },
+                            options: displayOptions,
+                          ),
                         ),
                       ),
                 Card(
@@ -224,8 +232,10 @@ class DashboardRankingList extends StatelessWidget {
                               Radius.circular(16.0),
                             ),
                             border: Border.all(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .color),
                           ),
                         ),
                       ),
@@ -233,29 +243,46 @@ class DashboardRankingList extends StatelessWidget {
                         child: Padding(
                           padding:
                               const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-                          child: Text(
-                            item.name,
-                            style: TextStyle(
-                              fontWeight: item.name == teamName
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                              fontSize: 16.0,
-                            ),
-                            textAlign: TextAlign.left,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.name,
+                                style: TextStyle(
+                                  fontWeight: item.name == teamName
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  fontSize: 16.0,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                '${item.userCount} ${Localizer.translate(context, 'lblActiveUsers')}',
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
                           ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8.0, 8.0, 16.0, 8.0),
-                        child: Text(
-                          item.value,
-                          style: TextStyle(
-                            fontWeight: item.name == teamName
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            fontSize: 16.0,
-                          ),
-                          textAlign: TextAlign.right,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              item.value,
+                              style: TextStyle(
+                                fontWeight: item.name == teamName
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                fontSize: 16.0,
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                            Text(
+                              Localizer.translate(context, 'lblUnitPoints'),
+                            ),
+                          ],
                         ),
                       ),
                     ],

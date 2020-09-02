@@ -29,4 +29,11 @@ class Preferences {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getInt('kChallengeGoalDaily') ?? DAILY_TARGET_POINTS;
   }
+
+  ///
+  static Future<String> getUserKey() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    final String value = preferences.getString('kUser');
+    return value;
+  }
 }

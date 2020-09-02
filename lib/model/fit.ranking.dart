@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:steps/model/calendar.dart';
 
 class FitRanking {
@@ -6,6 +7,7 @@ class FitRanking {
     MapEntry('yesterday', List<FitRankingEntry>()),
     MapEntry('week', List<FitRankingEntry>()),
     MapEntry('lastWeek', List<FitRankingEntry>()),
+    MapEntry('total', List<FitRankingEntry>()),
   ]);
   int absolute = 0;
   FitRanking._internal();
@@ -14,6 +16,7 @@ class FitRanking {
     final FitRanking ranking = FitRanking._internal();
 
     final Map<String, Map<String, num>> summary = Map();
+    final Map<String, num> participation = Map();
     final Calendar calendar = Calendar();
     final DateTime now = DateTime.now();
 
@@ -28,14 +31,6 @@ class FitRanking {
       timestamp = timestampKey > 0
           ? DateTime.fromMillisecondsSinceEpoch(timestampKey)
           : null;
-
-      if (timestamp == null) {
-        print('!!! user $key is deprecated, missing timestamp');
-      } else if (timestamp.isBefore(now.subtract(Duration(days: 7)))) {
-        print('!!! user $key is outdated, not synced within last 7 days');
-      }
-
-      print('[INFO] sync user $key ($timestamp) with app version ${value['client']} on ${value['device']}');
 
       // - sum user's weekly points if sync timestamp is within current week
       // - sum user's last weeks points if sync timestamp is within current week
@@ -163,7 +158,40 @@ class FitRanking {
           summary.putIfAbsent(categoryKey, () => categoryValue);
         }
       }
-      ranking.absolute += value['total'];
+
+      if (timestampKey > 0 &&
+          !timestamp.isBefore(now.subtract(Duration(days: 7)))) {
+        print(
+            '[INFO] sync user $key ($timestamp) with app version ${value['client']} on ${value['device']}');
+        // total
+        categoryKey = 'total';
+        if (summary.containsKey(categoryKey)) {
+          categoryValue = summary[categoryKey];
+        } else {
+          categoryValue = Map();
+        }
+
+        if (categoryValue.containsKey(teamKey)) {
+          categoryValue.update(teamKey, (v) => v + value['total']);
+        } else {
+          categoryValue.putIfAbsent(teamKey, () => value['total']);
+        }
+
+        if (summary.containsKey(categoryKey)) {
+          summary.update(categoryKey, (v) => categoryValue);
+        } else {
+          summary.putIfAbsent(categoryKey, () => categoryValue);
+        }
+
+        ranking.absolute += value['total'];
+        if (participation.containsKey(teamKey)) {
+          participation.update(teamKey, (v) => v + 1);
+        } else {
+          participation.putIfAbsent(teamKey, () => 1);
+        }
+      } else {
+        print('!!! user $key is outdated, not synced within last 7 days');
+      }
     });
 
     List<String> teamKeys;
@@ -172,20 +200,25 @@ class FitRanking {
       teamKeys.sort((k1, k2) => categoryValue[k2].compareTo(categoryValue[k1]));
       teamKeys.forEach((teamKey) {
         ranking.addEntry(categoryKey,
-            name: teamKey, value: categoryValue[teamKey].toString());
+            name: teamKey,
+            value: categoryValue[teamKey].toString(),
+            userCount: participation[teamKey] ?? 0);
       });
     });
 
     return ranking;
   }
 
-  void addEntry(String key, {String name, String value}) {
-    entries[key]?.add(FitRankingEntry(name: name, value: value));
+  void addEntry(String key,
+      {@required String name, @required String value, int userCount}) {
+    entries[key]
+        ?.add(FitRankingEntry(name: name, value: value, userCount: userCount));
   }
 }
 
 class FitRankingEntry {
   final String name;
   final String value;
-  FitRankingEntry({this.name, this.value});
+  final int userCount;
+  FitRankingEntry({@required this.name, @required this.value, this.userCount});
 }

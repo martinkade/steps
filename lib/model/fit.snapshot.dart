@@ -5,6 +5,8 @@ import 'package:steps/model/fit.plugin.dart';
 import 'package:steps/model/fit.record.dart';
 import 'dart:io' show Platform;
 
+import 'package:steps/model/preferences.dart';
+
 class FitSnapshot {
   ///
   Map<dynamic, int> data = Map();
@@ -144,6 +146,13 @@ class FitSnapshot {
         MapEntry('timestamp', DateTime.now().millisecondsSinceEpoch),
         MapEntry('device', await FitPlugin.getDeviceInfo()),
         MapEntry('client', await FitPlugin.getAppInfo()),
+        /*
+        MapEntry(
+            '_',
+            (await Preferences.getUserKey())
+                .split('@')
+                .first
+                ?.replaceAll('.', '_'))*/
       ],
     );
   }

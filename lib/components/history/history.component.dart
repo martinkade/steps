@@ -23,16 +23,28 @@ class _HistoryState extends State<History> {
   ///
   final FitnessRepository _repository = FitnessRepository();
 
+  ///
+  int _points;
+
   @override
   void initState() {
     super.initState();
 
+    _points = 0;
     _load();
   }
 
   void _load() {
     _repository.fetchHistory().then((records) {
       if (!mounted) return;
+      _points = 0;
+      records.forEach((record) {
+        if (record.type == FitRecord.TYPE_STEPS) {
+          _points += record.value ~/ 80;
+        } else {
+          _points += record.value;
+        }
+      });
       _records.clear();
       setState(() {
         _records.addAll(records);
@@ -72,9 +84,35 @@ class _HistoryState extends State<History> {
       child: _records.length == 0
           ? placeholderWidget
           : ListView.builder(
-              itemCount: _records.length,
+              itemCount: _records.length + 1,
               itemBuilder: (context, index) {
-                final FitRecord record = _records[index];
+                if (index == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
+                    child: Card(
+                      elevation: 8.0,
+                      shadowColor: Colors.grey.withAlpha(50),
+                      clipBehavior: Clip.antiAlias,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Container(
+                        color:
+                            Theme.of(context).colorScheme.primary.withAlpha(50),
+                        child: Padding(
+                          child: Text(
+                            Localizer.translate(context, 'lblHistorySummary')
+                                .replaceFirst('%1', '$_points')
+                                .replaceFirst('%2', '${_points ~/ 12}'),
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          padding: const EdgeInsets.all(16.0),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                final FitRecord record = _records[index - 1];
                 return GestureDetector(
                   child: HistoryRecordItem(
                     record: record,

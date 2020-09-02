@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:steps/components/challenge/challenge.component.dart';
 import 'package:steps/components/dashboard/dashboard.item.challenge.dart';
 import 'package:steps/components/dashboard/dashboard.item.footer.dart';
@@ -21,6 +20,7 @@ import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/fit.snapshot.dart';
+import 'package:steps/model/preferences.dart';
 import 'package:steps/model/storage.dart';
 
 class Dashboard extends StatefulWidget {
@@ -62,8 +62,7 @@ class _DashboardState extends State<Dashboard>
   void initState() {
     super.initState();
 
-    SharedPreferences.getInstance().then((preferences) {
-      final String userValue = preferences.getString('kUser');
+    Preferences.getUserKey().then((userValue) {
       if (!mounted) return;
 
       if (userValue != null) {

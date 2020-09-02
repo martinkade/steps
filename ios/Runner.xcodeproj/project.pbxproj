@@ -390,7 +390,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: mediaBEAM GmbH (K66M8A88HU)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: mediaBEAM GmbH (K66M8A88HU)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = K66M8A88HU;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -406,6 +406,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mediabeam.fitness;
 				PRODUCT_NAME = WANDR;
 				PROVISIONING_PROFILE_SPECIFIER = "Fitness Distribution";
@@ -533,7 +534,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/WANDR.entitlements;
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = K66M8A88HU;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -549,6 +550,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mediabeam.fitness;
 				PRODUCT_NAME = WANDR;
 				PROVISIONING_PROFILE_SPECIFIER = "Fitness Development";
@@ -570,7 +572,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: mediaBEAM GmbH (K66M8A88HU)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: mediaBEAM GmbH (K66M8A88HU)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = K66M8A88HU;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -586,6 +588,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mediabeam.fitness;
 				PRODUCT_NAME = WANDR;
 				PROVISIONING_PROFILE_SPECIFIER = "Fitness Distribution";

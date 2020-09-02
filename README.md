@@ -14,6 +14,10 @@ Ein paar grundlegende Dinge, die dir den Einstieg in Flutter erleichtern werden:
 
 ## Change-Log
 
-### Version 1.0.1
+### Version 1.0.0
 
-...
+#### Build 21
+
+- Teamstatistik beinhaltent jetzt auch Punkt insgesamt und die Anzahl aktiver Nutzer
+- 'Mein Verlauf' beginnt mit einer kurzen Zusammenfassung
+- Verbesserungen und Korrekturen

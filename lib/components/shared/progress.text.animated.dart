@@ -62,7 +62,9 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
   void didUpdateWidget(AnimatedProgressText oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _startAnimation();
+    if (oldWidget.end != widget.end) {
+      _startAnimation();
+    }
   }
 
   void _startAnimation() async {
@@ -148,8 +150,10 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: LinearProgressIndicator(
-            backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(50),
-            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
+            backgroundColor:
+                Theme.of(context).colorScheme.primary.withAlpha(50),
+            valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).colorScheme.primary),
             value:
                 widget.end > 0 ? _displayValue / widget.target.toDouble() : 0.0,
           ),
