@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:steps/components/about/about.component.dart';
 import 'package:steps/components/challenge/challenge.component.dart';
 import 'package:steps/components/dashboard/dashboard.item.challenge.dart';
 import 'package:steps/components/dashboard/dashboard.item.footer.dart';
 import 'package:steps/components/dashboard/dashboard.item.info.dart';
-import 'package:steps/components/dashboard/dashboard.item.info.dialog.dart';
 import 'package:steps/components/dashboard/dashboard.item.ranking.dart';
 import 'package:steps/components/dashboard/dashboard.item.sync.dart';
 import 'package:steps/components/dashboard/dashboard.item.title.dart';
@@ -164,20 +164,12 @@ class _DashboardState extends State<Dashboard>
 
   @override
   void onInfoRequested() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: DashboardInfoDialogContent(
-              onDismiss: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          );
-        });
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => About(),
+      ),
+    );
   }
 
   @override

@@ -12,13 +12,12 @@
     "lblDashboardUserStats": "Deine Punkte",
     "lblDashboardUserStatsToday": "Punkte heute",
     "lblDashboardUserStatsWeek": "diese Woche",
+    "lblDashboardUserStatsKilometer": "oder %1 Kilometer",
     "lblDashboardUserStatsAutoSyncOffApple": "Die automatische Synchronisation mit Apple Health ist deaktiviert. Das kannst du in den Einstellungen ändern.",
     "lblDashboardUserStatsAutoSyncOffGoogle": "Die automatische Synchronisation mit Google Fit ist deaktiviert. Das kannst du in den Einstellungen ändern.",
 
     "lblDashboardMotivation1": "Dran bleiben!",
     "lblDashboardMotivation2": "Sammle heute weitere %1 Punkte um dein Tagesziel zu erreichen.",
-    "lblDashboardInfo": "Wie funktioniert %1?",
-    "lblDashboardInfoText": "%1 basiert auf einem Punktesystem. 80 Schritte sind einen Punkt wert. Aktive Minuten werden dir 1:1 als Punkte gut geschrieben.",
     "lblDashboardActiveChallenges": "Aktuelle Challenges",
     "lblDashboardTeamStandings": "Teamstatistik",
     "lblDashboardActionHistory": "Mein Verlauf",
@@ -53,6 +52,13 @@
     "lblDashboardSettingsOption1": "Etwas aktiv",
     "lblDashboardSettingsOption2": "Aktiv (empfohlen)",
     "lblDashboardSettingsOption3": "Sehr Aktiv",
+
+    "lblAbout": "Über %1",
+    "lblAboutHowTo": "Wie funktioniert %1?",
+    "lblAboutHowToInfoPoints": "%1 basiert auf einem Punktesystem. 80 Schritte sind einen Punkt wert. Aktive Minuten werden dir 1:1 als Punkte gut geschrieben.",
+    "lblAboutHowToInfoKilometer": "12 Punkte ergeben einen Kilometer.",
+    "lblAboutPrivacy": "Datenschutz",
+    "lblAboutPrivacyInfo": "Deine Daten bleiben grundsätzlich auf deinem Gerät. Nur du kannst deine Tagesleistungen einsehen.\n\nLediglich zum Synchronisieren der %1 Challenges wird eine anonymisierte Statistik auf dem Server gespeichert.",
 
     "lblActionGetStarted": "Los gehts!",
     "lblActionBack": "Zurück",

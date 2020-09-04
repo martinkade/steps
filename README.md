@@ -18,6 +18,6 @@ Ein paar grundlegende Dinge, die dir den Einstieg in Flutter erleichtern werden:
 
 #### Build 21
 
-- Teamstatistik beinhaltent jetzt auch Punkt insgesamt und die Anzahl aktiver Nutzer
+- Teamstatistik beinhaltet jetzt auch Punkte insgesamt und die Anzahl aktiver Nutzer
 - 'Mein Verlauf' beginnt mit einer kurzen Zusammenfassung
 - Verbesserungen und Korrekturen

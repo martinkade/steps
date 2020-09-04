@@ -29,7 +29,7 @@ class DashboardInfoItem extends StatelessWidget {
         child: Container(
           color: Theme.of(context).colorScheme.primary.withAlpha(50),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
             child: Column(
               children: [
                 Row(
@@ -65,10 +65,10 @@ class DashboardInfoItem extends StatelessWidget {
                 Divider(),
                 GestureDetector(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
                     child: Center(
                       child: Text(
-                        Localizer.translate(context, 'lblDashboardInfo')
+                        Localizer.translate(context, 'lblAboutHowTo')
                             .replaceFirst(
                           '%1',
                           Localizer.translate(context, 'appName').toUpperCase(),
@@ -113,17 +113,20 @@ class DashboardAction extends StatelessWidget {
     return GestureDetector(
       child: SizedBox(
         width: width,
-        child: Column(
-          children: [
-            Icon(icon),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16.0, bottom: 4.0),
+          child: Column(
+            children: [
+              Icon(icon),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       onTap: onTap,

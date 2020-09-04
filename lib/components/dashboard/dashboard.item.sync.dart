@@ -221,13 +221,20 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
         });
   }
 
+  String _approxKilometers(int points) {
+    if (points == 0) return 0.0.toString();
+    final num kilometers = points / 12;
+    if (kilometers < 0.1) return '< 0.1';
+    return kilometers.toStringAsFixed(1);
+  }
+
   @override
   Widget build(BuildContext context) {
     final Widget loadingWidget = Container(
       child: Center(
         child: CircularProgressIndicator(),
       ),
-      height: 128.0,
+      height: 148.0,
     );
 
     final Widget contentWidget = Container(
@@ -244,26 +251,60 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: AnimatedProgressText(
-                      start: 0,
-                      end: _snapshot?.today() ?? 0,
-                      target: _goalDaily,
-                      fontSize: 48.0,
-                      label: Localizer.translate(
-                          context, 'lblDashboardUserStatsToday'),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AnimatedProgressText(
+                          start: 0,
+                          end: _snapshot?.today() ?? 0,
+                          target: _goalDaily,
+                          fontSize: 48.0,
+                          label: Localizer.translate(
+                              context, 'lblDashboardUserStatsToday'),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            Localizer.translate(
+                                    context, 'lblDashboardUserStatsKilometer')
+                                .replaceAll(
+                              '%1',
+                              _approxKilometers(_snapshot?.today() ?? 0),
+                            ),
+                            style: TextStyle(fontSize: 13.0),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: AnimatedProgressText(
-                      start: 0,
-                      end: _snapshot?.week() ?? 0,
-                      target: _goalDaily * 7,
-                      fontSize: 32.0,
-                      label: Localizer.translate(
-                          context, 'lblDashboardUserStatsWeek'),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AnimatedProgressText(
+                          start: 0,
+                          end: _snapshot?.week() ?? 0,
+                          target: _goalDaily * 7,
+                          fontSize: 32.0,
+                          label: Localizer.translate(
+                              context, 'lblDashboardUserStatsWeek'),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            Localizer.translate(
+                                    context, 'lblDashboardUserStatsKilometer')
+                                .replaceAll(
+                              '%1',
+                              _approxKilometers(_snapshot?.week() ?? 0),
+                            ),
+                            style: TextStyle(fontSize: 13.0),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
