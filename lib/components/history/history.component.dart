@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/history/history.component.add.dart';
-import 'package:steps/components/history/history.item.record.dart';
+import 'package:steps/components/history/history.chart.dart';
+import 'package:steps/components/history/history.component.day.dart';
+import 'package:steps/components/history/history.item.record.summary.dart';
 import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/components/shared/page.default.dart';
-import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.record.dart';
-import 'package:intl/intl.dart';
+import 'package:steps/model/preferences.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 
 class History extends StatefulWidget {
@@ -26,24 +26,28 @@ class _HistoryState extends State<History> {
   ///
   int _points;
 
+  ///
+  int _goalDaily;
+
   @override
   void initState() {
     super.initState();
 
     _points = 0;
+    _goalDaily = 0;
     _load();
   }
 
   void _load() {
+    Preferences().getDailyGoal().then((value) {
+      if (!mounted) return;
+      _goalDaily = value;
+    });
     _repository.fetchHistory().then((records) {
       if (!mounted) return;
       _points = 0;
       records.forEach((record) {
-        if (record.type == FitRecord.TYPE_STEPS) {
-          _points += record.value ~/ 80;
-        } else {
-          _points += record.value;
-        }
+        _points += record.value;
       });
       _records.clear();
       setState(() {
@@ -52,14 +56,13 @@ class _HistoryState extends State<History> {
     });
   }
 
-  void _editRecord(FitRecord record) {
-    if (record.source != FitRecord.SOURCE_MANUAL) return;
-
+  void _displayRecord(FitRecord record) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => HistoryAdd(
-          oldRecord: record,
+        builder: (context) => HistoryDay(
+          summary: record,
+          goal: _goalDaily,
         ),
       ),
     ).then((_) {
@@ -84,7 +87,7 @@ class _HistoryState extends State<History> {
       child: _records.length == 0
           ? placeholderWidget
           : ListView.builder(
-              itemCount: _records.length + 1,
+              itemCount: _records.length + 2,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return Padding(
@@ -111,15 +114,42 @@ class _HistoryState extends State<History> {
                       ),
                     ),
                   );
+                } else if (index == 1) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                    child: Card(
+                      elevation: 8.0,
+                      shadowColor: Colors.grey.withAlpha(32),
+                      clipBehavior: Clip.antiAlias,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Container(
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .color
+                            .withAlpha(50),
+                        child: Padding(
+                          child: HistoryChart.withData(
+                            _records,
+                            theme: Theme.of(context),
+                          ),
+                          padding: const EdgeInsets.all(16.0),
+                        ),
+                      ),
+                    ),
+                  );
                 }
-                final FitRecord record = _records[index - 1];
+                final FitRecord record = _records[index - 2];
                 return GestureDetector(
-                  child: HistoryRecordItem(
+                  child: HistoryRecordSummaryItem(
                     record: record,
                     isLastItem: index + 1 == _records.length,
+                    goal: _goalDaily,
                   ),
                   onTap: () {
-                    _editRecord(record);
+                    _displayRecord(record);
                   },
                 );
               },

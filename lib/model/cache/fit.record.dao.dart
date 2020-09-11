@@ -119,4 +119,43 @@ class FitRecordDao extends FitDao {
     }
     return records;
   }
+
+  ///
+  Future<List<FitRecord>> fetchAllByDayAndPoints({DateTime from}) async {
+    final Database db = await StructuredCache().getDb();
+    final List<Map<String, dynamic>> result = await db.rawQuery(
+        'SELECT *, date(${FitRecordDao.COL_TIMESTAMP} / 1000, \'unixepoch\', \'localtime\') AS _day, ' +
+            'SUM(CASE ${FitRecordDao.COL_TYPE} WHEN ${FitRecord.TYPE_STEPS} THEN ${FitRecordDao.COL_VALUE} / 80 ELSE ${FitRecordDao.COL_VALUE} END) AS _sum, ' +
+            'COUNT(${FitRecordDao.COL_TIMESTAMP}) AS _count FROM ${FitRecordDao.TBL_NAME} ' +
+            'WHERE ${FitRecordDao.COL_TIMESTAMP} >= ${from?.millisecondsSinceEpoch ?? 0} ' +
+            'GROUP BY _day ' +
+            'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC');
+    FitRecord record;
+    final List<FitRecord> records = List();
+    for (Map<String, dynamic> cursor in result) {
+      record = FitRecord();
+      record.initWithCursor(cursor);
+      record.value = cursor['_sum'];
+      record.count = cursor['_count'];
+      records.add(record);
+    }
+    return records;
+  }
+
+  ///
+  Future<List<FitRecord>> fetchAllOfDay({String day}) async {
+    final Database db = await StructuredCache().getDb();
+    final List<Map<String, dynamic>> result = await db.rawQuery(
+        'SELECT *, date(${FitRecordDao.COL_TIMESTAMP} / 1000, \'unixepoch\', \'localtime\') AS _day FROM ${FitRecordDao.TBL_NAME} ' +
+            'WHERE _day = \'$day\' ' +
+            'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC');
+    FitRecord record;
+    final List<FitRecord> records = List();
+    for (Map<String, dynamic> cursor in result) {
+      record = FitRecord();
+      record.initWithCursor(cursor);
+      records.add(record);
+    }
+    return records;
+  }
 }

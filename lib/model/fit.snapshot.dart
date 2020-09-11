@@ -1,15 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:steps/model/cache/fit.record.dao.dart';
 import 'package:steps/model/calendar.dart';
+import 'package:steps/model/fit.challenge.team1.dart';
+import 'package:steps/model/fit.challenge.team2.dart';
 import 'package:steps/model/fit.plugin.dart';
 import 'package:steps/model/fit.record.dart';
 import 'dart:io' show Platform;
 
-import 'package:steps/model/preferences.dart';
-
 class FitSnapshot {
   ///
-  Map<dynamic, int> data = Map();
+  Map<dynamic, dynamic> data = Map();
 
   ///
   FitSnapshot();
@@ -28,6 +28,9 @@ class FitSnapshot {
     int week = 0;
     int lastWeek = 0;
     int total = 0;
+
+    int challenge1 = 0;
+    int challenge2 = 0;
 
     int points;
     DateTime date;
@@ -53,38 +56,23 @@ class FitSnapshot {
             yesterday += points;
           }
         }
+
+        if (date.isAfter(FitChallenge2Team.kStartDate) ||
+            date.isAtSameMomentAs(FitChallenge2Team.kStartDate)) {
+          challenge2 += points;
+        } else if (date.isAfter(FitChallenge1Team.kStartDate) ||
+            date.isAtSameMomentAs(FitChallenge1Team.kStartDate)) {
+          challenge1 += points;
+        }
       }
     });
 
-    if (data['today'] == null) {
-      data['today'] = today;
-    } else {
-      data['today'] = data['today'] + today;
-    }
-
-    if (data['yesterday'] == null) {
-      data['yesterday'] = yesterday;
-    } else {
-      data['yesterday'] = data['yesterday'] + yesterday;
-    }
-
-    if (data['week'] == null) {
-      data['week'] = week;
-    } else {
-      data['week'] = data['week'] + week;
-    }
-
-    if (data['lastWeek'] == null) {
-      data['lastWeek'] = lastWeek;
-    } else {
-      data['lastWeek'] = data['lastWeek'] + lastWeek;
-    }
-
-    if (data['total'] == null) {
-      data['total'] = total;
-    } else {
-      data['total'] = data['total'] + total;
-    }
+    data['today'] = today;
+    data['yesterday'] = yesterday;
+    data['week'] = week;
+    data['lastWeek'] = lastWeek;
+    data['challenges'] = [challenge1, challenge2];
+    data['total'] = total;
   }
 
   ///
@@ -142,6 +130,7 @@ class FitSnapshot {
         MapEntry('yesterday', yesterday()),
         MapEntry('week', week()),
         MapEntry('lastWeek', lastWeek()),
+        MapEntry('challenges', challenges()),
         MapEntry('total', total()),
         MapEntry('timestamp', DateTime.now().millisecondsSinceEpoch),
         MapEntry('device', await FitPlugin.getDeviceInfo()),
@@ -180,5 +169,10 @@ class FitSnapshot {
   ///
   num total() {
     return data['total'] ?? 0;
+  }
+
+  ///
+  List<num> challenges() {
+    return data['challenges'] ?? [0, 0];
   }
 }

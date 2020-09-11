@@ -43,9 +43,12 @@ class FitnessRepository extends Repository {
   }
 
   ///
-  Future<List<FitRecord>> fetchHistory() async {
+  Future<List<FitRecord>> fetchHistory({String day}) async {
     final FitRecordDao dao = FitRecordDao();
-    return await dao.fetchAll();
+    if (day != null) {
+      return await dao.fetchAllOfDay(day: day);
+    }
+    return await dao.fetchAllByDayAndPoints();
   }
 
   ///

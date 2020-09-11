@@ -16,6 +16,12 @@ Ein paar grundlegende Dinge, die dir den Einstieg in Flutter erleichtern werden:
 
 ### Version 1.0.0
 
+#### Build 22
+
+- Neue Team-Challenge
+- 'Mein Verlauf' ist gruppiert nach Datum und zeigt an, ob das Tagesziel erreicht wurde
+- Verbesserungen und Korrekturen
+
 #### Build 21
 
 - Teamstatistik beinhaltet jetzt auch Punkte insgesamt und die Anzahl aktiver Nutzer

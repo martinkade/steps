@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
+// ignore: non_constant_identifier_names
+String LOCALE = 'de_DE';
+
 class LocalizerDelegate extends LocalizationsDelegate<Localizer> {
   const LocalizerDelegate();
 

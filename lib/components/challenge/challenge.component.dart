@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:steps/components/shared/bezier.clipper.dart';
+import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/components/shared/progress.text.animated.dart';
 import 'package:steps/model/fit.challenge.dart';
+import 'package:intl/intl.dart';
 
 class Challenge extends StatefulWidget {
   ///
@@ -85,7 +87,8 @@ class _ChallengeState extends State<Challenge> {
                                       ),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Theme.of(context).scaffoldBackgroundColor,
+                                        color: Theme.of(context)
+                                            .scaffoldBackgroundColor,
                                       ),
                                     ),
                                   ),
@@ -110,6 +113,18 @@ class _ChallengeState extends State<Challenge> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(14.0, 0.0, 14.0, 16.0),
+                        child: Text(
+                          Localizer.translate(context, 'lblChallengeStartDate')
+                              .replaceFirst(
+                            '%1',
+                            DateFormat.yMMMMEEEEd(LOCALE ?? 'de_DE')
+                                .format(widget.challenge.startDate),
                           ),
                         ),
                       ),

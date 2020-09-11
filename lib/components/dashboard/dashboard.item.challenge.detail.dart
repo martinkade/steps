@@ -1,5 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/components/shared/progress.text.animated.dart';
+import 'package:steps/model/calendar.dart';
 import 'package:steps/model/fit.challenge.dart';
 
 class DashboardChallengeDetail extends StatefulWidget {
@@ -19,6 +23,9 @@ class DashboardChallengeDetail extends StatefulWidget {
 }
 
 class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
+  ///
+  final Calendar _calendar = Calendar();
+
   @override
   void initState() {
     super.initState();
@@ -26,6 +33,89 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
     setState(() {
       widget.challenge.load();
     });
+  }
+
+  Widget _overlay(BuildContext context, FitChallenge challenge) {
+    final Duration delta =
+        challenge.getStartDateDelta(calendar: _calendar, date: DateTime.now());
+    if (delta.inMinutes > 0) {
+      String deltaText =
+          Localizer.translate(context, 'lblChallengeDeltaDaysMany')
+              .replaceFirst('%1', (delta.inDays + 1).toString());
+      if (delta.inDays == 1) {
+        deltaText = Localizer.translate(context, 'lblChallengeDeltaDaysOne');
+      } else if (delta.inDays == 0) {
+        deltaText = Localizer.translate(context, 'lblChallengeDeltaDaysZero')
+            .replaceFirst('%1', (delta.inHours + 1).toString());
+      }
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+        child: Container(
+          color: Colors.black.withOpacity(0.1),
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.timer),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                  child: Text(
+                    challenge.title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                  child: Text(deltaText),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else if (challenge.isCompleted) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+        child: Container(
+          color: Colors.black.withOpacity(0.1),
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check_circle_outline),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                  child: Text(
+                    challenge.title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                  child: Text(
+                    Localizer.translate(context, 'lblChallengeSuccess'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 
   @override
@@ -91,7 +181,8 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
               ),
             ],
           ),
-        )
+        ),
+        _overlay(context, widget.challenge),
       ],
     );
   }

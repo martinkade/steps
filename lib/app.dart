@@ -43,19 +43,22 @@ class App extends StatelessWidget {
         localeResolutionCallback:
             (Locale locale, Iterable<Locale> supportedLocales) {
           if (locale == null) {
-            print('Cound not detect language');
+            LOCALE = supportedLocales.first?.scriptCode;
+            print('Cound not detect language, using \'$LOCALE\'');
             return supportedLocales.first;
           }
 
           for (Locale supportedLocale in supportedLocales) {
             if (supportedLocale.languageCode == locale.languageCode ||
                 supportedLocale.countryCode == locale.countryCode) {
-              print('Detected language code \'$supportedLocale\'');
+              LOCALE = supportedLocale.scriptCode;
+              print('Detected language code \'$LOCALE\'');
               return supportedLocale;
             }
           }
 
-          print('Use language fallback \'${supportedLocales.first}\'');
+          LOCALE = supportedLocales.first?.scriptCode;
+          print('Use language fallback \'$LOCALE\'');
           return supportedLocales.first;
         });
   }

@@ -23,9 +23,16 @@
     "lblDashboardActionNewRecord": "New record",
     "lblDashboardActionSettings": "Settings",
 
-    "lblTeamChallengeTitle": "Our team challenge",
-    "lblTeamChallengeDescription": "WANDR is a team challenge in which everyone completes a virtual trail together with active minutes or steps. The first goal is Kreuztal (165 km), here Markus treats us to an ice cream. We continue to Nice (1044 km), visit Thomas ;-)\nOnly you can see your daily active minutes or steps, but everyone can see how much of the distance the team has already made. Cheering welcome. Here we go!",
-    
+    "lblChallengeStartDate": "starts on %1",
+    "lblChallengeDeltaDaysMany": "starts in %1 days",
+    "lblChallengeDeltaDaysOne": "starts tomorrow",
+    "lblChallengeDeltaDaysZero": "starts in %1 hours",
+    "lblChallengeSuccess": "erfolgreich abgeschlossen",
+    "lblTeamChallenge1Title": "Off to Nice",
+    "lblTeamChallenge1Description": "All team challenges are about completing a virtual trail together. Collected steps or active minutes are converted into kilometers.\n\nThe first goal is Kreuztal (165 km), here Markus treats us to an ice cream. We continue to Nice (1044 km), visit Thomas. 👋\n\nOnly you can see your daily active minutes or steps, but everyone can see how much of the distance the team has already made. Cheering welcome. Here we go!",
+    "lblTeamChallenge2Title": "Once around Germany",
+    "lblTeamChallenge2Description": "From Nice we fly non-stop to the airport in Stadtlohn, pack our backpacks and off we go: We circle Germany - clockwise, for those who want to know exactly 😉. Let yourself be impressed and surprised along the way, there is a lot on our way. And at 4800 km there is no boredom.\n\n♫ WANDRn is the Hiker's delight ♫",
+
     "lblHistory": "My history",
     "lblHistoryAdd": "New record",
     "lblHistoryEdit": "Edit record",
@@ -33,8 +40,12 @@
     "lblHistoryDate": "Date",
     "lblHistoryDataApple": "Apple Health data",
     "lblHistoryDataGoogle": "Google Fit data",
+    "lblHistoryDataMultiple": "%1 records",
     "lblHistoryDataManual": "manual record",
     "lblHistorySummary": "Excellent! You have already collected %1 points in total. This corresponds to a distance of the equivalent of %2 kilometers. Keep it up. 💪",
+    "lblHistorySummaryDayPositive": "You have reached your daily goal and collected %1 points. 🥳",
+    "lblHistorySummaryDayNegative": "You did not reach your daily goal. %1 points were not enough.",
+    "lblHistoryChartTapInstruction": "Tap the graphic",
 
     "lblSettings": "Settings",
     "lblSettingsDataSource": "Data source",

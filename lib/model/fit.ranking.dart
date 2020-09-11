@@ -10,6 +10,8 @@ class FitRanking {
     MapEntry('total', List<FitRankingEntry>()),
   ]);
   int absolute = 0;
+  int challenge1 = 0;
+  int challenge2 = 0;
   FitRanking._internal();
 
   static FitRanking createFromSnapshot(dynamic snapshot) {
@@ -183,7 +185,6 @@ class FitRanking {
           summary.putIfAbsent(categoryKey, () => categoryValue);
         }
 
-        ranking.absolute += value['total'];
         if (participation.containsKey(teamKey)) {
           participation.update(teamKey, (v) => v + 1);
         } else {
@@ -191,6 +192,14 @@ class FitRanking {
         }
       } else {
         print('!!! user $key is outdated, not synced within last 7 days');
+      }
+
+      ranking.absolute += value['total'] ?? 0;
+      if (value['challenges'] != null) {
+        ranking.challenge1 += value['challenges'][0] ?? 0;
+        ranking.challenge2 += value['challenges'][1] ?? 0;
+      } else {
+        ranking.challenge1 += value['total'] ?? 0;
       }
     });
 

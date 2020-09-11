@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:steps/components/history/history.item.dart';
+import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/model/calendar.dart';
 import 'package:steps/model/fit.record.dart';
 
-class HistoryRecordItem extends HistoryItem {
+class HistoryRecordSummaryItem extends HistoryItem {
   ///
   final FitRecord record;
 
@@ -11,25 +12,28 @@ class HistoryRecordItem extends HistoryItem {
   final bool isLastItem;
 
   ///
-  final Calendar calendar;
+  final int goal;
 
   ///
-  final DateTime now;
-
-  ///
-  HistoryRecordItem({
+  HistoryRecordSummaryItem({
     Key key,
     this.record,
     this.isLastItem,
-    this.calendar,
-    this.now,
+    this.goal,
   }) : super(key: key);
 
   @override
-  _HistoryRecordItemState createState() => _HistoryRecordItemState();
+  _HistoryRecordSummaryItemState createState() =>
+      _HistoryRecordSummaryItemState();
 }
 
-class _HistoryRecordItemState extends State<HistoryRecordItem> {
+class _HistoryRecordSummaryItemState extends State<HistoryRecordSummaryItem> {
+  ///
+  final DateTime _now = DateTime.now();
+
+  ///
+  final Calendar _calendar = Calendar();
+
   @override
   void initState() {
     super.initState();
@@ -38,17 +42,24 @@ class _HistoryRecordItemState extends State<HistoryRecordItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 8.0),
       child: Row(
         children: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: Icon(
-              Icons.edit,
-              color: widget.record.source == FitRecord.SOURCE_MANUAL
-                  ? Theme.of(context).textTheme.bodyText1.color
-                  : Theme.of(context).textTheme.bodyText1.color.withAlpha(32),
-            ),
+            child: widget.record.value >= widget.goal
+                ? Icon(
+                    Icons.check_circle_outline,
+                    color: Theme.of(context).colorScheme.primary,
+                  )
+                : Icon(
+                    Icons.check_circle_outline,
+                    color: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .color
+                        .withAlpha(32),
+                  ),
           ),
           Expanded(
             child: Column(
@@ -59,12 +70,12 @@ class _HistoryRecordItemState extends State<HistoryRecordItem> {
                   children: [
                     Expanded(
                       child: Text(
-                        widget.record.relativeDateTime(context,
-                            calendar: widget.calendar, now: widget.now),
+                        widget.record.relativeDate(context,
+                            calendar: _calendar, now: _now),
                       ),
                     ),
                     Text(
-                      widget.record.typeString(context),
+                      Localizer.translate(context, 'lblUnitPoints'),
                     ),
                   ],
                 ),
@@ -89,10 +100,11 @@ class _HistoryRecordItemState extends State<HistoryRecordItem> {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
+          Icon(Icons.navigate_next),
         ],
       ),
     );

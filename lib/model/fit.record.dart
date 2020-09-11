@@ -28,6 +28,9 @@ class FitRecord {
   String name;
 
   ///
+  int count;
+
+  ///
   FitRecord({DateTime dateTime}) {
     timestamp = dateTime?.millisecondsSinceEpoch ??
         DateTime.now().millisecondsSinceEpoch;
@@ -43,6 +46,7 @@ class FitRecord {
     type = cursor[FitRecordDao.COL_TYPE];
     value = cursor[FitRecordDao.COL_VALUE];
     name = cursor[FitRecordDao.COL_NAME];
+    count = 1;
   }
 
   ///
@@ -51,6 +55,7 @@ class FitRecord {
     this.value = value;
     this.type = type;
     this.name = name;
+    count = 1;
   }
 
   ///
@@ -60,6 +65,9 @@ class FitRecord {
   DateTime get dateTime => DateTime.fromMillisecondsSinceEpoch(timestamp);
 
   ///
+  String get dateString => DateFormat('yyyy-MM-dd').format(dateTime);
+
+  ///
   String relativeDate(BuildContext context, {Calendar calendar, DateTime now}) {
     final DateTime date = dateTime;
     if (calendar.isToday(date, now)) {
@@ -67,9 +75,16 @@ class FitRecord {
     } else if (calendar.isYesterday(date, now)) {
       return Localizer.translate(context, 'lblYesterday');
     }
-    return DateFormat('dd.MM.yyyy').format(date);
+    return DateFormat.yMMMEd(LOCALE ?? 'de_DE').format(date);
   }
 
+  ///
+  String relativeDateTime(BuildContext context, {Calendar calendar, DateTime now}) {
+    final DateTime date = dateTime;
+    return DateFormat.Hm(LOCALE ?? 'de_DE').format(date);
+  }
+
+  ///
   String typeString(BuildContext context) {
     switch (type) {
       case TYPE_ACTIVE_MINUTES:
@@ -81,6 +96,10 @@ class FitRecord {
 
   ///
   String title(BuildContext context) {
+    if (count > 1) {
+      return Localizer.translate(context, 'lblHistoryDataMultiple')
+          .replaceFirst('%1', count.toString());
+    }
     if (source == SOURCE_MANUAL) {
       return name ?? Localizer.translate(context, 'lblHistoryDataManual');
     } else if (source == SOURCE_GOOGLE_FIT) {

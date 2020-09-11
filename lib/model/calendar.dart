@@ -54,4 +54,9 @@ class Calendar {
     return (moment.isAfter(weekStart) || moment.isAtSameMomentAs(weekStart)) &&
         moment.isBefore(weekEnd);
   }
+
+  ///
+  Duration delta(DateTime moment, DateTime now) {
+    return moment.difference(now);
+  }
 }

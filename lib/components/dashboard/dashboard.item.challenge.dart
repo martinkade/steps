@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:steps/components/dashboard/dashboard.item.challenge.detail.dart';
 import 'package:steps/components/dashboard/dashboard.item.dart';
 import 'package:steps/model/fit.challenge.dart';
-import 'package:steps/model/fit.challenge.team.dart';
+import 'package:steps/model/fit.challenge.team1.dart';
+import 'package:steps/model/fit.challenge.team2.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/fit.snapshot.dart';
 
@@ -64,9 +65,16 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    final FitChallenge1Team challenge1 = FitChallenge1Team(context);
+    final FitChallenge2Team challenge2 = FitChallenge2Team(context);
     _challenges = [
-      FitChallengeTeam(context),
+      challenge1,
     ];
+    if (challenge2.startDate.isBefore(DateTime.now())) {
+      _challenges.insert(0, challenge2);
+    } else {
+      _challenges.add(challenge2);
+    }
   }
 
   @override

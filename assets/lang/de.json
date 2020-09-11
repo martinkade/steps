@@ -24,9 +24,16 @@
     "lblDashboardActionNewRecord": "Neuer Eintrag",
     "lblDashboardActionSettings": "Einstellungen",
 
-    "lblTeamChallengeTitle": "Unsere Team-Challenge",
-    "lblTeamChallengeDescription": "WANDR ist eine Team-Challenge, bei der alle zusammen durch aktive Minuten oder Schritte einen virtuellen Trail absolvieren. Erstes Ziel ist Kreuztal (165 km), hier spendiert uns Markus ein Eis. Weiter gehts nach Nizza (1044 km), Thomas besuchen ;-)\nNur du siehst deine täglichen aktiven Minuten bzw. Schritte, aber jeder kann sehen wie viel der Strecke das Team schon geschafft hat. Anfeuern erwünscht. Los gehts!",
-    
+    "lblChallengeStartDate": "beginnt am %1",
+    "lblChallengeDeltaDaysMany": "beginnt in %1 Tagen",
+    "lblChallengeDeltaDaysOne": "beginnt morgen",
+    "lblChallengeDeltaDaysZero": "beginnt in %1 Stunden",
+    "lblChallengeSuccess": "erfolgreich abgeschlossen",
+    "lblTeamChallenge1Title": "Auf nach Nizza",
+    "lblTeamChallenge1Description": "Bei allen Team-Challenges geht es darum, gemeinsam einen virtuellen Trail zu absolvieren. Gesammelte Schritte oder aktive Minuten werden dabei in Kilometer umgerechnet.\n\nErstes Ziel ist Kreuztal (165 km), hier spendiert uns Markus ein Eis. Weiter gehts nach Nizza (1044 km), Thomas besuchen. 👋\n\nNur du siehst deine täglichen aktiven Minuten bzw. Schritte, aber jeder kann sehen wie viel der Strecke das Team schon geschafft hat. Anfeuern erwünscht. Los gehts!",
+    "lblTeamChallenge2Title": "Einmal rund um Deutschland",
+    "lblTeamChallenge2Description": "Von Nizza aus fliegen wir Non-Stop zum Flughafen in Stadtlohn, packen unsere Rucksäcke und schon geht's weiter: Wir umrunden Deutschland - im Uhrzeigersinn, für die, die es ganz genau wissen wollen 😉. Lasst euch unterwegs beeindrucken und überraschen, da liegt einiges auf unserem Weg. Und bei 4800 km kommt keine Langeweile auf.\n\n♫ Das WANDRn ist des WANDRers Lust ♫",
+
     "lblHistory": "Mein Verlauf",
     "lblHistoryAdd": "Neuer Eintrag",
     "lblHistoryEdit": "Eintrag bearbeiten",
@@ -34,8 +41,12 @@
     "lblHistoryDate": "Datum",
     "lblHistoryDataApple": "Daten aus Apple Health",
     "lblHistoryDataGoogle": "Daten aus Google Fit",
+    "lblHistoryDataMultiple": "%1 Einträge",
     "lblHistoryDataManual": "Manueller Eintrag",
     "lblHistorySummary": "Super! Du hast insgesamt schon %1 Punkte gesammelt. Das entspricht einer Strecke von umgerechnet %2 Kilometern. Weiter so. 💪",
+    "lblHistorySummaryDayPositive": "Du hast dein Tagesziel erreicht und %1 Punkte gesammelt. 🥳",
+    "lblHistorySummaryDayNegative": "Du hast dein Tagesziel nicht erreicht. %1 Punkte waren nicht genug.",
+    "lblHistoryChartTapInstruction": "Tippe auf die Grafik",
 
     "lblSettings": "Einstellungen",
     "lblSettingsDataSource": "Datenquelle",
