@@ -133,7 +133,9 @@ class _HistoryState extends State<History> {
                         child: Padding(
                           child: HistoryChart.withData(
                             _records,
+                            target: _goalDaily,
                             theme: Theme.of(context),
+                            animate: false,
                           ),
                           padding: const EdgeInsets.all(16.0),
                         ),

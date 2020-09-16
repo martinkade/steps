@@ -19,23 +19,40 @@ class _AboutHowtoItemState extends State<AboutHowtoItem> {
 
   @override
   Widget build(BuildContext context) {
-    final Widget titleWidget = Padding(
-      padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),
-      child: Text(
-        widget.title,
-        style: TextStyle(
-          fontSize: 16.0,
-          color: Colors.grey,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
+    /*
+Localizer.translate(context, 'lblAboutHowTo').replaceFirst(
+                  '%1',
+                  Localizer.translate(context, 'appName').toUpperCase();
+                  */
 
     final Widget contentWidget = Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  widget.title,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(32.0, 0.0, 16.0, 8.0),
+                child: SizedBox(
+                  child: Image.asset('assets/images/faq.png',
+                      color: Theme.of(context).textTheme.bodyText1.color),
+                  width: 72.0,
+                  height: 72.0,
+                ),
+              ),
+            ],
+          ),
           Text(
             Localizer.translate(context, 'lblUnitPoints'),
             style: TextStyle(
@@ -73,24 +90,17 @@ class _AboutHowtoItemState extends State<AboutHowtoItem> {
       ),
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        titleWidget,
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-          child: Card(
-            elevation: 8.0,
-            shadowColor: Colors.grey.withAlpha(50),
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: contentWidget,
-          ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 8.0,
+        shadowColor: Colors.grey.withAlpha(50),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
         ),
-      ],
+        child: contentWidget,
+      ),
     );
   }
 }
