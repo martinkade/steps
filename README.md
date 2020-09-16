@@ -16,6 +16,11 @@ Ein paar grundlegende Dinge, die dir den Einstieg in Flutter erleichtern werden:
 
 ### Version 1.0.0
 
+#### Build 23
+
+- Die Grafik in 'Mein Verlauf' ist jetzt um das Tagesziel angereichert und ist interaktiver
+- Verbesserungen und Korrekturen
+
 #### Build 22
 
 - Neue Team-Challenge

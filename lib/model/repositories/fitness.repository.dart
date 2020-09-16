@@ -48,7 +48,17 @@ class FitnessRepository extends Repository {
     if (day != null) {
       return await dao.fetchAllOfDay(day: day);
     }
-    return await dao.fetchAllByDayAndPoints();
+    DateTime start = DateTime.now();
+    start = start.subtract(
+      Duration(
+        days: 21 + start.weekday,
+        hours: start.hour,
+        minutes: start.minute,
+        seconds: start.second,
+        milliseconds: start.microsecond,
+      ),
+    );
+    return await dao.fetchAllByDayAndPoints(from: start);
   }
 
   ///
