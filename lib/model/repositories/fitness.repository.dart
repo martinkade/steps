@@ -20,6 +20,32 @@ class FitnessRepository extends Repository {
   static const platform = const MethodChannel('com.mediabeam/fitness');
 
   ///
+  Future<bool> isNotificationsEnabled() async {
+    try {
+      final bool notificationsEnabled =
+          await platform.invokeMethod('isNotificationsEnabled');
+      return notificationsEnabled;
+    } on PlatformException catch (ex) {
+      print(ex.toString());
+    }
+    return false;
+  }
+
+  ///
+  Future<bool> enableNotifications(bool enable) async {
+    try {
+      final bool notificationsEnabled =
+          await platform.invokeMethod('enableNotifications', <String, dynamic>{
+        'enable': enable,
+      });
+      return notificationsEnabled;
+    } on PlatformException catch (ex) {
+      print(ex.toString());
+    }
+    return false;
+  }
+
+  ///
   Future<bool> hasPermissions() async {
     try {
       final bool isAuthenticated =

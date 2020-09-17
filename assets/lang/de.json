@@ -56,7 +56,10 @@
     "lblSettingsGoals": "Ziele",
     "lblSettingsGoalDailyTitle": "Dein Tagesziel",
     "lblSettingsGoalDailyInfo": "Überlege dir, wie viele Punkte du täglich erreichen möchtest um die Motivation aufrecht zu erhalten.",
-    
+    "lblSettingsNotifications": "Benachrichtigungen",
+    "lblSettingsNotificationsTitle": "Neues von %1",
+    "lblSettingsNotificationsInfo": "Lass dich von den %1 Assistenten Pia und Emil informieren und motivieren.",
+
     "lblDashboardSettingsTitle": "Tagesziel anpassen",
     "lblDashboardSettingsText": "Wähle dein Aktivitätsniveau!",
     "lblDashboardSettingsOption0": "Nicht sehr aktiv",

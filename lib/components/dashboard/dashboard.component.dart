@@ -17,24 +17,25 @@ import 'package:steps/components/landing/landing.component.dart';
 import 'package:steps/components/settings/settings.component.dart';
 import 'package:steps/components/shared/bezier.clipper.dart';
 import 'package:steps/components/shared/localizer.dart';
+import 'package:steps/components/shared/route.transition.dart';
 import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/fit.snapshot.dart';
 import 'package:steps/model/preferences.dart';
 import 'package:steps/model/storage.dart';
 
-class Dashboard extends StatefulWidget {
+class DashboardComponent extends StatefulWidget {
   ///
   final String title;
 
   ///
-  Dashboard({Key key, this.title}) : super(key: key);
+  DashboardComponent({Key key, this.title}) : super(key: key);
 
   @override
   _DashboardState createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard>
+class _DashboardState extends State<DashboardComponent>
     implements
         DashboardTitleDelegate,
         DashboardSyncDelegate,
@@ -56,7 +57,8 @@ class _DashboardState extends State<Dashboard>
   StreamSubscription<Event> _rankingSubscription;
 
   ///
-  final key = GlobalKey();
+  final GlobalKey<DashboardSyncItemState> _key = GlobalKey<DashboardSyncItemState>(
+      debugLabel: '_DashboardSyncItemStateState');
 
   @override
   void initState() {
@@ -87,7 +89,7 @@ class _DashboardState extends State<Dashboard>
   void _land() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Landing()),
+      RouteTransition(page: Landing()),
     );
   }
 
@@ -130,11 +132,11 @@ class _DashboardState extends State<Dashboard>
   void onHistoryRequested() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => History(),
+      RouteTransition(
+        page: HistoryComponent(),
       ),
     ).then((_) {
-      (key.currentState as DashboardSyncItemState)?.reload();
+      (_key.currentState)?.reload();
     });
   }
 
@@ -142,11 +144,11 @@ class _DashboardState extends State<Dashboard>
   void onNewRecordRequested() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => HistoryAdd(),
+      RouteTransition(
+        page: HistoryAdd(),
       ),
     ).then((_) {
-      (key.currentState as DashboardSyncItemState)?.reload();
+      (_key.currentState)?.reload();
     });
   }
 
@@ -154,11 +156,11 @@ class _DashboardState extends State<Dashboard>
   void onSettingsRequested() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => Settings(),
+      RouteTransition(
+        page: SettingsComponent(),
       ),
     ).then((_) {
-      (key.currentState as DashboardSyncItemState)?.reload();
+      (_key.currentState)?.reload();
     });
   }
 
@@ -166,8 +168,8 @@ class _DashboardState extends State<Dashboard>
   void onInfoRequested() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => About(),
+      RouteTransition(
+        page: About(),
       ),
     );
   }
@@ -176,8 +178,8 @@ class _DashboardState extends State<Dashboard>
   void onChallengeRequested(FitChallenge challenge, int index) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => Challenge(
+      RouteTransition(
+        page: Challenge(
           challenge: challenge,
           index: index,
         ),
@@ -209,7 +211,7 @@ class _DashboardState extends State<Dashboard>
                 onHistoryRequested();
               },
               child: DashboardSyncItem(
-                key: key,
+                key: _key,
                 title: Localizer.translate(context, 'lblDashboardUserStats'),
                 delegate: this,
                 userKey: _userName,

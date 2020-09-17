@@ -24,7 +24,7 @@ class App extends StatelessWidget {
           accentColor: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: Dashboard(
+        home: DashboardComponent(
           title: Localizer.translate(context, 'appName'),
         ),
         supportedLocales: [

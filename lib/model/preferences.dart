@@ -1,6 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:steps/model/fit.challenge.dart';
 
+const kFlagInitialNotifications = 'kFlagInitialNotifications';
+
 class Preferences {
   static final Preferences _instance = Preferences._internal();
   factory Preferences() => _instance;
@@ -35,5 +37,17 @@ class Preferences {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     final String value = preferences.getString('kUser');
     return value;
+  }
+
+  ///
+  Future<void> setFlag(String key, bool value) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool(key, value);
+  }
+
+  ///
+  Future<bool> isFlagSet(String key) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getBool(key) ?? false;
   }
 }

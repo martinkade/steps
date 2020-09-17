@@ -3,6 +3,7 @@ import 'package:steps/components/history/history.component.add.dart';
 import 'package:steps/components/history/history.item.record.dart';
 import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/components/shared/page.default.dart';
+import 'package:steps/components/shared/route.transition.dart';
 import 'package:steps/model/calendar.dart';
 import 'package:steps/model/fit.record.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
@@ -56,8 +57,8 @@ class _HistoryDayState extends State<HistoryDay> {
 
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => HistoryAdd(
+      RouteTransition(
+        page: HistoryAdd(
           oldRecord: record,
         ),
       ),
@@ -73,7 +74,7 @@ class _HistoryDayState extends State<HistoryDay> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            Localizer.translate(context, 'lblNoRecordsAfter'),
+            Localizer.translate(context, 'lblNoRecords'),
           ),
         ),
       ),

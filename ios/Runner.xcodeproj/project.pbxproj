@@ -14,6 +14,7 @@
 		8B4A1CF724EAD1D9009D6CFF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8B4A1CF524EACC95009D6CFF /* GoogleService-Info.plist */; };
 		8B4A1CF924EAD6B2009D6CFF /* FitnessHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4A1CF824EAD6B2009D6CFF /* FitnessHandler.swift */; };
 		8B4A1CFC24EADBF9009D6CFF /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B4A1CFB24EADBF9009D6CFF /* HealthKit.framework */; };
+		8B81E8C5251238F0009F737C /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B81E8C4251238F0009F737C /* NotificationHandler.swift */; };
 		8BA6EE9324EBF586000BAC92 /* FitnessDateRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA6EE9224EBF586000BAC92 /* FitnessDateRange.swift */; };
 		8BAF922624F8472D00A0B262 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8BAF922824F8472D00A0B262 /* Localizable.strings */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -45,6 +46,7 @@
 		8B4A1CF524EACC95009D6CFF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8B4A1CF824EAD6B2009D6CFF /* FitnessHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessHandler.swift; sourceTree = "<group>"; };
 		8B4A1CFB24EADBF9009D6CFF /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		8B81E8C4251238F0009F737C /* NotificationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHandler.swift; sourceTree = "<group>"; };
 		8BA6EE9224EBF586000BAC92 /* FitnessDateRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessDateRange.swift; sourceTree = "<group>"; };
 		8BAF922524F846BB00A0B262 /* WANDR.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WANDR.entitlements; sourceTree = "<group>"; };
 		8BAF922724F8472D00A0B262 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				8B4A1CF824EAD6B2009D6CFF /* FitnessHandler.swift */,
+				8B81E8C4251238F0009F737C /* NotificationHandler.swift */,
 				8BA6EE9224EBF586000BAC92 /* FitnessDateRange.swift */,
 				8BAF922824F8472D00A0B262 /* Localizable.strings */,
 			);
@@ -293,6 +296,7 @@
 			files = (
 				8BA6EE9324EBF586000BAC92 /* FitnessDateRange.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
+				8B81E8C5251238F0009F737C /* NotificationHandler.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				8B4A1CF924EAD6B2009D6CFF /* FitnessHandler.swift in Sources */,
 			);

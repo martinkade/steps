@@ -62,6 +62,10 @@ class MainActivity : FlutterActivity() {
                 } else {
                     result.success(true)
                 }
+            } else if (call.method == "isNotificationsEnabled") {
+                result.success(isNotificationsEnabled())
+            } else if (call.method == "enableNotifications") {
+                result.success(call.argument<Boolean>("enable")?.let { enableNotifications(it) })
             } else if (call.method == "getDeviceInfo") {
                 result.success(getDeviceInfo() ?: "unknown")
             } else if (call.method == "getAppInfo") {
@@ -76,9 +80,6 @@ class MainActivity : FlutterActivity() {
         super.onCreate(savedInstanceState)
 
         createNotificationChannel()
-
-        // scheduleTestNotification()
-        scheduleWeeklyResultNotification()
     }
 
     private fun handleDataCall(pendingCall: MethodCall?, pendingResult: MethodChannel.Result?) {
@@ -147,34 +148,46 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    private fun scheduleTestNotification() {
-        val currentDate: Calendar = Calendar.getInstance()
-        currentDate.add(Calendar.SECOND, 10)
+    private fun enableNotifications(enable: Boolean): Boolean {
+        val preferences = getSharedPreferences("$packageName.prefs", MODE_PRIVATE)
+        preferences.edit().putBoolean("notifications", enable).apply()
+        if (enable) {
+            scheduleWeeklyResultNotification()
+        } else {
+            cancelNotifications()
+        }
+        return enable
+    }
 
+    private fun isNotificationsEnabled(): Boolean {
+        val preferences = getSharedPreferences("$packageName.prefs", MODE_PRIVATE)
+        return preferences.getBoolean("notifications", false)
+    }
+
+    private fun cancelNotifications() {
         val intent = Intent(this, JobCommandReceiver::class.java)
         intent.putExtra("notification_type", 1)
-        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_ALARM, intent, 0)
+        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_ALARM, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val am: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            am.setExact(AlarmManager.RTC_WAKEUP, currentDate.timeInMillis, pendingIntent)
-        }
+        am.cancel(pendingIntent)
     }
 
     private fun scheduleWeeklyResultNotification() {
+        cancelNotifications()
+
         val currentDate: Calendar = Calendar.getInstance()
         while (currentDate.get(Calendar.DAY_OF_WEEK) !== Calendar.MONDAY) {
             currentDate.add(Calendar.DATE, 1)
         }
-        currentDate.set(Calendar.HOUR_OF_DAY, 9)
-        currentDate.set(Calendar.MINUTE, 0)
+        currentDate.set(Calendar.HOUR_OF_DAY, 8)
+        currentDate.set(Calendar.MINUTE, 30)
         currentDate.set(Calendar.SECOND, 0)
-        currentDate.set(Calendar.MILLISECOND, 0)
 
         val intent = Intent(this, JobCommandReceiver::class.java)
         intent.putExtra("notification_type", 1)
-        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_ALARM, intent, 0)
+        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_ALARM, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val am: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        // am.setRepeating(AlarmManager.RTC_WAKEUP, currentDate.timeInMillis, AlarmManager.INTERVAL_DAY * 7, pendingIntent)
+        am.setRepeating(AlarmManager.RTC_WAKEUP, currentDate.timeInMillis, AlarmManager.INTERVAL_DAY * 7, pendingIntent)
     }
 
     private fun createNotificationChannel() {
@@ -182,7 +195,7 @@ class MainActivity : FlutterActivity() {
             val name = getString(R.string.lblNotificationChannelResults)
             val descriptionText = getString(R.string.lblNotificationChannelResultsInfo)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("com.mediabeam.fitness.notification.results", name, importance).apply {
+            val channel = NotificationChannel("$packageName.notification.results", name, importance).apply {
                 description = descriptionText
             }
             val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

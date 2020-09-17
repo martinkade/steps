@@ -16,9 +16,14 @@ Ein paar grundlegende Dinge, die dir den Einstieg in Flutter erleichtern werden:
 
 ### Version 1.0.0
 
+#### Build 24
+
+- Benachrichtigungen von den WANDR Assistenten Pia und Emil
+- Verbesserungen und Korrekturen
+
 #### Build 23
 
-- Die Grafik in 'Mein Verlauf' ist jetzt um das Tagesziel angereichert und ist interaktiver
+- Die Grafik in 'Mein Verlauf' ist jetzt um das Tagesziel angereichert und interaktiver
 - Verbesserungen und Korrekturen
 
 #### Build 22

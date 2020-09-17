@@ -6,63 +6,52 @@ import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/model/preferences.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 
-class SettingsSyncItem extends SettingsItem {
-  ///
-  SettingsSyncItem({Key key, String title}) : super(key: key, title: title);
-
-  @override
-  _SettingsSyncItemState createState() => _SettingsSyncItemState();
+abstract class SettingsNotificationDelegate {
+  void onSettingsRequested();
 }
 
-class _SettingsSyncItemState extends State<SettingsSyncItem> {
+class SettingsNotificationItem extends SettingsItem {
+  ///
+  SettingsNotificationItem({Key key, String title})
+      : super(key: key, title: title);
+
+  @override
+  _SettingsNotificationItemState createState() =>
+      _SettingsNotificationItemState();
+}
+
+class _SettingsNotificationItemState extends State<SettingsNotificationItem> {
   ///
   final FitnessRepository _repository = FitnessRepository();
 
   ///
-  bool _autoSyncEnabled;
+  bool _notificationsEnabled;
 
   @override
   void initState() {
     super.initState();
 
-    _autoSyncEnabled = false;
+    _notificationsEnabled = false;
 
     _load();
   }
 
   void _load() {
-    Preferences().isAutoSyncEnabled().then((enabled) {
+    _repository.isNotificationsEnabled().then((enabled) {
       if (!mounted) return;
-      if (enabled) {
-        _repository.hasPermissions().then((authorized) {
-          if (!mounted) return;
-          setState(() {
-            _autoSyncEnabled = authorized;
-          });
-        });
-      } else {
-        setState(() {
-          _autoSyncEnabled = false;
-        });
-      }
+      setState(() {
+        _notificationsEnabled = enabled;
+      });
     });
   }
 
-  void _toggleAutoSync(bool enable) {
-    if (enable) {
-      _repository.requestPermissions().then((authorized) {
-        if (!mounted) return;
-        Preferences().setAutoSyncEnabled(authorized);
-        setState(() {
-          _autoSyncEnabled = authorized;
-        });
-      });
-    } else {
-      Preferences().setAutoSyncEnabled(false);
+  void _toggleNotifications(bool enable) {
+    _repository.enableNotifications(enable).then((enabled) {
+      if (!mounted) return;
       setState(() {
-        _autoSyncEnabled = false;
+        _notificationsEnabled = enabled;
       });
-    }
+    });
   }
 
   @override
@@ -92,28 +81,34 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      Platform.isIOS
-                          ? Localizer.translate(
-                              context, 'lblSettingsDataSourceApple')
-                          : Localizer.translate(
-                              context, 'lblSettingsDataSourceGoogle'),
+                      Localizer.translate(
+                              context, 'lblSettingsNotificationsTitle')
+                          .replaceFirst(
+                        '%1',
+                        Localizer.translate(context, 'appName'),
+                      ),
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      Localizer.translate(context, 'lblSettingsDataSourceInfo'),
+                      Localizer.translate(
+                              context, 'lblSettingsNotificationsInfo')
+                          .replaceFirst(
+                        '%1',
+                        Localizer.translate(context, 'appName'),
+                      ),
                       style: TextStyle(fontSize: 16.0),
                     )
                   ],
                 ),
               ),
               Switch(
-                value: _autoSyncEnabled,
+                value: _notificationsEnabled,
                 activeColor: Theme.of(context).colorScheme.primary,
                 onChanged: (active) {
-                  _toggleAutoSync(active);
+                  _toggleNotifications(active);
                 },
               )
             ],

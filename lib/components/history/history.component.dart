@@ -4,19 +4,20 @@ import 'package:steps/components/history/history.component.day.dart';
 import 'package:steps/components/history/history.item.record.summary.dart';
 import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/components/shared/page.default.dart';
+import 'package:steps/components/shared/route.transition.dart';
 import 'package:steps/model/fit.record.dart';
 import 'package:steps/model/preferences.dart';
 import 'package:steps/model/repositories/fitness.repository.dart';
 
-class History extends StatefulWidget {
+class HistoryComponent extends StatefulWidget {
   ///
-  History({Key key}) : super(key: key);
+  HistoryComponent({Key key}) : super(key: key);
 
   @override
   _HistoryState createState() => _HistoryState();
 }
 
-class _HistoryState extends State<History> {
+class _HistoryState extends State<HistoryComponent> {
   ///
   final List<FitRecord> _records = List();
 
@@ -59,8 +60,8 @@ class _HistoryState extends State<History> {
   void _displayRecord(FitRecord record) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => HistoryDay(
+      RouteTransition(
+        page: HistoryDay(
           summary: record,
           goal: _goalDaily,
         ),
@@ -77,7 +78,7 @@ class _HistoryState extends State<History> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            Localizer.translate(context, 'lblNoRecordsAfter'),
+            Localizer.translate(context, 'lblNoRecords'),
           ),
         ),
       ),

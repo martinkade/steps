@@ -5,6 +5,6 @@
     <string name="lblNotificationChannelResultsInfo">Werde benachrichtigt, sobald Challenge-Ergebnisse verfügbar sind</string>
 
     <string name="lblNotificationWeeklyResults">Ergebnisse verfügbar</string>
-    <string name="lblNotificationWeeklyResultsInfo">Tippe um die Ergebnisse der wöchentlichen Challenge abzurufen</string>
+    <string name="lblNotificationWeeklyResultsInfo">Tippe um die Ergebnisse der letzten Woche abzurufen</string>
 
 </resources>

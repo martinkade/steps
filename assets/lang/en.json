@@ -34,7 +34,7 @@
     "lblTeamChallenge2Description": "From Nice we fly non-stop to the airport in Stadtlohn, pack our backpacks and off we go: We circle Germany - clockwise, for those who want to know exactly 😉. Let yourself be impressed and surprised along the way, there is a lot on our way. And at 4800 km there is no boredom.\n\n♫ WANDRn is the Hiker's delight ♫",
 
     "lblHistory": "My history",
-    "lblHistoryAdd": "New record",
+    "lblHistoryAdd": "New record",  
     "lblHistoryEdit": "Edit record",
     "lblHistoryName": "Description",
     "lblHistoryDate": "Date",
@@ -55,7 +55,10 @@
     "lblSettingsGoals": "Goals",
     "lblSettingsGoalDailyTitle": "Your daily goal",
     "lblSettingsGoalDailyInfo": "Think about how many points you would like to achieve daily in order to maintain motivation.",
-    
+    "lblSettingsNotifications": "Notifications",
+    "lblSettingsNotificationsTitle": "News from %1",
+    "lblSettingsNotificationsInfo": "Let the %1 assistants Pia and Emil inform and motivate you.",
+
     "lblDashboardSettingsTitle": "Adjust your daily goal ",
     "lblDashboardSettingsText": "Choose your level of activity!",
     "lblDashboardSettingsOption0": "Not very active",

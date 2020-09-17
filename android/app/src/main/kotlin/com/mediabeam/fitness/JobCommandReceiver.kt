@@ -19,8 +19,8 @@ class JobCommandReceiver(var context: Context? = null) : BroadcastReceiver() {
             val intent = Intent(this, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
-            val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-            val builder = NotificationCompat.Builder(this, "com.mediabeam.fitness.notification.results")
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(this, MainActivity.REQUEST_CODE_ALARM, intent, 0)
+            val builder = NotificationCompat.Builder(this, "$packageName.notification.results")
                     .setSmallIcon(R.drawable.ic_challenge)
                     .setContentTitle(resources.getString(R.string.lblNotificationWeeklyResults))
                     .setContentText(resources.getString(R.string.lblNotificationWeeklyResultsInfo))

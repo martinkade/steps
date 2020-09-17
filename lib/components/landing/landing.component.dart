@@ -8,6 +8,7 @@ import 'package:steps/components/landing/landing.item.fitaccess.dart';
 import 'package:steps/components/landing/landing.item.welcome.dart';
 import 'package:steps/components/shared/bezier.clipper.dart';
 import 'package:steps/components/shared/localizer.dart';
+import 'package:steps/components/shared/route.transition.dart';
 
 class Landing extends StatefulWidget {
   ///
@@ -92,7 +93,11 @@ class _LandingState extends State<Landing> implements LandingDelegate {
     if (item.index == 2) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
+        RouteTransition(
+          page: DashboardComponent(
+            title: Localizer.translate(context, 'appName'),
+          ),
+        ),
       );
     } else {
       _cardIndex = min(2, _cardIndex + 1);
