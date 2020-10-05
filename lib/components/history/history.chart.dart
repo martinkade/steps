@@ -22,10 +22,14 @@ class HistoryChart extends StatefulWidget {
   final int target;
 
   ///
+  final bool unitKilometersEnabled;
+
+  ///
   HistoryChart({
     Key key,
     @required this.series,
     @required this.target,
+    @required this.unitKilometersEnabled,
     @required this.theme,
     this.animate,
   }) : super(key: key);
@@ -35,10 +39,19 @@ class HistoryChart extends StatefulWidget {
 
   ///
   factory HistoryChart.withData(List<FitRecord> data,
-      {int target = 0, Color color, @required ThemeData theme, bool animate}) {
+      {int target = 0,
+      @required bool unitKilometersEnabled,
+      Color color,
+      @required ThemeData theme,
+      bool animate}) {
     return HistoryChart(
-      series: _createData(data, theme: theme),
+      series: _createData(
+        data,
+        theme: theme,
+        unitKilometersEnabled: unitKilometersEnabled,
+      ),
       target: target,
+      unitKilometersEnabled: unitKilometersEnabled,
       theme: theme,
       animate: animate,
     );
@@ -57,14 +70,16 @@ class HistoryChart extends StatefulWidget {
   ///
   static List<charts.Series<FitRecord, DateTime>> _createData(
       List<FitRecord> data,
-      {ThemeData theme}) {
+      {ThemeData theme,
+      bool unitKilometersEnabled}) {
     final charts.Color seriesColor = colorFrom(theme.colorScheme.primary);
     return [
       charts.Series<FitRecord, DateTime>(
         id: 'points',
         colorFn: (FitRecord record, _) => seriesColor,
         domainFn: (FitRecord record, _) => record.dateTime,
-        measureFn: (FitRecord record, _) => record.value,
+        measureFn: (FitRecord record, _) =>
+            unitKilometersEnabled ? record.value / 12.0 : record.value,
         data: data,
       ),
     ];
@@ -85,7 +100,7 @@ class _HistoryChartState extends State<HistoryChart>
   String tooltipGetValue() {
     return _record == null
         ? '-'
-        : '${_record?.value ?? '-'} ${Localizer.translate(context, 'lblUnitPoints')}';
+        : '${_record?.valueString(displayKilometers: widget.unitKilometersEnabled)} ${widget.unitKilometersEnabled ? Localizer.translate(context, 'lblUnitKilometer') : Localizer.translate(context, 'lblUnitPoints')}';
   }
 
   @override
@@ -141,7 +156,9 @@ class _HistoryChartState extends State<HistoryChart>
             behaviors: [
               charts.RangeAnnotation([
                 charts.LineAnnotationSegment(
-                  widget.target,
+                  widget.unitKilometersEnabled
+                      ? widget.target / 12.0
+                      : widget.target,
                   charts.RangeAnnotationAxisType.measure,
                   dashPattern: [4, 4],
                   strokeWidthPx: 1,

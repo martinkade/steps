@@ -3,6 +3,7 @@ import 'package:steps/components/dashboard/dashboard.item.dart';
 import 'package:steps/components/shared/localizer.dart';
 import 'package:steps/components/shared/segmented.control.dart';
 import 'package:steps/model/fit.ranking.dart';
+import 'package:steps/model/preferences.dart';
 
 class DashboardRankingItem extends DashboardItem {
   ///
@@ -15,20 +16,27 @@ class DashboardRankingItem extends DashboardItem {
   final FitRanking ranking;
 
   ///
-  DashboardRankingItem(
-      {Key key, String title, this.ranking, this.userKey, this.teamName})
-      : super(key: key, title: title);
+  DashboardRankingItem({
+    Key key,
+    String title,
+    this.ranking,
+    this.userKey,
+    this.teamName,
+  }) : super(key: key, title: title);
 
   @override
-  _DashboardRankingItemState createState() => _DashboardRankingItemState();
+  DashboardRankingItemState createState() => DashboardRankingItemState();
 }
 
-class _DashboardRankingItemState extends State<DashboardRankingItem> {
+class DashboardRankingItemState extends State<DashboardRankingItem> {
   ///
   Map<String, List<FitRankingEntry>> _boards;
 
   ///
   int _selectedModeIndex;
+
+  ///
+  bool _unitKilometersEnabled;
 
   @override
   void initState() {
@@ -36,6 +44,18 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
 
     _selectedModeIndex = 0;
     _boards = widget.ranking?.entries ?? Map();
+    _unitKilometersEnabled = false;
+    Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
+      setState(() {
+        _unitKilometersEnabled = enabled;
+      });
+    });
+  }
+
+  void reload(bool unitKilometersEnabled) {
+    setState(() {
+      _unitKilometersEnabled = unitKilometersEnabled;
+    });
   }
 
   @override
@@ -160,6 +180,7 @@ class _DashboardRankingItemState extends State<DashboardRankingItem> {
                               list: _boards[
                                   _boards.keys.toList()[_selectedModeIndex]],
                               teamName: widget.teamName,
+                              unitKilometersEnabled: _unitKilometersEnabled,
                             ),
                 ),
               ],
@@ -177,7 +198,12 @@ class DashboardRankingList extends StatelessWidget {
   final String teamName;
 
   ///
-  DashboardRankingList({Key key, this.list, this.teamName}) : super(key: key);
+  final bool unitKilometersEnabled;
+
+  ///
+  DashboardRankingList(
+      {Key key, this.list, this.teamName, this.unitKilometersEnabled})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -270,7 +296,9 @@ class DashboardRankingList extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              item.value,
+                              unitKilometersEnabled
+                                  ? (item.value / 12.0).toStringAsFixed(1)
+                                  : item.value.toStringAsFixed(0),
                               style: TextStyle(
                                 fontWeight: item.name == teamName
                                     ? FontWeight.bold
@@ -280,7 +308,11 @@ class DashboardRankingList extends StatelessWidget {
                               textAlign: TextAlign.right,
                             ),
                             Text(
-                              Localizer.translate(context, 'lblUnitPoints'),
+                              unitKilometersEnabled
+                                  ? Localizer.translate(
+                                      context, 'lblUnitKilometer')
+                                  : Localizer.translate(
+                                      context, 'lblUnitPoints'),
                             ),
                           ],
                         ),

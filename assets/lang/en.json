@@ -58,6 +58,9 @@
     "lblSettingsNotifications": "Notifications",
     "lblSettingsNotificationsTitle": "News from %1",
     "lblSettingsNotificationsInfo": "Let the %1 assistants Pia and Emil inform and motivate you.",
+    "lblSettingsDisplay": "Display",
+    "lblSettingsDisplayUnitMainTitle": "Conversion to kilometers",
+    "lblSettingsDisplayUnitMainInfo": "If you want, you can have the points in your history and in the statistics converted directly into kilometers.",
 
     "lblDashboardSettingsTitle": "Adjust your daily goal ",
     "lblDashboardSettingsText": "Choose your level of activity!",

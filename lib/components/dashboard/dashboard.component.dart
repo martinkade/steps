@@ -51,19 +51,29 @@ class _DashboardState extends State<DashboardComponent>
   FitSnapshot _fitSnapshot;
 
   ///
+  bool _unitKilometersEnabled;
+
+  ///
   FitRanking _ranking;
 
   ///
   StreamSubscription<Event> _rankingSubscription;
 
   ///
-  final GlobalKey<DashboardSyncItemState> _key = GlobalKey<DashboardSyncItemState>(
-      debugLabel: '_DashboardSyncItemStateState');
+  final GlobalKey<DashboardSyncItemState> _syncKey =
+      GlobalKey<DashboardSyncItemState>(
+          debugLabel: '_DashboardSyncItemStateState');
+
+  ///
+  final GlobalKey<DashboardRankingItemState> _rankingKey =
+      GlobalKey<DashboardRankingItemState>(
+          debugLabel: '_DashboardRankingItemState');
 
   @override
   void initState() {
     super.initState();
 
+    _unitKilometersEnabled = false;
     Preferences.getUserKey().then((userValue) {
       if (!mounted) return;
 
@@ -94,34 +104,38 @@ class _DashboardState extends State<DashboardComponent>
   }
 
   void _load() {
-    Storage().access().then((instance) {
-      final FirebaseDatabase db = FirebaseDatabase(app: instance);
-      db.reference().child('users').once().then((snapshot) {
-        if (!mounted) return;
-        _onSnapshotChanged(snapshot);
-      });
-
-      if (_rankingSubscription == null) {
-        _rankingSubscription =
-            db.reference().child('users').onChildChanged.listen((_) {
+    Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
+      if (!mounted) return;
+      _unitKilometersEnabled = enabled;
+      Storage().access().then((instance) {
+        final FirebaseDatabase db = FirebaseDatabase(app: instance);
+        db.reference().child('users').once().then((snapshot) {
           if (!mounted) return;
-          db.reference().child('users').once().then((snapshot) {
-            _onSnapshotChanged(snapshot);
-          });
+          _onSnapshotChanged(snapshot);
         });
-      }
+
+        if (_rankingSubscription == null) {
+          _rankingSubscription =
+              db.reference().child('users').onChildChanged.listen((_) {
+            if (!mounted) return;
+            db.reference().child('users').once().then((snapshot) {
+              _onSnapshotChanged(snapshot);
+            });
+          });
+        }
+      });
     });
   }
 
   void _onSnapshotChanged(DataSnapshot snapshot) {
-    if (snapshot == null) return;
+    if (!mounted) return;
     setState(() {
       _ranking = FitRanking.createFromSnapshot(snapshot);
     });
   }
 
   @override
-  void onFitnessDataUpadte(FitSnapshot snapshot) {
+  void onFitnessDataUpdate(FitSnapshot snapshot) {
     if (!mounted) return;
     setState(() {
       _fitSnapshot = snapshot;
@@ -136,7 +150,7 @@ class _DashboardState extends State<DashboardComponent>
         page: HistoryComponent(),
       ),
     ).then((_) {
-      (_key.currentState)?.reload();
+      (_syncKey.currentState)?.reload();
     });
   }
 
@@ -148,7 +162,7 @@ class _DashboardState extends State<DashboardComponent>
         page: HistoryAdd(),
       ),
     ).then((_) {
-      (_key.currentState)?.reload();
+      (_syncKey.currentState)?.reload();
     });
   }
 
@@ -159,8 +173,10 @@ class _DashboardState extends State<DashboardComponent>
       RouteTransition(
         page: SettingsComponent(),
       ),
-    ).then((_) {
-      (_key.currentState)?.reload();
+    ).then((_) async {
+      (_syncKey.currentState)?.reload();
+      (_rankingKey.currentState)
+          ?.reload(await Preferences().isFlagSet(kFlagUnitKilometers));
     });
   }
 
@@ -211,7 +227,7 @@ class _DashboardState extends State<DashboardComponent>
                 onHistoryRequested();
               },
               child: DashboardSyncItem(
-                key: _key,
+                key: _syncKey,
                 title: Localizer.translate(context, 'lblDashboardUserStats'),
                 delegate: this,
                 userKey: _userName,
@@ -234,6 +250,7 @@ class _DashboardState extends State<DashboardComponent>
             );
           case 4:
             return DashboardRankingItem(
+              key: _rankingKey,
               title: Localizer.translate(context, 'lblDashboardTeamStandings'),
               ranking: _ranking,
               userKey: _userName,

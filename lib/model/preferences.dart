@@ -2,11 +2,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:steps/model/fit.challenge.dart';
 
 const kFlagInitialNotifications = 'kFlagInitialNotifications';
+const kFlagUnitKilometers = 'kFlagUnitKilometers';
 
 class Preferences {
   static final Preferences _instance = Preferences._internal();
   factory Preferences() => _instance;
   Preferences._internal();
+
+  ///
+  static Future<String> getUserKey() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    final String value = preferences.getString('kUser');
+    return value;
+  }
 
   ///
   Future<void> setAutoSyncEnabled(bool enabled) async {
@@ -30,13 +38,6 @@ class Preferences {
   Future<int> getDailyGoal() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getInt('kChallengeGoalDaily') ?? DAILY_TARGET_POINTS;
-  }
-
-  ///
-  static Future<String> getUserKey() async {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final String value = preferences.getString('kUser');
-    return value;
   }
 
   ///

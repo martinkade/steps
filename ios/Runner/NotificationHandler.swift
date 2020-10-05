@@ -83,8 +83,8 @@ class NotificationHandler: NSObject {
         var dateComponents = DateComponents()
         dateComponents.calendar = Calendar.current
         
-        dateComponents.weekday = 2 // Monday
-        dateComponents.hour = 8
+        // dateComponents.weekday = 2 // Monday
+        dateComponents.hour = 7
         dateComponents.minute = 30
         dateComponents.second = 0
         

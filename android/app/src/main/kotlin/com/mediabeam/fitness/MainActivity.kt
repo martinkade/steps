@@ -176,10 +176,10 @@ class MainActivity : FlutterActivity() {
         cancelNotifications()
 
         val currentDate: Calendar = Calendar.getInstance()
-        while (currentDate.get(Calendar.DAY_OF_WEEK) !== Calendar.MONDAY) {
-            currentDate.add(Calendar.DATE, 1)
-        }
-        currentDate.set(Calendar.HOUR_OF_DAY, 8)
+        // while (currentDate.get(Calendar.DAY_OF_WEEK) !== Calendar.MONDAY) {
+        //     currentDate.add(Calendar.DATE, 1)
+        // }
+        currentDate.set(Calendar.HOUR_OF_DAY, 7)
         currentDate.set(Calendar.MINUTE, 30)
         currentDate.set(Calendar.SECOND, 0)
 
@@ -187,7 +187,7 @@ class MainActivity : FlutterActivity() {
         intent.putExtra("notification_type", 1)
         val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_ALARM, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val am: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        am.setRepeating(AlarmManager.RTC_WAKEUP, currentDate.timeInMillis, AlarmManager.INTERVAL_DAY * 7, pendingIntent)
+        am.setRepeating(AlarmManager.RTC_WAKEUP, currentDate.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
     }
 
     private fun createNotificationChannel() {

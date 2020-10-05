@@ -30,12 +30,16 @@ class _HistoryState extends State<HistoryComponent> {
   ///
   int _goalDaily;
 
+  ///
+  bool _unitKilometersEnabled;
+
   @override
   void initState() {
     super.initState();
 
     _points = 0;
     _goalDaily = 0;
+    _unitKilometersEnabled = false;
     _load();
   }
 
@@ -43,16 +47,20 @@ class _HistoryState extends State<HistoryComponent> {
     Preferences().getDailyGoal().then((value) {
       if (!mounted) return;
       _goalDaily = value;
-    });
-    _repository.fetchHistory().then((records) {
-      if (!mounted) return;
-      _points = 0;
-      records.forEach((record) {
-        _points += record.value;
-      });
-      _records.clear();
-      setState(() {
-        _records.addAll(records);
+      Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
+        if (!mounted) return;
+        _unitKilometersEnabled = enabled;
+        _repository.fetchHistory().then((records) {
+          if (!mounted) return;
+          _points = 0;
+          records.forEach((record) {
+            _points += record.value;
+          });
+          _records.clear();
+          setState(() {
+            _records.addAll(records);
+          });
+        });
       });
     });
   }
@@ -107,7 +115,8 @@ class _HistoryState extends State<HistoryComponent> {
                           child: Text(
                             Localizer.translate(context, 'lblHistorySummary')
                                 .replaceFirst('%1', '$_points')
-                                .replaceFirst('%2', '${_points ~/ 12}'),
+                                .replaceFirst('%2',
+                                    '${(_points / 12.0).toStringAsFixed(1)}'),
                             style: TextStyle(fontSize: 16.0),
                           ),
                           padding: const EdgeInsets.all(16.0),
@@ -135,6 +144,7 @@ class _HistoryState extends State<HistoryComponent> {
                           child: HistoryChart.withData(
                             _records,
                             target: _goalDaily,
+                            unitKilometersEnabled: _unitKilometersEnabled,
                             theme: Theme.of(context),
                             animate: false,
                           ),
@@ -150,6 +160,7 @@ class _HistoryState extends State<HistoryComponent> {
                     record: record,
                     isLastItem: index + 1 == _records.length,
                     goal: _goalDaily,
+                    unitKilometersEnabled: _unitKilometersEnabled,
                   ),
                   onTap: () {
                     _displayRecord(record);

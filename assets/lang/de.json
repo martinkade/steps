@@ -59,6 +59,9 @@
     "lblSettingsNotifications": "Benachrichtigungen",
     "lblSettingsNotificationsTitle": "Neues von %1",
     "lblSettingsNotificationsInfo": "Lass dich von den %1 Assistenten Pia und Emil informieren und motivieren.",
+    "lblSettingsDisplay": "Anzeige",
+    "lblSettingsDisplayUnitMainTitle": "Umrechnung in Kilometer",
+    "lblSettingsDisplayUnitMainInfo": "Wenn du möchtest, kannst du dir die Punkte in deinem Verlauf und in der Statistik direkt in Kilometer umrechnen lassen.",
 
     "lblDashboardSettingsTitle": "Tagesziel anpassen",
     "lblDashboardSettingsText": "Wähle dein Aktivitätsniveau!",

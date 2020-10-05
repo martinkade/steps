@@ -15,11 +15,15 @@ class HistoryRecordSummaryItem extends HistoryItem {
   final int goal;
 
   ///
+  final bool unitKilometersEnabled;
+
+  ///
   HistoryRecordSummaryItem({
     Key key,
     this.record,
     this.isLastItem,
     this.goal,
+    this.unitKilometersEnabled,
   }) : super(key: key);
 
   @override
@@ -75,7 +79,9 @@ class _HistoryRecordSummaryItemState extends State<HistoryRecordSummaryItem> {
                       ),
                     ),
                     Text(
-                      Localizer.translate(context, 'lblUnitPoints'),
+                      widget.unitKilometersEnabled
+                          ? Localizer.translate(context, 'lblUnitKilometer')
+                          : Localizer.translate(context, 'lblUnitPoints'),
                     ),
                   ],
                 ),
@@ -93,7 +99,8 @@ class _HistoryRecordSummaryItemState extends State<HistoryRecordSummaryItem> {
                       ),
                     ),
                     Text(
-                      '${widget.record.value}',
+                      widget.record.valueString(
+                          displayKilometers: widget.unitKilometersEnabled),
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,

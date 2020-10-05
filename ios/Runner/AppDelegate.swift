@@ -28,7 +28,7 @@ import Flutter
     override func applicationDidBecomeActive(_ application: UIApplication) {
         super.applicationDidBecomeActive(application)
         
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        application.applicationIconBadgeNumber = 0
     }
     
 }

@@ -16,9 +16,10 @@ Ein paar grundlegende Dinge, die dir den Einstieg in Flutter erleichtern werden:
 
 ### Version 1.0.0
 
-#### Build 24
+#### Build 25
 
 - Benachrichtigungen von den WANDR Assistenten Pia und Emil
+- Einstellungen > Anzeige > Umrechnung in Kilometer
 - Verbesserungen und Korrekturen
 
 #### Build 23

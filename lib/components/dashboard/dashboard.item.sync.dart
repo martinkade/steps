@@ -11,7 +11,7 @@ import 'package:steps/model/repositories/fitness.repository.dart';
 import 'package:steps/model/repositories/repository.dart';
 
 abstract class DashboardSyncDelegate {
-  void onFitnessDataUpadte(FitSnapshot snapshot);
+  void onFitnessDataUpdate(FitSnapshot snapshot);
   void onSettingsRequested();
 }
 
@@ -129,7 +129,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
         break;
       default:
         _snapshot = snapshot;
-        widget.delegate?.onFitnessDataUpadte(snapshot);
+        widget.delegate?.onFitnessDataUpdate(snapshot);
         break;
     }
 

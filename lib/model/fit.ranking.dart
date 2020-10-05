@@ -210,7 +210,7 @@ class FitRanking {
       teamKeys.forEach((teamKey) {
         ranking.addEntry(categoryKey,
             name: teamKey,
-            value: categoryValue[teamKey].toString(),
+            value: categoryValue[teamKey],
             userCount: participation[teamKey] ?? 0);
       });
     });
@@ -219,7 +219,7 @@ class FitRanking {
   }
 
   void addEntry(String key,
-      {@required String name, @required String value, int userCount}) {
+      {@required String name, @required num value, int userCount}) {
     entries[key]
         ?.add(FitRankingEntry(name: name, value: value, userCount: userCount));
   }
@@ -227,7 +227,7 @@ class FitRanking {
 
 class FitRankingEntry {
   final String name;
-  final String value;
+  final num value;
   final int userCount;
   FitRankingEntry({@required this.name, @required this.value, this.userCount});
 }

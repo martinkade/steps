@@ -79,7 +79,8 @@ class FitRecord {
   }
 
   ///
-  String relativeDateTime(BuildContext context, {Calendar calendar, DateTime now}) {
+  String relativeDateTime(BuildContext context,
+      {Calendar calendar, DateTime now}) {
     final DateTime date = dateTime;
     return DateFormat.Hm(LOCALE ?? 'de_DE').format(date);
   }
@@ -92,6 +93,14 @@ class FitRecord {
       default:
         return Localizer.translate(context, 'lblUnitSteps');
     }
+  }
+
+  ///
+  String valueString({bool displayKilometers = false}) {
+    if (displayKilometers) {
+      return (value / 12.0).toStringAsFixed(1);
+    }
+    return value.toString();
   }
 
   ///

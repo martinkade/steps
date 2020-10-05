@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:steps/components/settings/settings.item.display.dart';
 import 'package:steps/components/settings/settings.item.goals.dart';
 import 'package:steps/components/settings/settings.item.notifications.dart';
 import 'package:steps/components/settings/settings.item.sync.dart';
@@ -23,18 +24,22 @@ class _SettingsState extends State<SettingsComponent> {
   Widget build(BuildContext context) {
     return DefaultPage(
       child: ListView.builder(
-        itemCount: 3,
+        itemCount: 4,
         itemBuilder: (context, index) {
           switch (index) {
             case 0:
+              return SettingsDisplayItem(
+                title: Localizer.translate(context, 'lblSettingsDisplay'),
+              );
+            case 1:
               return SettingsGoalItem(
                 title: Localizer.translate(context, 'lblSettingsGoals'),
               );
-            case 1:
+            case 2:
               return SettingsNotificationItem(
                 title: Localizer.translate(context, 'lblSettingsNotifications'),
               );
-            case 2:
+            case 3:
               return SettingsSyncItem(
                 title: Localizer.translate(context, 'lblSettingsDataSource'),
               );

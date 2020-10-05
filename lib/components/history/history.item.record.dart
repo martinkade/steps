@@ -82,7 +82,7 @@ class _HistoryRecordItemState extends State<HistoryRecordItem> {
                       ),
                     ),
                     Text(
-                      '${widget.record.value}',
+                      widget.record.valueString(),
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,

@@ -1,48 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:steps/components/settings/settings.item.dart';
 import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/model/repositories/fitness.repository.dart';
+import 'package:steps/model/preferences.dart';
 
-class SettingsNotificationItem extends SettingsItem {
+class SettingsDisplayItem extends SettingsItem {
   ///
-  SettingsNotificationItem({Key key, String title})
-      : super(key: key, title: title);
+  SettingsDisplayItem({Key key, String title}) : super(key: key, title: title);
 
   @override
-  _SettingsNotificationItemState createState() =>
-      _SettingsNotificationItemState();
+  _SettingsDisplayItemState createState() => _SettingsDisplayItemState();
 }
 
-class _SettingsNotificationItemState extends State<SettingsNotificationItem> {
+class _SettingsDisplayItemState extends State<SettingsDisplayItem> {
   ///
-  final FitnessRepository _repository = FitnessRepository();
-
-  ///
-  bool _notificationsEnabled;
+  bool _unitKilometersEnabled;
 
   @override
   void initState() {
     super.initState();
 
-    _notificationsEnabled = false;
+    _unitKilometersEnabled = false;
 
     _load();
   }
 
   void _load() {
-    _repository.isNotificationsEnabled().then((enabled) {
+    Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
       if (!mounted) return;
       setState(() {
-        _notificationsEnabled = enabled;
+        _unitKilometersEnabled = enabled;
       });
     });
   }
 
-  void _toggleNotifications(bool enable) {
-    _repository.enableNotifications(enable).then((enabled) {
+  void _toggleUnits(bool enable) {
+    Preferences().setFlag(kFlagUnitKilometers, enable).then((_) {
       if (!mounted) return;
       setState(() {
-        _notificationsEnabled = enabled;
+        _unitKilometersEnabled = enable;
       });
     });
   }
@@ -75,10 +70,8 @@ class _SettingsNotificationItemState extends State<SettingsNotificationItem> {
                   children: [
                     Text(
                       Localizer.translate(
-                              context, 'lblSettingsNotificationsTitle')
-                          .replaceFirst(
-                        '%1',
-                        Localizer.translate(context, 'appName'),
+                        context,
+                        'lblSettingsDisplayUnitMainTitle',
                       ),
                       style: TextStyle(
                         fontSize: 16.0,
@@ -87,10 +80,8 @@ class _SettingsNotificationItemState extends State<SettingsNotificationItem> {
                     ),
                     Text(
                       Localizer.translate(
-                              context, 'lblSettingsNotificationsInfo')
-                          .replaceFirst(
-                        '%1',
-                        Localizer.translate(context, 'appName'),
+                        context,
+                        'lblSettingsDisplayUnitMainInfo',
                       ),
                       style: TextStyle(fontSize: 16.0),
                     )
@@ -98,10 +89,10 @@ class _SettingsNotificationItemState extends State<SettingsNotificationItem> {
                 ),
               ),
               Switch(
-                value: _notificationsEnabled,
+                value: _unitKilometersEnabled,
                 activeColor: Theme.of(context).colorScheme.primary,
                 onChanged: (active) {
-                  _toggleNotifications(active);
+                  _toggleUnits(active);
                 },
               )
             ],
