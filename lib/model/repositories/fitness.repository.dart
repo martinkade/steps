@@ -17,15 +17,16 @@ abstract class FitnessRepositoryClient {
 
 class FitnessRepository extends Repository {
   ///
-  static const platform = const MethodChannel('com.mediabeam/fitness');
+  static const fitness = const MethodChannel('com.mediabeam/fitness');
+  static const notification = const MethodChannel('com.mediabeam/notification');
 
   ///
   Future<bool> isNotificationsEnabled() async {
     try {
       final bool notificationsEnabled =
-          await platform.invokeMethod('isNotificationsEnabled');
+          await notification.invokeMethod('isNotificationsEnabled');
       return notificationsEnabled;
-    } on PlatformException catch (ex) {
+    } on Exception catch (ex) {
       print(ex.toString());
     }
     return false;
@@ -35,11 +36,11 @@ class FitnessRepository extends Repository {
   Future<bool> enableNotifications(bool enable) async {
     try {
       final bool notificationsEnabled =
-          await platform.invokeMethod('enableNotifications', <String, dynamic>{
+          await notification.invokeMethod('enableNotifications', <String, dynamic>{
         'enable': enable,
       });
       return notificationsEnabled;
-    } on PlatformException catch (ex) {
+    } on Exception catch (ex) {
       print(ex.toString());
     }
     return false;
@@ -49,9 +50,9 @@ class FitnessRepository extends Repository {
   Future<bool> hasPermissions() async {
     try {
       final bool isAuthenticated =
-          await platform.invokeMethod('isAuthenticated');
+          await fitness.invokeMethod('isAuthenticated');
       return isAuthenticated;
-    } on PlatformException catch (ex) {
+    } on Exception catch (ex) {
       print(ex.toString());
     }
     return false;
@@ -60,9 +61,9 @@ class FitnessRepository extends Repository {
   ///
   Future<bool> requestPermissions() async {
     try {
-      final bool isAuthenticated = await platform.invokeMethod('authenticate');
+      final bool isAuthenticated = await fitness.invokeMethod('authenticate');
       return isAuthenticated;
-    } on PlatformException catch (ex) {
+    } on Exception catch (ex) {
       print(ex.toString());
     }
     return false;
@@ -124,10 +125,10 @@ class FitnessRepository extends Repository {
     try {
       if (isAutoSyncEnabled && await hasPermissions()) {
         final Map<dynamic, dynamic> data =
-            await platform.invokeMethod('getFitnessMetrics');
+            await fitness.invokeMethod('getFitnessMetrics');
         await snapshot.fillWithExternalData(dao, data);
       }
-    } on PlatformException catch (ex) {
+    } on Exception catch (ex) {
       print(ex.toString());
     }
 

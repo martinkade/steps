@@ -16,6 +16,11 @@ Ein paar grundlegende Dinge, die dir den Einstieg in Flutter erleichtern werden:
 
 ### Version 1.0.0
 
+#### Build 26
+
+- Apple Health Plugin funktioniert wieder
+- Verbesserungen und Korrekturen
+
 #### Build 25
 
 - Benachrichtigungen von den WANDR Assistenten Pia und Emil

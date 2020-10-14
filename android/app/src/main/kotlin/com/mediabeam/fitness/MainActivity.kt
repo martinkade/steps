@@ -21,7 +21,8 @@ import java.util.*
 class MainActivity : FlutterActivity() {
 
     companion object {
-        const val CHANNEL = "com.mediabeam/fitness"
+        const val CHANNEL_FITNESS = "com.mediabeam/fitness"
+        const val CHANNEL_NOTIFICATION = "com.mediabeam/notification"
         const val REQUEST_CODE_DATA_AUTH = 1
         const val REQUEST_CODE_AUTH = 2
         const val REQUEST_CODE_ALARM = 3
@@ -39,7 +40,7 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL_FITNESS).setMethodCallHandler { call, result ->
             // Note: this method is invoked on the main thread.
             if (call.method == "getFitnessMetrics") {
                 MainActivity@ this.pendingResult = result
@@ -62,14 +63,20 @@ class MainActivity : FlutterActivity() {
                 } else {
                     result.success(true)
                 }
-            } else if (call.method == "isNotificationsEnabled") {
-                result.success(isNotificationsEnabled())
-            } else if (call.method == "enableNotifications") {
-                result.success(call.argument<Boolean>("enable")?.let { enableNotifications(it) })
             } else if (call.method == "getDeviceInfo") {
                 result.success(getDeviceInfo() ?: "unknown")
             } else if (call.method == "getAppInfo") {
                 result.success(getAppInfo() ?: "unknown")
+            } else {
+                result.notImplemented()
+            }
+        }
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL_NOTIFICATION).setMethodCallHandler { call, result ->
+            // Note: this method is invoked on the main thread.
+            if (call.method == "isNotificationsEnabled") {
+                result.success(isNotificationsEnabled())
+            } else if (call.method == "enableNotifications") {
+                result.success(call.argument<Boolean>("enable")?.let { enableNotifications(it) })
             } else {
                 result.notImplemented()
             }

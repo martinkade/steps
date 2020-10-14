@@ -14,8 +14,9 @@ import Flutter
             let fitnessHandler = FitnessHandler()
             fitnessHandler.subscribe(toChannel: fitnessChannel, fromController: controller)
             if #available(iOS 10.0, *) {
+                let notificationChannel = FlutterMethodChannel(name: "com.mediabeam/notification", binaryMessenger: controller.binaryMessenger)
                 let notificationHandler = NotificationHandler(withDelegate: self)
-                notificationHandler.subscribe(toChannel: fitnessChannel, fromController: controller)
+                notificationHandler.subscribe(toChannel: notificationChannel, fromController: controller)
             }
         }
         

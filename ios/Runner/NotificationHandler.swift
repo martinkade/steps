@@ -32,6 +32,8 @@ class NotificationHandler: NSObject {
                         result(enabled)
                     }
                 }
+            } else {
+                result(FlutterMethodNotImplemented)
             }
         })
     }

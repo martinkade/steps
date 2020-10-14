@@ -66,6 +66,8 @@ class FitnessHandler: NSObject {
                     return
                 }
                 result(String(format: "%@ (%@)", versionNumber, buildNumber))
+            } else {
+                result(FlutterMethodNotImplemented)
             }
         })
     }
