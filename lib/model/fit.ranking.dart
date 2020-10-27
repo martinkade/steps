@@ -12,6 +12,7 @@ class FitRanking {
   int absolute = 0;
   int challenge1 = 0;
   int challenge2 = 0;
+  int challenge3 = 0;
   FitRanking._internal();
 
   static FitRanking createFromSnapshot(dynamic snapshot) {
@@ -162,7 +163,7 @@ class FitRanking {
       }
 
       if (timestampKey > 0 &&
-          !timestamp.isBefore(now.subtract(Duration(days: 7)))) {
+          !timestamp.isBefore(now.subtract(Duration(days: 14)))) {
         print(
             '[INFO] sync user $key ($timestamp) with app version ${value['client']} on ${value['device']}');
         // total
@@ -191,13 +192,14 @@ class FitRanking {
           participation.putIfAbsent(teamKey, () => 1);
         }
       } else {
-        print('!!! user $key is outdated, not synced within last 7 days');
+        print('!!! user $key is outdated, not synced within last 14 days');
       }
 
       ranking.absolute += value['total'] ?? 0;
       if (value['challenges'] != null) {
-        ranking.challenge1 += value['challenges'][0] ?? 0;
-        ranking.challenge2 += value['challenges'][1] ?? 0;
+        ranking.challenge1 += ((value['challenges']?.length ?? 0) > 0) ? (value['challenges'][0] ?? 0) : 0;
+        ranking.challenge2 += ((value['challenges']?.length ?? 0) > 1) ? (value['challenges'][1] ?? 0) : 0;
+        ranking.challenge3 += ((value['challenges']?.length ?? 0) > 2) ? (value['challenges'][2] ?? 0) : 0;
       } else {
         ranking.challenge1 += value['total'] ?? 0;
       }

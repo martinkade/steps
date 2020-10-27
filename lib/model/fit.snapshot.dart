@@ -3,6 +3,7 @@ import 'package:steps/model/cache/fit.record.dao.dart';
 import 'package:steps/model/calendar.dart';
 import 'package:steps/model/fit.challenge.team1.dart';
 import 'package:steps/model/fit.challenge.team2.dart';
+import 'package:steps/model/fit.challenge.team3.dart';
 import 'package:steps/model/fit.plugin.dart';
 import 'package:steps/model/fit.record.dart';
 import 'dart:io' show Platform;
@@ -31,6 +32,7 @@ class FitSnapshot {
 
     int challenge1 = 0;
     int challenge2 = 0;
+    int challenge3 = 0;
 
     int points;
     DateTime date;
@@ -57,7 +59,10 @@ class FitSnapshot {
           }
         }
 
-        if (date.isAfter(FitChallenge2Team.kStartDate) ||
+        if (date.isAfter(FitChallenge3Team.kStartDate) ||
+            date.isAtSameMomentAs(FitChallenge3Team.kStartDate)) {
+          challenge3 += points;
+        } else if (date.isAfter(FitChallenge2Team.kStartDate) ||
             date.isAtSameMomentAs(FitChallenge2Team.kStartDate)) {
           challenge2 += points;
         } else if (date.isAfter(FitChallenge1Team.kStartDate) ||
@@ -71,7 +76,7 @@ class FitSnapshot {
     data['yesterday'] = yesterday;
     data['week'] = week;
     data['lastWeek'] = lastWeek;
-    data['challenges'] = [challenge1, challenge2];
+    data['challenges'] = [challenge1, challenge2, challenge3];
     data['total'] = total;
   }
 

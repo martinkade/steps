@@ -33,6 +33,6 @@ class FitChallenge2Team extends FitChallenge {
 
   @override
   void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = ranking.challenge2.toDouble() / 12.0;
+    progress = (ranking.challenge2?.toDouble() ?? 0.0) / 12.0;
   }
 }
