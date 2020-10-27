@@ -6,6 +6,7 @@ import 'package:steps/components/dashboard/dashboard.item.dart';
 import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.challenge.team1.dart';
 import 'package:steps/model/fit.challenge.team2.dart';
+import 'package:steps/model/fit.challenge.team3.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/fit.snapshot.dart';
 
@@ -67,13 +68,15 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
 
     final FitChallenge1Team challenge1 = FitChallenge1Team(context);
     final FitChallenge2Team challenge2 = FitChallenge2Team(context);
+    final FitChallenge3Team challenge3 = FitChallenge3Team(context);
     _challenges = [
+      challenge2,
       challenge1,
     ];
-    if (challenge2.startDate.isBefore(DateTime.now())) {
-      _challenges.insert(0, challenge2);
+    if (challenge3.startDate.isBefore(DateTime.now())) {
+      _challenges.insert(0, challenge3);
     } else {
-      _challenges.add(challenge2);
+      _challenges.insert(1, challenge3);
     }
   }
 

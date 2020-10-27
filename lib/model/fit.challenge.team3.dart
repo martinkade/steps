@@ -4,20 +4,20 @@ import 'package:steps/model/fit.challenge.dart';
 import 'package:steps/model/fit.ranking.dart';
 import 'package:steps/model/fit.snapshot.dart';
 
-class FitChallenge1Team extends FitChallenge {
+class FitChallenge3Team extends FitChallenge {
   ///
-  static DateTime kStartDate = DateTime(2020, 8, 31);
+  static DateTime kStartDate = DateTime(2020, 11, 03);
 
   ///
-  FitChallenge1Team(BuildContext context)
+  FitChallenge3Team(BuildContext context)
       : super(
           context,
           startDate: kStartDate,
-          title: Localizer.translate(context, 'lblTeamChallenge1Title'),
+          title: Localizer.translate(context, 'lblTeamChallenge3Title'),
           description:
-              Localizer.translate(context, 'lblTeamChallenge1Description'),
+              Localizer.translate(context, 'lblTeamChallenge3Description'),
           label: Localizer.translate(context, 'lblUnitKilometer'),
-          imageAsset: 'assets/images/challenge1.jpg',
+          imageAsset: 'assets/images/challenge3.jpg',
         );
 
   @override
@@ -28,11 +28,11 @@ class FitChallenge1Team extends FitChallenge {
 
   @override
   void initTargets() {
-    target = 1044.0; // km
+    target = 3100.0; // km
   }
 
   @override
   void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = (ranking.challenge1?.toDouble() ?? 0.0) / 12.0;
+    progress = (ranking.challenge3?.toDouble() ?? 0.0) / 12.0;
   }
 }
