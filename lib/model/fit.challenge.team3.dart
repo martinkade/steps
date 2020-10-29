@@ -28,7 +28,7 @@ class FitChallenge3Team extends FitChallenge {
 
   @override
   void initTargets() {
-    target = 3100.0; // km
+    target = 3421.0; // km
   }
 
   @override

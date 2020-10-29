@@ -22,7 +22,7 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>LSMinimumSystemVersion</key>
+	<key>MinimumOSVersion</key>
 	<string>12.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
