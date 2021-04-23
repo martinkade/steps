@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/settings/settings.item.display.dart';
-import 'package:steps/components/settings/settings.item.goals.dart';
-import 'package:steps/components/settings/settings.item.notifications.dart';
-import 'package:steps/components/settings/settings.item.sync.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/components/shared/page.default.dart';
+import 'package:wandr/components/settings/settings.item.display.dart';
+import 'package:wandr/components/settings/settings.item.goals.dart';
+import 'package:wandr/components/settings/settings.item.notifications.dart';
+import 'package:wandr/components/settings/settings.item.sync.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/components/shared/page.default.dart';
 
 class SettingsComponent extends StatefulWidget {
   ///

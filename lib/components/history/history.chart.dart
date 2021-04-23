@@ -1,8 +1,8 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/model/calendar.dart';
-import 'package:steps/model/fit.record.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/model/calendar.dart';
+import 'package:wandr/model/fit.record.dart';
 
 import 'dart:math' show Rectangle, max;
 import 'package:charts_flutter/src/text_element.dart' as chartsTextElement;

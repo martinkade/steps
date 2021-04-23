@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/settings/settings.item.goals.dialog.dart';
-import 'package:steps/components/settings/settings.item.dart';
+import 'package:wandr/components/settings/settings.item.goals.dialog.dart';
+import 'package:wandr/components/settings/settings.item.dart';
 
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/model/fit.challenge.dart';
-import 'package:steps/model/preferences.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/model/fit.challenge.dart';
+import 'package:wandr/model/preferences.dart';
 
 class SettingsGoalItem extends SettingsItem {
   ///

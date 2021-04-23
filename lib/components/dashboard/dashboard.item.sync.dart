@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
-import 'package:steps/components/dashboard/dashboard.item.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/components/shared/progress.text.animated.dart';
-import 'package:steps/lifecycle.dart';
-import 'package:steps/model/fit.challenge.dart';
-import 'package:steps/model/fit.snapshot.dart';
-import 'package:steps/model/preferences.dart';
-import 'package:steps/model/repositories/fitness.repository.dart';
-import 'package:steps/model/repositories/repository.dart';
+import 'package:wandr/components/dashboard/dashboard.item.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/components/shared/progress.text.animated.dart';
+import 'package:wandr/lifecycle.dart';
+import 'package:wandr/model/fit.challenge.dart';
+import 'package:wandr/model/fit.snapshot.dart';
+import 'package:wandr/model/preferences.dart';
+import 'package:wandr/model/repositories/fitness.repository.dart';
+import 'package:wandr/model/repositories/repository.dart';
 
 abstract class DashboardSyncDelegate {
   void onFitnessDataUpdate(FitSnapshot snapshot);

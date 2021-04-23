@@ -237,4 +237,16 @@ class GermanCupertinoLocalizations implements CupertinoLocalizations {
   String tabSemanticsLabel({int tabIndex, int tabCount}) {
     return 'tabSemanticsLabel';
   }
+
+  @override
+  String get searchTextFieldPlaceholderLabel => 'Suchen';
+
+  @override
+  List<String> get timerPickerHourLabels => <String>[];
+
+  @override
+  List<String> get timerPickerMinuteLabels => <String>[];
+
+  @override
+  List<String> get timerPickerSecondLabels => <String>[];
 }

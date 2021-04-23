@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-import 'package:steps/components/dashboard/dashboard.component.dart';
-import 'package:steps/components/history/history.component.dart';
-import 'package:steps/components/landing/landing.component.dart';
-import 'package:steps/components/settings/settings.component.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/components/shared/route.transition.dart';
-import 'package:steps/model/preferences.dart';
+import 'package:wandr/components/dashboard/dashboard.component.dart';
+import 'package:wandr/components/history/history.component.dart';
+import 'package:wandr/components/landing/landing.component.dart';
+import 'package:wandr/components/settings/settings.component.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/components/shared/route.transition.dart';
+import 'package:wandr/model/preferences.dart';
 
 class Tabs extends StatefulWidget {
   ///
@@ -113,19 +113,15 @@ class _TabsState extends State<Tabs> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
-            title: Text('Home'),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
-            title: Text(
-              Localizer.translate(context, 'lblHistory'),
-            ),
+            label: Localizer.translate(context, 'lblHistory'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            title: Text(
-              Localizer.translate(context, 'lblSettings'),
-            ),
+            label: Localizer.translate(context, 'lblSettings'),
           ),
         ],
         currentIndex: _tabIndex,

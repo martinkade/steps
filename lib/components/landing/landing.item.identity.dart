@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:steps/components/landing/landing.item.dart';
-import 'package:steps/components/shared/localizer.dart';
+import 'package:wandr/components/landing/landing.item.dart';
+import 'package:wandr/components/shared/localizer.dart';
 
 class LandingIdentityItem extends LandingItem {
   ///

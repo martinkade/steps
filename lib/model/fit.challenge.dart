@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:steps/model/calendar.dart';
-import 'package:steps/model/fit.ranking.dart';
-import 'package:steps/model/fit.snapshot.dart';
+import 'package:wandr/model/calendar.dart';
+import 'package:wandr/model/fit.ranking.dart';
+import 'package:wandr/model/fit.snapshot.dart';
 
 const int DAILY_TARGET_POINTS = 75;
 

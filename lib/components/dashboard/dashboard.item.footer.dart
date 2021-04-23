@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/dashboard/dashboard.item.dart';
-import 'package:steps/model/fit.plugin.dart';
+import 'package:wandr/components/dashboard/dashboard.item.dart';
+import 'package:wandr/model/fit.plugin.dart';
 
 class DashboardFooterItem extends DashboardItem {
   ///

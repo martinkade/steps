@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:steps/components/shared/localizer.dart';
+import 'package:wandr/components/shared/localizer.dart';
 
 class DashboardSettingsDialogContent extends StatelessWidget {
   final Function setDailyTargetPoints;
@@ -52,7 +52,8 @@ class DashboardSettingsDialogContent extends StatelessWidget {
                               : FontWeight.normal,
                         ),
                       ),
-                      splashColor: Theme.of(context).colorScheme.primary.withAlpha(50),
+                      splashColor:
+                          Theme.of(context).colorScheme.primary.withAlpha(50),
                       color: selectedLevel == activityLevels[index]
                           ? Theme.of(context).colorScheme.primary.withAlpha(50)
                           : Colors.transparent,

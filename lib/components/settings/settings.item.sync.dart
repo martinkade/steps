@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/settings/settings.item.dart';
+import 'package:wandr/components/settings/settings.item.dart';
 import 'dart:io' show Platform;
 
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/model/preferences.dart';
-import 'package:steps/model/repositories/fitness.repository.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/model/preferences.dart';
+import 'package:wandr/model/repositories/fitness.repository.dart';
 
 class SettingsSyncItem extends SettingsItem {
   ///

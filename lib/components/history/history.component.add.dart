@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/components/shared/page.default.dart';
-import 'package:steps/components/shared/segmented.control.dart';
-import 'package:steps/model/fit.record.dart';
-import 'package:steps/model/repositories/fitness.repository.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/components/shared/page.default.dart';
+import 'package:wandr/components/shared/segmented.control.dart';
+import 'package:wandr/model/fit.record.dart';
+import 'package:wandr/model/repositories/fitness.repository.dart';
 import 'package:intl/intl.dart';
 
 class HistoryAdd extends StatefulWidget {

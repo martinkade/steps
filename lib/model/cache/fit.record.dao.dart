@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:steps/model/cache/fit.dao.spec.dart';
-import 'package:steps/model/cache/structured.cache.dart';
-import 'package:steps/model/fit.record.dart';
+import 'package:wandr/model/cache/fit.dao.spec.dart';
+import 'package:wandr/model/cache/structured.cache.dart';
+import 'package:wandr/model/fit.record.dart';
 
 class FitRecordDao extends FitDao {
   static const String TBL_NAME = 'tbl_fit_record';

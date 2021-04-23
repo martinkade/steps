@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/about/about.item.dart';
+import 'package:wandr/components/about/about.item.dart';
 
-import 'package:steps/components/shared/localizer.dart';
+import 'package:wandr/components/shared/localizer.dart';
 
 class AboutHowtoItem extends AboutItem {
   ///

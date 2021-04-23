@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/dashboard/dashboard.item.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/components/shared/segmented.control.dart';
-import 'package:steps/model/fit.ranking.dart';
-import 'package:steps/model/preferences.dart';
+import 'package:wandr/components/dashboard/dashboard.item.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/components/shared/segmented.control.dart';
+import 'package:wandr/model/fit.ranking.dart';
+import 'package:wandr/model/preferences.dart';
 
 class DashboardRankingItem extends DashboardItem {
   ///

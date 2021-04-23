@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/model/cache/fit.record.dao.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/model/cache/fit.record.dao.dart';
 import 'package:intl/intl.dart';
-import 'package:steps/model/calendar.dart';
+import 'package:wandr/model/calendar.dart';
 
 class FitRecord {
   static const int SOURCE_MANUAL = 0;

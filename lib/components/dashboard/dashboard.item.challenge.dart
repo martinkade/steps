@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:steps/components/dashboard/dashboard.item.challenge.detail.dart';
-import 'package:steps/components/dashboard/dashboard.item.dart';
-import 'package:steps/model/fit.challenge.dart';
-import 'package:steps/model/fit.challenge.team1.dart';
-import 'package:steps/model/fit.challenge.team2.dart';
-import 'package:steps/model/fit.challenge.team3.dart';
-import 'package:steps/model/fit.ranking.dart';
-import 'package:steps/model/fit.snapshot.dart';
+import 'package:wandr/components/dashboard/dashboard.item.challenge.detail.dart';
+import 'package:wandr/components/dashboard/dashboard.item.dart';
+import 'package:wandr/model/fit.challenge.dart';
+import 'package:wandr/model/fit.challenge.team1.dart';
+import 'package:wandr/model/fit.challenge.team2.dart';
+import 'package:wandr/model/fit.challenge.team3.dart';
+import 'package:wandr/model/fit.ranking.dart';
+import 'package:wandr/model/fit.snapshot.dart';
 
 abstract class DashboardChallengeDelegate {
   void onChallengeRequested(FitChallenge challenge, int index);

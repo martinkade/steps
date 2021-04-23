@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:steps/model/calendar.dart';
+import 'package:wandr/model/calendar.dart';
 
 class FitRanking {
   final Map<String, List<FitRankingEntry>> entries = Map.fromEntries([
@@ -197,9 +197,15 @@ class FitRanking {
 
       ranking.absolute += value['total'] ?? 0;
       if (value['challenges'] != null) {
-        ranking.challenge1 += ((value['challenges']?.length ?? 0) > 0) ? (value['challenges'][0] ?? 0) : 0;
-        ranking.challenge2 += ((value['challenges']?.length ?? 0) > 1) ? (value['challenges'][1] ?? 0) : 0;
-        ranking.challenge3 += ((value['challenges']?.length ?? 0) > 2) ? (value['challenges'][2] ?? 0) : 0;
+        ranking.challenge1 += ((value['challenges']?.length ?? 0) > 0)
+            ? (value['challenges'][0] ?? 0)
+            : 0;
+        ranking.challenge2 += ((value['challenges']?.length ?? 0) > 1)
+            ? (value['challenges'][1] ?? 0)
+            : 0;
+        ranking.challenge3 += ((value['challenges']?.length ?? 0) > 2)
+            ? (value['challenges'][2] ?? 0)
+            : 0;
       } else {
         ranking.challenge1 += value['total'] ?? 0;
       }

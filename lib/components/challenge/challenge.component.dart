@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/shared/bezier.clipper.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/components/shared/progress.text.animated.dart';
-import 'package:steps/model/fit.challenge.dart';
+import 'package:wandr/components/shared/bezier.clipper.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/components/shared/progress.text.animated.dart';
+import 'package:wandr/model/fit.challenge.dart';
 import 'package:intl/intl.dart';
 
 class Challenge extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter\_localizations/flutter\_localizations.dart';
-import 'package:steps/components/dashboard/dashboard.component.dart';
-import 'package:steps/components/shared/localizer.dart';
+import 'package:wandr/components/dashboard/dashboard.component.dart';
+import 'package:wandr/components/shared/localizer.dart';
 
 /// This widget is the root of your application.
 class App extends StatelessWidget {

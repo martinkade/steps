@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/history/history.item.dart';
-import 'package:steps/model/calendar.dart';
-import 'package:steps/model/fit.record.dart';
+import 'package:wandr/components/history/history.item.dart';
+import 'package:wandr/model/calendar.dart';
+import 'package:wandr/model/fit.record.dart';
 
 class HistoryRecordItem extends HistoryItem {
   ///

@@ -1,6 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:steps/__secrets.dart';
+import 'package:wandr/__secrets.dart';
 
 class Storage {
   FirebaseApp _app;
@@ -10,19 +10,22 @@ class Storage {
 
   Future<FirebaseApp> access() async {
     if (_app == null) {
-      _app = await FirebaseApp.configure(
+      _app = await Firebase.initializeApp(
         name: 'jovial-engine-286206',
         options: Platform.isIOS
             ? const FirebaseOptions(
-                googleAppID: IOS_APP_ID,
+                appId: IOS_APP_ID,
                 apiKey: API_KEY,
+                projectId: 'jovial-engine-286206',
                 databaseURL: DATABASE_URL,
-                gcmSenderID: GCM_SENDER_ID,
+                messagingSenderId: GCM_SENDER_ID,
               )
             : const FirebaseOptions(
-                googleAppID: ANDROID_APP_ID,
+                appId: ANDROID_APP_ID,
                 apiKey: API_KEY,
+                projectId: 'jovial-engine-286206',
                 databaseURL: DATABASE_URL,
+                messagingSenderId: GCM_SENDER_ID,
               ),
       );
     }

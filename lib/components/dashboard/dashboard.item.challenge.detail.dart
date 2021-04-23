@@ -1,10 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/components/shared/progress.text.animated.dart';
-import 'package:steps/model/calendar.dart';
-import 'package:steps/model/fit.challenge.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/components/shared/progress.text.animated.dart';
+import 'package:wandr/model/calendar.dart';
+import 'package:wandr/model/fit.challenge.dart';
 
 class DashboardChallengeDetail extends StatefulWidget {
   ///

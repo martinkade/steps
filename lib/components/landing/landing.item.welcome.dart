@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/landing/landing.item.dart';
-import 'package:steps/components/shared/localizer.dart';
+import 'package:wandr/components/landing/landing.item.dart';
+import 'package:wandr/components/shared/localizer.dart';
 
 class LandingWelcomeItem extends LandingItem {
   ///
@@ -27,7 +27,8 @@ class _LandingWelcomeItemState extends State<LandingWelcomeItem> {
             padding: const EdgeInsets.only(top: 8.0),
             child: Center(
               child: SizedBox(
-                child: Image.asset('assets/images/landing.png', color: Theme.of(context).textTheme.bodyText1.color),
+                child: Image.asset('assets/images/landing.png',
+                    color: Theme.of(context).textTheme.bodyText1.color),
                 width: 192.0,
                 height: 128.0,
               ),

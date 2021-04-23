@@ -22,10 +22,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>MinimumOSVersion</key>
-	<string>12.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MinimumOSVersion</key>
+	<string>12.0</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Die App benötigt Zugriff auf einige Metriken aus Apple Health, damit du dein Team bei Challenges unterstützen kannst.</string>
 	<key>NSHealthUpdateUsageDescription</key>

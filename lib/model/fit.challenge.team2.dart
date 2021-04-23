@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/model/fit.challenge.dart';
-import 'package:steps/model/fit.ranking.dart';
-import 'package:steps/model/fit.snapshot.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/model/fit.challenge.dart';
+import 'package:wandr/model/fit.ranking.dart';
+import 'package:wandr/model/fit.snapshot.dart';
 
 class FitChallenge2Team extends FitChallenge {
   ///

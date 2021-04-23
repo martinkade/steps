@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:steps/app.dart';
-import 'package:steps/model/storage.dart';
+import 'package:wandr/app.dart';
+import 'package:wandr/model/storage.dart';
 
 void main() async {
   // establish Firebase connection

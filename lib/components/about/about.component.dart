@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/about/about.item.howto.dart';
-import 'package:steps/components/about/about.item.privacy.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/components/shared/page.default.dart';
+import 'package:wandr/components/about/about.item.howto.dart';
+import 'package:wandr/components/about/about.item.privacy.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/components/shared/page.default.dart';
 
 class About extends StatefulWidget {
   ///

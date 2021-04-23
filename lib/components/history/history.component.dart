@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/history/history.chart.dart';
-import 'package:steps/components/history/history.component.day.dart';
-import 'package:steps/components/history/history.item.record.summary.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/components/shared/page.default.dart';
-import 'package:steps/components/shared/route.transition.dart';
-import 'package:steps/model/fit.record.dart';
-import 'package:steps/model/preferences.dart';
-import 'package:steps/model/repositories/fitness.repository.dart';
+import 'package:wandr/components/history/history.chart.dart';
+import 'package:wandr/components/history/history.component.day.dart';
+import 'package:wandr/components/history/history.item.record.summary.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/components/shared/page.default.dart';
+import 'package:wandr/components/shared/route.transition.dart';
+import 'package:wandr/model/fit.record.dart';
+import 'package:wandr/model/preferences.dart';
+import 'package:wandr/model/repositories/fitness.repository.dart';
 
 class HistoryComponent extends StatefulWidget {
   ///

@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:steps/model/cache/fit.record.dao.dart';
-import 'package:steps/model/calendar.dart';
-import 'package:steps/model/fit.challenge.team1.dart';
-import 'package:steps/model/fit.challenge.team2.dart';
-import 'package:steps/model/fit.challenge.team3.dart';
-import 'package:steps/model/fit.plugin.dart';
-import 'package:steps/model/fit.record.dart';
+import 'package:wandr/model/cache/fit.record.dao.dart';
+import 'package:wandr/model/calendar.dart';
+import 'package:wandr/model/fit.challenge.team1.dart';
+import 'package:wandr/model/fit.challenge.team2.dart';
+import 'package:wandr/model/fit.challenge.team3.dart';
+import 'package:wandr/model/fit.plugin.dart';
+import 'package:wandr/model/fit.record.dart';
 import 'dart:io' show Platform;
 
 class FitSnapshot {

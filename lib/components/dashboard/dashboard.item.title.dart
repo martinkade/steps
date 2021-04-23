@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/dashboard/dashboard.item.dart';
+import 'package:wandr/components/dashboard/dashboard.item.dart';
 
 abstract class DashboardTitleDelegate {
   void onSettingsRequested();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/about/about.item.dart';
+import 'package:wandr/components/about/about.item.dart';
 
-import 'package:steps/components/shared/localizer.dart';
+import 'package:wandr/components/shared/localizer.dart';
 
 class AboutPrivacyItem extends AboutItem {
   ///
@@ -37,8 +37,7 @@ class _AboutPrivacyItemState extends State<AboutPrivacyItem> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            Localizer.translate(context, 'lblAboutPrivacyInfo')
-                .replaceFirst(
+            Localizer.translate(context, 'lblAboutPrivacyInfo').replaceFirst(
               '%1',
               Localizer.translate(context, 'appName').toUpperCase(),
             ),

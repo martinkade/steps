@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:steps/components/dashboard/dashboard.component.dart';
-import 'package:steps/components/landing/landing.item.dart';
-import 'package:steps/components/landing/landing.item.identity.dart';
-import 'package:steps/components/landing/landing.item.fitaccess.dart';
-import 'package:steps/components/landing/landing.item.welcome.dart';
-import 'package:steps/components/shared/bezier.clipper.dart';
-import 'package:steps/components/shared/localizer.dart';
-import 'package:steps/components/shared/route.transition.dart';
+import 'package:wandr/components/dashboard/dashboard.component.dart';
+import 'package:wandr/components/landing/landing.item.dart';
+import 'package:wandr/components/landing/landing.item.identity.dart';
+import 'package:wandr/components/landing/landing.item.fitaccess.dart';
+import 'package:wandr/components/landing/landing.item.welcome.dart';
+import 'package:wandr/components/shared/bezier.clipper.dart';
+import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/components/shared/route.transition.dart';
 
 class Landing extends StatefulWidget {
   ///

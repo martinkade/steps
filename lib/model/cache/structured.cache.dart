@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:steps/model/cache/structured.cache.spec.dart';
-import 'package:steps/model/cache/fit.record.dao.dart';
+import 'package:wandr/model/cache/structured.cache.spec.dart';
+import 'package:wandr/model/cache/fit.record.dao.dart';
 
 class StructuredCache extends IStructuredCache {
   static final StructuredCache _instance = StructuredCache._internal();

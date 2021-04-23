@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:steps/model/fit.challenge.dart';
+import 'package:wandr/model/fit.challenge.dart';
 
 const kFlagInitialNotifications = 'kFlagInitialNotifications';
 const kFlagUnitKilometers = 'kFlagUnitKilometers';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:steps/components/shared/localizer.dart';
+import 'package:wandr/components/shared/localizer.dart';
 
 abstract class DashboardInfoItemDelegate {
   void onSettingsRequested();

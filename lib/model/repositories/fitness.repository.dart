@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
-import 'package:steps/model/cache/fit.record.dao.dart';
-import 'package:steps/model/fit.record.dart';
-import 'package:steps/model/fit.snapshot.dart';
-import 'package:steps/model/preferences.dart';
-import 'package:steps/model/repositories/repository.dart';
-import 'package:steps/model/storage.dart';
+import 'package:wandr/model/cache/fit.record.dao.dart';
+import 'package:wandr/model/fit.record.dart';
+import 'package:wandr/model/fit.snapshot.dart';
+import 'package:wandr/model/preferences.dart';
+import 'package:wandr/model/repositories/repository.dart';
+import 'package:wandr/model/storage.dart';
 
 ///
 abstract class FitnessRepositoryClient {
@@ -35,8 +35,8 @@ class FitnessRepository extends Repository {
   ///
   Future<bool> enableNotifications(bool enable) async {
     try {
-      final bool notificationsEnabled =
-          await notification.invokeMethod('enableNotifications', <String, dynamic>{
+      final bool notificationsEnabled = await notification
+          .invokeMethod('enableNotifications', <String, dynamic>{
         'enable': enable,
       });
       return notificationsEnabled;
