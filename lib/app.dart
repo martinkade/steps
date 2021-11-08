@@ -7,22 +7,27 @@ import 'package:wandr/components/shared/localizer.dart';
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = ThemeData(
+      fontFamily: 'Calibri',
+      brightness: Brightness.light,
+      primarySwatch: Colors.blue,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+    );
+    final ThemeData darkTheme = ThemeData(
+      fontFamily: 'Calibri',
+      brightness: Brightness.light,
+      primarySwatch: Colors.yellow,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+    );
+
     return MaterialApp(
         title: Localizer.translate(context, 'appName'),
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: 'Calibri',
-          brightness: Brightness.light,
-          primarySwatch: Colors.blue,
-          accentColor: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+        theme: theme.copyWith(
+          colorScheme: theme.colorScheme.copyWith(secondary: Colors.blue),
         ),
-        darkTheme: ThemeData(
-          fontFamily: 'Calibri',
-          brightness: Brightness.dark,
-          primarySwatch: Colors.yellow,
-          accentColor: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+        darkTheme: darkTheme.copyWith(
+          colorScheme: theme.colorScheme.copyWith(secondary: Colors.yellow),
         ),
         home: DashboardComponent(
           title: Localizer.translate(context, 'appName'),

@@ -61,13 +61,12 @@ class _DashboardState extends State<DashboardComponent>
 
   ///
   final GlobalKey<DashboardSyncItemState> _syncKey =
-      GlobalKey<DashboardSyncItemState>(
-          debugLabel: '_DashboardSyncItemStateState');
+      GlobalKey<DashboardSyncItemState>(debugLabel: 'DashboardSyncItemState');
 
   ///
   final GlobalKey<DashboardRankingItemState> _rankingKey =
       GlobalKey<DashboardRankingItemState>(
-          debugLabel: '_DashboardRankingItemState');
+          debugLabel: 'DashboardRankingItemState');
 
   @override
   void initState() {
