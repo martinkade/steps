@@ -15,7 +15,7 @@ class App extends StatelessWidget {
     );
     final ThemeData darkTheme = ThemeData(
       fontFamily: 'Calibri',
-      brightness: Brightness.light,
+      brightness: Brightness.dark,
       primarySwatch: Colors.yellow,
       visualDensity: VisualDensity.adaptivePlatformDensity,
     );
@@ -27,7 +27,7 @@ class App extends StatelessWidget {
           colorScheme: theme.colorScheme.copyWith(secondary: Colors.blue),
         ),
         darkTheme: darkTheme.copyWith(
-          colorScheme: theme.colorScheme.copyWith(secondary: Colors.yellow),
+          colorScheme: darkTheme.colorScheme.copyWith(secondary: Colors.yellow),
         ),
         home: DashboardComponent(
           title: Localizer.translate(context, 'appName'),
