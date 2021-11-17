@@ -54,7 +54,7 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
   List<FitChallenge> _challenges;
 
   ///
-  int _cardIndex = 0;
+  int _cardIndex = 0, _cardCount = 0;
 
   @override
   void initState() {
@@ -81,6 +81,8 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
     } else {
       _challenges.insert(1, challenge4);
     }
+
+    _cardCount = _challenges.length;
   }
 
   @override
@@ -162,7 +164,7 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
               if (details.velocity.pixelsPerSecond.dx > 0) {
                 if (_cardIndex > 0) _cardIndex--;
               } else {
-                if (_cardIndex < 2) _cardIndex++;
+                if (_cardIndex < (_cardCount - 1)) _cardIndex++;
               }
               setState(() {
                 _scrollController.animateTo(
