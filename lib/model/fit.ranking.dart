@@ -3,17 +3,14 @@ import 'package:wandr/model/calendar.dart';
 
 class FitRanking {
   final Map<String, List<FitRankingEntry>> entries = Map.fromEntries([
-    MapEntry('today', List<FitRankingEntry>()),
-    MapEntry('yesterday', List<FitRankingEntry>()),
-    MapEntry('week', List<FitRankingEntry>()),
-    MapEntry('lastWeek', List<FitRankingEntry>()),
-    MapEntry('total', List<FitRankingEntry>()),
+    MapEntry('today', <FitRankingEntry>[]),
+    MapEntry('yesterday', <FitRankingEntry>[]),
+    MapEntry('week', <FitRankingEntry>[]),
+    MapEntry('lastWeek', <FitRankingEntry>[]),
+    MapEntry('total', <FitRankingEntry>[]),
   ]);
   int absolute = 0;
-  int challenge1 = 0;
-  int challenge2 = 0;
-  int challenge3 = 0;
-  int challenge4 = 0;
+  List<int> challengeTotals = <int>[];
   FitRanking._internal();
 
   static FitRanking createFromSnapshot(dynamic snapshot) {
@@ -28,14 +25,16 @@ class FitRanking {
     String teamKey, categoryKey;
     int timestampKey;
     Map<String, num> categoryValue;
-    snapshot.value.forEach((key, value) {
-      // key is user
+
+    // iterate through user documents
+    snapshot.value.forEach((userId, value) {
       teamKey = value['team'];
       timestampKey = value['timestamp']?.toInt() ?? 0;
       timestamp = timestampKey > 0
           ? DateTime.fromMillisecondsSinceEpoch(timestampKey)
           : null;
 
+      // collect points
       // - sum user's weekly points if sync timestamp is within current week
       // - sum user's last weeks points if sync timestamp is within current week
       if (timestampKey != 0 && calendar.isThisWeek(timestamp, now)) {
@@ -99,6 +98,8 @@ class FitRanking {
           summary.putIfAbsent(categoryKey, () => categoryValue);
         }
       }
+
+      // collect points
       // - sum user's today points if sync timestamp is today
       // - sum user's yesterday points if sync timestamp is today
       if (timestampKey > 0 && calendar.isToday(timestamp, now)) {
@@ -163,10 +164,12 @@ class FitRanking {
         }
       }
 
+      // collect total points if user synced within last 14 days
       if (timestampKey > 0 &&
           !timestamp.isBefore(now.subtract(Duration(days: 14)))) {
         print(
-            '[INFO] sync user $key ($timestamp) with app version ${value['client']} on ${value['device']}');
+            '[INFO] sync user $userId ($timestamp) with app version ${value['client']} on ${value['device']}');
+
         // total
         categoryKey = 'total';
         if (summary.containsKey(categoryKey)) {
@@ -193,25 +196,20 @@ class FitRanking {
           participation.putIfAbsent(teamKey, () => 1);
         }
       } else {
-        print('!!! user $key is outdated, not synced within last 14 days');
+        print('!!! user $userId is outdated, not synced within last 14 days');
       }
 
       ranking.absolute += value['total'] ?? 0;
-      if (value['challenges'] != null) {
-        ranking.challenge1 += ((value['challenges']?.length ?? 0) > 0)
-            ? (value['challenges'][0] ?? 0)
-            : 0;
-        ranking.challenge2 += ((value['challenges']?.length ?? 0) > 1)
-            ? (value['challenges'][1] ?? 0)
-            : 0;
-        ranking.challenge3 += ((value['challenges']?.length ?? 0) > 2)
-            ? (value['challenges'][2] ?? 0)
-            : 0;
-        ranking.challenge4 += ((value['challenges']?.length ?? 0) > 3)
-            ? (value['challenges'][3] ?? 0)
-            : 0;
-      } else {
-        ranking.challenge1 += value['total'] ?? 0;
+      if (value['challenges']?.isNotEmpty == true) {
+        final int challengeCount = value['challenges'].length;
+        if (challengeCount != ranking.challengeTotals.length) {
+          ranking.challengeTotals = value['challenges'].map((c) => c.toInt());
+        } else {
+          final List<int> newTotals = value['challenges'].map((c) => c.toInt());
+          newTotals.asMap().forEach((i, value) => {
+            ranking.challengeTotals[i] += value
+          });
+        }
       }
     });
 
@@ -230,10 +228,17 @@ class FitRanking {
     return ranking;
   }
 
-  void addEntry(String key,
-      {@required String name, @required num value, int userCount}) {
-    entries[key]
-        ?.add(FitRankingEntry(name: name, value: value, userCount: userCount));
+  void addEntry(
+    String key, {
+    @required String name,
+    @required num value,
+    int userCount,
+  }) {
+    entries[key]?.add(FitRankingEntry(
+      name: name,
+      value: value,
+      userCount: userCount,
+    ));
   }
 }
 
@@ -241,5 +246,9 @@ class FitRankingEntry {
   final String name;
   final num value;
   final int userCount;
-  FitRankingEntry({@required this.name, @required this.value, this.userCount});
+  FitRankingEntry({
+    @required this.name,
+    @required this.value,
+    this.userCount,
+  });
 }

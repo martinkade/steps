@@ -67,20 +67,8 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final FitChallenge1Team challenge1 = FitChallenge1Team(context);
-    final FitChallenge2Team challenge2 = FitChallenge2Team(context);
-    final FitChallenge3Team challenge3 = FitChallenge3Team(context);
-    final FitChallenge4Team challenge4 = FitChallenge4Team(context);
-    _challenges = [
-      challenge3,
-      challenge2,
-      challenge1,
-    ];
-    if (challenge4.startDate.isBefore(DateTime.now())) {
-      _challenges.insert(0, challenge4);
-    } else {
-      _challenges.insert(1, challenge4);
-    }
+    _challenges = FitChallenge.buildChallenges(context);
+    _challenges.sort((a, b) => a.compareTo(b));
 
     _cardCount = _challenges.length;
   }

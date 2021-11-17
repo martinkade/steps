@@ -26,9 +26,13 @@ class DashboardSyncItem extends DashboardItem {
   final DashboardSyncDelegate delegate;
 
   ///
-  DashboardSyncItem(
-      {Key key, String title, this.delegate, this.userKey, this.teamName})
-      : super(key: key, title: title);
+  DashboardSyncItem({
+    Key key,
+    String title,
+    this.delegate,
+    this.userKey,
+    this.teamName,
+  }) : super(key: key, title: title);
 
   @override
   DashboardSyncItemState createState() => DashboardSyncItemState();
@@ -105,6 +109,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
     _repository.syncPoints(
       userKey: widget.userKey,
       teamName: widget.teamName,
+      challenges: FitChallenge.buildChallenges(context),
       client: this,
       pushData: true,
     );
@@ -118,8 +123,12 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
   }
 
   @override
-  void fitnessRepositoryDidUpdate(FitnessRepository repository,
-      {SyncState state, DateTime day, FitSnapshot snapshot}) {
+  void fitnessRepositoryDidUpdate(
+    FitnessRepository repository, {
+    SyncState state,
+    DateTime day,
+    FitSnapshot snapshot,
+  }) {
     if (!mounted) return;
 
     switch (state) {
@@ -136,6 +145,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
     setState(() {
       _fitnessSyncState = state;
       _loading = false;
+      print('$_fitnessSyncState');
     });
   }
 

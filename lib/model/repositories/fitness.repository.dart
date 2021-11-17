@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:wandr/model/cache/fit.record.dao.dart';
+import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.record.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 import 'package:wandr/model/preferences.dart';
@@ -10,9 +12,13 @@ import 'package:wandr/model/storage.dart';
 
 ///
 abstract class FitnessRepositoryClient {
-  ///
-  void fitnessRepositoryDidUpdate(FitnessRepository repository,
-      {SyncState state, DateTime day, FitSnapshot snapshot});
+  /// Notify client with updated local data from Google Fit or Apple Health (or manually recordet data).
+  void fitnessRepositoryDidUpdate(
+    FitnessRepository repository, {
+    SyncState state,
+    DateTime day,
+    FitSnapshot snapshot,
+  });
 }
 
 class FitnessRepository extends Repository {
@@ -104,23 +110,31 @@ class FitnessRepository extends Repository {
   }
 
   ///
-  Future<void> syncPoints(
-      {String userKey,
-      String teamName,
-      FitnessRepositoryClient client,
-      bool pushData = false}) async {
+  Future<void> syncPoints({
+    @required String userKey,
+    @required String teamName,
+    @required FitnessRepositoryClient client,
+    @required List<FitChallenge> challenges,
+    bool pushData = false,
+  }) async {
     FitSnapshot snapshot = FitSnapshot();
     final bool isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
 
     // restrict local data to start on august, 24
     final DateTime anchor = DateTime(2020, 8, 24);
     final FitRecordDao dao = FitRecordDao();
-    final List<FitRecord> localData =
-        await dao.fetch(from: anchor, onlyManualRecords: !isAutoSyncEnabled);
+    final List<FitRecord> localData = await dao.fetch(
+      from: anchor,
+      onlyManualRecords: !isAutoSyncEnabled,
+    );
     await dao.delete(records: localData, exclude: true);
-    snapshot.fillWithLocalData(localData, anchor: anchor);
-    client.fitnessRepositoryDidUpdate(this,
-        state: SyncState.FETCHING_DATA, day: anchor, snapshot: snapshot);
+    snapshot.fillWithLocalData(localData, challenges, anchor: anchor);
+    client.fitnessRepositoryDidUpdate(
+      this,
+      state: SyncState.FETCHING_DATA,
+      day: anchor,
+      snapshot: snapshot,
+    );
 
     try {
       if (isAutoSyncEnabled && await hasPermissions()) {
@@ -133,24 +147,33 @@ class FitnessRepository extends Repository {
     }
 
     localData.clear();
-    localData.addAll(
-        await dao.fetch(from: anchor, onlyManualRecords: !isAutoSyncEnabled));
-    snapshot.fillWithLocalData(localData, anchor: anchor);
+    localData.addAll(await dao.fetch(
+      from: anchor,
+      onlyManualRecords: !isAutoSyncEnabled,
+    ));
+    snapshot.fillWithLocalData(localData, challenges, anchor: anchor);
 
     client.fitnessRepositoryDidUpdate(this,
         state: SyncState.DATA_READY, day: anchor, snapshot: snapshot);
 
     // restrict server data to start on august, 31
     snapshot = FitSnapshot();
-    snapshot.fillWithLocalData(localData, anchor: DateTime(2020, 8, 31));
+    snapshot.fillWithLocalData(
+      localData,
+      challenges,
+      anchor: DateTime(2020, 8, 31),
+    );
     if (pushData) {
       applySnapshot(snapshot, userKey: userKey, teamName: teamName);
     }
   }
 
   ///
-  Future<void> applySnapshot(FitSnapshot snapshot,
-      {String userKey, String teamName}) async {
+  Future<void> applySnapshot(
+    FitSnapshot snapshot, {
+    String userKey,
+    String teamName,
+  }) async {
     Storage().access().then((instance) async {
       final FirebaseDatabase db = FirebaseDatabase(app: instance);
       db.setPersistenceEnabled(true);

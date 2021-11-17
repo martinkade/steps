@@ -37,7 +37,7 @@ class FitChallenge2Team extends FitChallenge {
 
   @override
   void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = (ranking.challenge2?.toDouble() ?? 0.0) / 12.0;
+    progress = (ranking.challengeTotals[1]?.toDouble() ?? 0.0) / 12.0;
     final int totalHours = kEndDate.difference(kStartDate).inHours;
     final int hours = max(0, DateTime.now().difference(kStartDate).inHours);
     final double estimatedPercent = min(1.0, hours / totalHours.toDouble());

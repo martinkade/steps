@@ -106,6 +106,7 @@ class _DashboardState extends State<DashboardComponent>
     Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
       if (!mounted) return;
       _unitKilometersEnabled = enabled;
+      print('$_unitKilometersEnabled');
       Storage().access().then((instance) {
         final FirebaseDatabase db = FirebaseDatabase(app: instance);
         db.reference().child('users').once().then((snapshot) {
@@ -129,6 +130,7 @@ class _DashboardState extends State<DashboardComponent>
   void _onSnapshotChanged(DataSnapshot snapshot) {
     if (!mounted) return;
     setState(() {
+      // create ranking from Firebase realtime database
       _ranking = FitRanking.createFromSnapshot(snapshot);
     });
   }
@@ -137,6 +139,7 @@ class _DashboardState extends State<DashboardComponent>
   void onFitnessDataUpdate(FitSnapshot snapshot) {
     if (!mounted) return;
     setState(() {
+      // apply local data snapshot with updated fitnes metrics from Google Fit or Apple health (or manually recorded data)
       _fitSnapshot = snapshot;
     });
   }
