@@ -7,6 +7,7 @@ import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.challenge.team1.dart';
 import 'package:wandr/model/fit.challenge.team2.dart';
 import 'package:wandr/model/fit.challenge.team3.dart';
+import 'package:wandr/model/fit.challenge.team4.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 
@@ -69,14 +70,16 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
     final FitChallenge1Team challenge1 = FitChallenge1Team(context);
     final FitChallenge2Team challenge2 = FitChallenge2Team(context);
     final FitChallenge3Team challenge3 = FitChallenge3Team(context);
+    final FitChallenge4Team challenge4 = FitChallenge4Team(context);
     _challenges = [
+      challenge3,
       challenge2,
       challenge1,
     ];
-    if (challenge3.startDate.isBefore(DateTime.now())) {
-      _challenges.insert(0, challenge3);
+    if (challenge4.startDate.isBefore(DateTime.now())) {
+      _challenges.insert(0, challenge4);
     } else {
-      _challenges.insert(1, challenge3);
+      _challenges.insert(1, challenge4);
     }
   }
 

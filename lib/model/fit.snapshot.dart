@@ -4,6 +4,7 @@ import 'package:wandr/model/calendar.dart';
 import 'package:wandr/model/fit.challenge.team1.dart';
 import 'package:wandr/model/fit.challenge.team2.dart';
 import 'package:wandr/model/fit.challenge.team3.dart';
+import 'package:wandr/model/fit.challenge.team4.dart';
 import 'package:wandr/model/fit.plugin.dart';
 import 'package:wandr/model/fit.record.dart';
 import 'dart:io' show Platform;
@@ -33,6 +34,7 @@ class FitSnapshot {
     int challenge1 = 0;
     int challenge2 = 0;
     int challenge3 = 0;
+    int challenge4 = 0;
 
     int points;
     DateTime date;
@@ -59,15 +61,26 @@ class FitSnapshot {
           }
         }
 
-        if (date.isAfter(FitChallenge3Team.kStartDate) ||
+        if (date.isAfter(FitChallenge4Team.kStartDate) ||
+            date.isAtSameMomentAs(FitChallenge4Team.kStartDate)) {
+          if (date.isBefore(FitChallenge4Team.kEndDate) ||
+              date.isAtSameMomentAs(FitChallenge4Team.kEndDate))
+            challenge4 += points;
+        } else if (date.isAfter(FitChallenge3Team.kStartDate) ||
             date.isAtSameMomentAs(FitChallenge3Team.kStartDate)) {
-          challenge3 += points;
+          if (date.isBefore(FitChallenge3Team.kEndDate) ||
+              date.isAtSameMomentAs(FitChallenge3Team.kEndDate))
+            challenge3 += points;
         } else if (date.isAfter(FitChallenge2Team.kStartDate) ||
             date.isAtSameMomentAs(FitChallenge2Team.kStartDate)) {
-          challenge2 += points;
+          if (date.isBefore(FitChallenge2Team.kEndDate) ||
+              date.isAtSameMomentAs(FitChallenge2Team.kEndDate))
+            challenge2 += points;
         } else if (date.isAfter(FitChallenge1Team.kStartDate) ||
             date.isAtSameMomentAs(FitChallenge1Team.kStartDate)) {
-          challenge1 += points;
+          if (date.isBefore(FitChallenge1Team.kEndDate) ||
+              date.isAtSameMomentAs(FitChallenge1Team.kEndDate))
+            challenge1 += points;
         }
       }
     });

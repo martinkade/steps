@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wandr/components/shared/bezier.clipper.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/components/shared/progress.text.animated.dart';
+import 'package:wandr/model/calendar.dart';
 import 'package:wandr/model/fit.challenge.dart';
 import 'package:intl/intl.dart';
 
@@ -20,6 +21,9 @@ class Challenge extends StatefulWidget {
 }
 
 class _ChallengeState extends State<Challenge> {
+  ///
+  final Calendar _calendar = Calendar();
+
   @override
   void initState() {
     super.initState();
@@ -116,18 +120,60 @@ class _ChallengeState extends State<Challenge> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(14.0, 0.0, 14.0, 16.0),
-                        child: Text(
-                          Localizer.translate(context, 'lblChallengeStartDate')
-                              .replaceFirst(
-                            '%1',
-                            DateFormat.yMMMMEEEEd(LOCALE ?? 'de_DE')
-                                .format(widget.challenge.startDate),
-                          ),
-                        ),
-                      ),
+                      widget.challenge.isUpcoming(
+                              calendar: _calendar, date: DateTime.now())
+                          ? Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  14.0, 0.0, 14.0, 16.0),
+                              child: Text(
+                                Localizer.translate(
+                                        context, 'lblChallengeStartDate')
+                                    .replaceFirst(
+                                  '%1',
+                                  DateFormat.yMMMMEEEEd(LOCALE ?? 'de_DE')
+                                      .format(widget.challenge.startDate),
+                                ),
+                              ),
+                            )
+                          : (widget.challenge.isCompleted
+                              ? Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      14.0, 0.0, 14.0, 16.0),
+                                  child: Text(
+                                    Localizer.translate(
+                                        context, 'lblChallengeSuccess'),
+                                  ),
+                                )
+                              : (widget.challenge.isExpired(
+                                      calendar: _calendar, date: DateTime.now())
+                                  ? Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          14.0, 0.0, 14.0, 16.0),
+                                      child: Text(
+                                        Localizer.translate(
+                                                context, 'lblChallengeExpired')
+                                            .replaceFirst(
+                                          '%1',
+                                          DateFormat.yMMMMEEEEd(
+                                                  LOCALE ?? 'de_DE')
+                                              .format(widget.challenge.endDate),
+                                        ),
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          14.0, 0.0, 14.0, 16.0),
+                                      child: Text(
+                                        Localizer.translate(
+                                                context, 'lblChallengeEndDate')
+                                            .replaceFirst(
+                                          '%1',
+                                          DateFormat.yMMMMEEEEd(
+                                                  LOCALE ?? 'de_DE')
+                                              .format(widget.challenge.endDate),
+                                        ),
+                                      ),
+                                    ))),
                       Padding(
                         padding:
                             const EdgeInsets.fromLTRB(14.0, 8.0, 14.0, 32.0),
@@ -144,6 +190,7 @@ class _ChallengeState extends State<Challenge> {
                         child: AnimatedProgressText(
                           start: 0,
                           end: widget.challenge.progress.toInt(),
+                          estimated: widget.challenge.estimated.toInt(),
                           target: widget.challenge.target.toInt(),
                           fontSize: 48.0,
                           label: widget.challenge.label,

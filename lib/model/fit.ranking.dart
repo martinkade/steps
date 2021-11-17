@@ -13,6 +13,7 @@ class FitRanking {
   int challenge1 = 0;
   int challenge2 = 0;
   int challenge3 = 0;
+  int challenge4 = 0;
   FitRanking._internal();
 
   static FitRanking createFromSnapshot(dynamic snapshot) {
@@ -205,6 +206,9 @@ class FitRanking {
             : 0;
         ranking.challenge3 += ((value['challenges']?.length ?? 0) > 2)
             ? (value['challenges'][2] ?? 0)
+            : 0;
+        ranking.challenge4 += ((value['challenges']?.length ?? 0) > 3)
+            ? (value['challenges'][3] ?? 0)
             : 0;
       } else {
         ranking.challenge1 += value['total'] ?? 0;

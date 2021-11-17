@@ -5,6 +5,7 @@ import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/components/shared/progress.text.animated.dart';
 import 'package:wandr/model/calendar.dart';
 import 'package:wandr/model/fit.challenge.dart';
+import 'package:intl/intl.dart';
 
 class DashboardChallengeDetail extends StatefulWidget {
   ///
@@ -38,7 +39,7 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
   Widget _overlay(BuildContext context, FitChallenge challenge) {
     final Duration delta =
         challenge.getStartDateDelta(calendar: _calendar, date: DateTime.now());
-    if (delta.inMinutes > 0) {
+    if (challenge.isUpcoming(calendar: _calendar, date: DateTime.now())) {
       String deltaText =
           Localizer.translate(context, 'lblChallengeDeltaDaysMany')
               .replaceFirst('%1', (delta.inDays + 1).toString());
@@ -113,6 +114,45 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
           ),
         ),
       );
+    } else if (challenge.isExpired(calendar: _calendar, date: DateTime.now())) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+        child: Container(
+          color: Colors.black.withOpacity(0.1),
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.block_rounded),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                  child: Text(
+                    challenge.title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                  child: Text(
+                    Localizer.translate(context, 'lblChallengeExpired')
+                        .replaceFirst(
+                      '%1',
+                      DateFormat.yMMMMEEEEd(LOCALE ?? 'de_DE')
+                          .format(widget.challenge.endDate),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
     } else {
       return Container();
     }
@@ -156,6 +196,7 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
               AnimatedProgressText(
                 start: 0,
                 end: widget.challenge.progress.toInt(),
+                estimated: widget.challenge.estimated.toInt(),
                 target: widget.challenge.target.toInt(),
                 fontSize: 32.0,
                 label: widget.challenge.label,

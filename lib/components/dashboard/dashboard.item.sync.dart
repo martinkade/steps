@@ -257,6 +257,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                         AnimatedProgressText(
                           start: 0,
                           end: _snapshot?.today() ?? 0,
+                          estimated: -1,
                           target: _goalDaily,
                           fontSize: 48.0,
                           label: Localizer.translate(
@@ -287,6 +288,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                         AnimatedProgressText(
                           start: 0,
                           end: _snapshot?.week() ?? 0,
+                          estimated: -1,
                           target: _goalDaily * 7,
                           fontSize: 32.0,
                           label: Localizer.translate(

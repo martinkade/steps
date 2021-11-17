@@ -5,7 +5,7 @@ class AnimatedProgressText extends StatefulWidget {
   final int start;
 
   ///
-  final int end;
+  final int end, estimated;
 
   ///
   final int target;
@@ -24,6 +24,7 @@ class AnimatedProgressText extends StatefulWidget {
     Key key,
     this.start,
     this.end,
+    this.estimated,
     this.target,
     this.label,
     this.fontSize = 32.0,
