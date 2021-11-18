@@ -89,7 +89,7 @@ class FitSnapshot {
     data['yesterday'] = yesterday;
     data['week'] = week;
     data['lastWeek'] = lastWeek;
-    data['challenges'] = [challenge1, challenge2, challenge3];
+    data['challenges'] = [challenge1, challenge2, challenge3, challenge4];
     data['total'] = total;
   }
 
