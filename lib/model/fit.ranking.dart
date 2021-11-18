@@ -168,7 +168,7 @@ class FitRanking {
       if (timestampKey > 0 &&
           !timestamp.isBefore(now.subtract(Duration(days: 14)))) {
         print(
-            '[INFO] sync user $userId ($timestamp) with app version ${value['client']} on ${value['device']}');
+            '[INFO] sync user $userId ($timestamp)\n\t - with app version ${value['client']}\n\t - on ${value['device']}');
 
         // total
         categoryKey = 'total';
@@ -196,19 +196,20 @@ class FitRanking {
           participation.putIfAbsent(teamKey, () => 1);
         }
       } else {
-        print('!!! user $userId is outdated, not synced within last 14 days');
+        print('[INFO] ignore user $userId, has not synced within last 14 days');
       }
 
       ranking.absolute += value['total'] ?? 0;
       if (value['challenges']?.isNotEmpty == true) {
         final int challengeCount = value['challenges'].length;
+        final List<int> newTotals = List.castFrom<dynamic, int>(
+            value['challenges'].map((c) => c).toList());
         if (challengeCount != ranking.challengeTotals.length) {
-          ranking.challengeTotals = value['challenges'].map((c) => c.toInt());
+          ranking.challengeTotals = newTotals;
         } else {
-          final List<int> newTotals = value['challenges'].map((c) => c.toInt());
-          newTotals.asMap().forEach((i, value) => {
-            ranking.challengeTotals[i] += value
-          });
+          newTotals
+              .asMap()
+              .forEach((i, value) => {ranking.challengeTotals[i] += value});
         }
       }
     });

@@ -12,6 +12,7 @@ import 'package:wandr/model/repositories/repository.dart';
 
 abstract class DashboardSyncDelegate {
   void onFitnessDataUpdate(FitSnapshot snapshot);
+  List<FitChallenge> getChallenges();
   void onSettingsRequested();
 }
 
@@ -66,7 +67,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
       LifecycleEventHandler(
         resumeCallBack: () async {
           if (!mounted) return;
-          _syncSteps();
+          _syncSteps(context);
         },
       ),
     );
@@ -75,17 +76,17 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
   }
 
   void reload() {
-    _syncSteps();
+    _syncSteps(context);
   }
 
   void _load() {
     setState(() {
       _loading = true;
     });
-    _syncSteps();
+    _syncSteps(context);
   }
 
-  void _syncSteps() {
+  void _syncSteps(BuildContext context) {
     Preferences().getDailyGoal().then((value) {
       if (!mounted) return;
       _goalDaily = value;
@@ -109,7 +110,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
     _repository.syncPoints(
       userKey: widget.userKey,
       teamName: widget.teamName,
-      challenges: FitChallenge.buildChallenges(context),
+      challenges: widget.delegate.getChallenges(),
       client: this,
       pushData: true,
     );

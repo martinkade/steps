@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wandr/model/calendar.dart';
-import 'package:wandr/model/fit.challenge.team1.dart';
-import 'package:wandr/model/fit.challenge.team2.dart';
-import 'package:wandr/model/fit.challenge.team3.dart';
-import 'package:wandr/model/fit.challenge.team4.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 
@@ -22,17 +18,7 @@ abstract class FitChallenge implements Comparable {
   double estimated = 0.0;
   double get percent => progress / target;
 
-  static List<FitChallenge> buildChallenges(BuildContext context) {
-    return [
-      FitChallenge1Team(context),
-      FitChallenge2Team(context),
-      FitChallenge3Team(context),
-      FitChallenge4Team(context),
-    ];
-  }
-
-  FitChallenge(
-    BuildContext context, {
+  FitChallenge({
     @required this.startDate,
     @required this.endDate,
     @required this.title,

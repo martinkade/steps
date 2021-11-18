@@ -1,7 +1,4 @@
 import 'dart:math';
-
-import 'package:flutter/material.dart';
-import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
@@ -12,15 +9,14 @@ class FitChallenge4Team extends FitChallenge {
   static DateTime kEndDate = DateTime(2021, 12, 19);
 
   ///
-  FitChallenge4Team(BuildContext context)
+  FitChallenge4Team()
       : super(
-          context,
           startDate: kStartDate,
           endDate: kEndDate,
-          title: Localizer.translate(context, 'lblTeamChallenge4Title'),
+          title: 'Walk Around NRW',
           description:
-              Localizer.translate(context, 'lblTeamChallenge4Description'),
-          label: Localizer.translate(context, 'lblUnitKilometer'),
+              'Nach unserer kurzen Verschnaufpause starten wir in die nächste Runde. Uns erwarten Berge, Flüsse, Schlösser und Sauerbraten 😊',
+          label: 'Kilometer',
           imageAsset: 'assets/images/challenge4.jpg',
         );
 

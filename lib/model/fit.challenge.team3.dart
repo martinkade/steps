@@ -1,7 +1,4 @@
 import 'dart:math';
-
-import 'package:flutter/material.dart';
-import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
@@ -12,18 +9,16 @@ class FitChallenge3Team extends FitChallenge {
   static DateTime kEndDate = DateTime(2020, 12, 24);
 
   ///
-  FitChallenge3Team(BuildContext context)
+  FitChallenge3Team()
       : super(
-          context,
           startDate: kStartDate,
           endDate: kEndDate,
-          title: Localizer.translate(context, 'lblTeamChallenge3Title'),
+          title: 'Polarlichter angucken am Nordkap',
           description:
-              Localizer.translate(context, 'lblTeamChallenge3Description'),
-          label: Localizer.translate(context, 'lblUnitKilometer'),
+              'An festes Schuhwerk sind wir schon gewöhnt, aber jetzt brauchen wir auch noch Mütze und Schal - es wird kalt 🥶 Diese WANDR Challenge bringt uns in den Norden, mit einem kleinen Abstecher zum Weihnachtsmann. Wenn wir schnell genug sind, können wir unsere Wunschzettel persönlich abgeben, ist ja immer besser 😉\n\nUnd dann ist unser Ziel auch nicht mehr weit - Polarlichter angucken am Nordkap."',
+          label: 'Kilometer',
           imageAsset: 'assets/images/challenge3.jpg',
         );
-
   @override
   bool get requiresSnapshotData => false;
 

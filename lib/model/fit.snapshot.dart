@@ -191,6 +191,6 @@ class FitSnapshot {
 
   ///
   List<num> challenges() {
-    return data['challenges'] ?? [0, 0];
+    return List.castFrom<dynamic, int>(data['challenges'].map((c) => c).toList()) ?? [0, 0];
   }
 }
