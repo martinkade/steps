@@ -204,7 +204,7 @@ class FitnessHandler: NSObject {
                     }
                 }
                 
-                result([:])
+                result(data)
                 return
           }
 
