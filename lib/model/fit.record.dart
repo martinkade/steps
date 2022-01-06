@@ -32,8 +32,10 @@ class FitRecord {
 
   ///
   FitRecord({DateTime dateTime}) {
-    timestamp = dateTime?.millisecondsSinceEpoch ??
-        DateTime.now().millisecondsSinceEpoch;
+    final DateTime mDateTime = dateTime ?? DateTime.now();
+    timestamp = mDateTime
+        .subtract(Duration(milliseconds: mDateTime.millisecond))
+        .millisecondsSinceEpoch;
     source = SOURCE_MANUAL;
     type = TYPE_ACTIVE_MINUTES;
     value = 0;
@@ -66,6 +68,10 @@ class FitRecord {
 
   ///
   String get dateString => DateFormat('yyyy-MM-dd').format(dateTime);
+
+  ///
+  String get dateTimeString =>
+      DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
 
   ///
   String relativeDate(BuildContext context, {Calendar calendar, DateTime now}) {

@@ -8,7 +8,14 @@ import 'package:wandr/model/repositories/fitness.repository.dart';
 
 class SettingsSyncItem extends SettingsItem {
   ///
-  SettingsSyncItem({Key key, String title}) : super(key: key, title: title);
+  final String userKey;
+
+  ///
+  SettingsSyncItem({
+    Key key,
+    String title,
+    this.userKey,
+  }) : super(key: key, title: title);
 
   @override
   _SettingsSyncItemState createState() => _SettingsSyncItemState();
@@ -63,6 +70,10 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
         _autoSyncEnabled = false;
       });
     }
+  }
+
+  void _restorePoints() {
+    _repository.restorePoints(userKey: widget.userKey);
   }
 
   @override
@@ -122,13 +133,50 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
       ),
     );
 
+    final Widget restoreWidget = Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: GestureDetector(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              Localizer.translate(context, 'lblSettingsDataSourceRestoreTitle'),
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              Localizer.translate(context, 'lblSettingsDataSourceRestoreInfo')
+                  .replaceFirst(
+                '%1',
+                Localizer.translate(context, 'appName'),
+              ),
+              style: TextStyle(fontSize: 16.0),
+            ),
+            Text(
+              Localizer.translate(context, 'lblActionRestore'),
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.end,
+            ),
+          ],
+        ),
+        onTap: () {
+          _restorePoints();
+        },
+      ),
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
         titleWidget,
         Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
           child: Card(
             elevation: 8.0,
             shadowColor: Colors.grey.withAlpha(50),
@@ -137,6 +185,18 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: contentWidget,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 8.0),
+          child: Card(
+            elevation: 8.0,
+            shadowColor: Colors.grey.withAlpha(50),
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: restoreWidget,
           ),
         ),
       ],

@@ -22,8 +22,13 @@ class FitSnapshot {
   }
 
   ///
-  void fillWithLocalData(List<FitRecord> records, {@required DateTime anchor}) {
+  void fillWithLocalData(
+    List<FitRecord> records, {
+    @required DateTime anchor,
+  }) {
     _reset();
+
+    final Map<String, dynamic> history = Map();
 
     int today = 0;
     int yesterday = 0;
@@ -47,6 +52,16 @@ class FitSnapshot {
             ? record.value
             : record.value ~/ 80;
         total += points;
+        if (points > 0)
+          history.putIfAbsent(
+            record.dateTimeString,
+            () => Map.fromEntries([
+              MapEntry('source', record.source),
+              MapEntry('type', record.type),
+              MapEntry('value', record.value),
+              MapEntry('name', record.name),
+            ]),
+          );
         if (calendar.isThisWeek(date, now)) {
           week += points;
           if (calendar.isToday(date, now)) {
@@ -85,12 +100,14 @@ class FitSnapshot {
       }
     });
 
-    data['today'] = today;
-    data['yesterday'] = yesterday;
-    data['week'] = week;
-    data['lastWeek'] = lastWeek;
+    data['stats'] = Map<String, dynamic>();
+    data['stats']['today'] = today;
+    data['stats']['yesterday'] = yesterday;
+    data['stats']['week'] = week;
+    data['stats']['lastWeek'] = lastWeek;
+    data['stats']['total'] = total;
+    data['history'] = history;
     data['challenges'] = [challenge1, challenge2, challenge3, challenge4];
-    data['total'] = total;
   }
 
   ///
@@ -142,55 +159,51 @@ class FitSnapshot {
 
   ///
   Future<Map<String, dynamic>> persist() async {
-    return Map.fromEntries(
-      [
-        MapEntry('today', today()),
-        MapEntry('yesterday', yesterday()),
-        MapEntry('week', week()),
-        MapEntry('lastWeek', lastWeek()),
-        MapEntry('challenges', challenges()),
-        MapEntry('total', total()),
-        MapEntry('timestamp', DateTime.now().millisecondsSinceEpoch),
-        MapEntry('device', await FitPlugin.getDeviceInfo()),
-        MapEntry('client', await FitPlugin.getAppInfo()),
-        /*
-        MapEntry(
-            '_',
-            (await Preferences.getUserKey())
-                .split('@')
-                .first
-                ?.replaceAll('.', '_'))*/
-      ],
-    );
+    final Map<String, dynamic> meta = Map.fromEntries([
+      MapEntry('timestamp', DateTime.now().millisecondsSinceEpoch),
+      MapEntry('device', await FitPlugin.getDeviceInfo()),
+      MapEntry('client', await FitPlugin.getAppInfo()),
+    ]);
+    final Map<String, dynamic> stats = Map.fromEntries([
+      MapEntry('today', today),
+      MapEntry('yesterday', yesterday),
+      MapEntry('week', week),
+      MapEntry('lastWeek', lastWeek),
+      MapEntry('total', total),
+    ]);
+    return Map.fromEntries([
+      MapEntry('meta', meta),
+      MapEntry('stats', stats),
+      MapEntry('history', history),
+      MapEntry('challenges', challenges),
+    ]);
   }
 
   ///
-  num today() {
-    return data['today'] ?? 0;
-  }
+  num get today =>
+      data['stats'] == null ? data['today'] ?? 0 : data['stats']['today'] ?? 0;
 
   ///
-  num yesterday() {
-    return data['yesterday'] ?? 0;
-  }
+  num get yesterday => data['stats'] == null
+      ? data['yesterday'] ?? 0
+      : data['stats']['yesterday'] ?? 0;
 
   ///
-  num week() {
-    return data['week'] ?? 0;
-  }
+  num get week =>
+      data['stats'] == null ? data['week'] ?? 0 : data['stats']['week'] ?? 0;
 
   ///
-  num lastWeek() {
-    return data['lastWeek'] ?? 0;
-  }
+  num get lastWeek => data['stats'] == null
+      ? data['lastWeek'] ?? 0
+      : data['stats']['lastWeek'] ?? 0;
 
   ///
-  num total() {
-    return data['total'] ?? 0;
-  }
+  num get total =>
+      data['stats'] == null ? data['total'] ?? 0 : data['stats']['total'] ?? 0;
 
   ///
-  List<num> challenges() {
-    return data['challenges'] ?? [0, 0];
-  }
+  Map<String, dynamic> get history => data['history'] ?? Map();
+
+  ///
+  List<num> get challenges => data['challenges'] ?? [0, 0, 0, 0];
 }

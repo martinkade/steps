@@ -71,6 +71,33 @@ class FitRecordDao extends FitDao {
   }
 
   ///
+  Future<void> restore({
+    @required List<FitRecord> oldRecords,
+    @required List<FitRecord> records,
+  }) async {
+    final Database db = await StructuredCache().getDb();
+    await db.transaction((txn) async {
+      String statement;
+      final Batch batch = txn.batch();
+      oldRecords.forEach((record) {
+        statement = buildStatement(
+            'INSERT OR REPLACE INTO ${FitRecordDao.TBL_NAME} ' +
+                '(${FitRecordDao.COL_TIMESTAMP}, ${FitRecordDao.COL_SOURCE}, ${FitRecordDao.COL_TYPE}, ${FitRecordDao.COL_VALUE}, ${FitRecordDao.COL_NAME}) VALUES ' +
+                '(?, ?, ?, ?, ?)',
+            [
+              record.timestamp,
+              record.source,
+              record.type,
+              record.value,
+              record.name,
+            ]);
+        batch.rawInsert(statement);
+      });
+      await batch.commit(continueOnError: true);
+    });
+  }
+
+  ///
   Future<void> delete(
       {@required List<FitRecord> records, bool exclude = false}) async {
     final String idList = records.map((it) => '${it.idString}').join(',');

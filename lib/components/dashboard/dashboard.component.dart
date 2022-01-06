@@ -170,7 +170,7 @@ class _DashboardState extends State<DashboardComponent>
     Navigator.push(
       context,
       RouteTransition(
-        page: SettingsComponent(),
+        page: SettingsComponent(userKey: _userName),
       ),
     ).then((_) async {
       (_syncKey.currentState)?.reload();

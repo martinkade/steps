@@ -26,9 +26,13 @@ class DashboardSyncItem extends DashboardItem {
   final DashboardSyncDelegate delegate;
 
   ///
-  DashboardSyncItem(
-      {Key key, String title, this.delegate, this.userKey, this.teamName})
-      : super(key: key, title: title);
+  DashboardSyncItem({
+    Key key,
+    String title,
+    this.delegate,
+    this.userKey,
+    this.teamName,
+  }) : super(key: key, title: title);
 
   @override
   DashboardSyncItemState createState() => DashboardSyncItemState();
@@ -110,7 +114,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
     );
   }
 
-  int get _delta => _goalDaily - (_snapshot?.today() ?? 0);
+  int get _delta => _goalDaily - (_snapshot?.today ?? 0);
 
   bool get _showMotivation {
     final int hour = DateTime.now().hour;
@@ -256,7 +260,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                       children: [
                         AnimatedProgressText(
                           start: 0,
-                          end: _snapshot?.today() ?? 0,
+                          end: _snapshot?.today ?? 0,
                           estimated: -1,
                           target: _goalDaily,
                           fontSize: 48.0,
@@ -270,7 +274,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                                     context, 'lblDashboardUserStatsKilometer')
                                 .replaceAll(
                               '%1',
-                              _approxKilometers(_snapshot?.today() ?? 0),
+                              _approxKilometers(_snapshot?.today ?? 0),
                             ),
                             style: TextStyle(fontSize: 13.0),
                           ),
@@ -287,7 +291,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                       children: [
                         AnimatedProgressText(
                           start: 0,
-                          end: _snapshot?.week() ?? 0,
+                          end: _snapshot?.week ?? 0,
                           estimated: -1,
                           target: _goalDaily * 7,
                           fontSize: 32.0,
@@ -301,7 +305,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                                     context, 'lblDashboardUserStatsKilometer')
                                 .replaceAll(
                               '%1',
-                              _approxKilometers(_snapshot?.week() ?? 0),
+                              _approxKilometers(_snapshot?.week ?? 0),
                             ),
                             style: TextStyle(fontSize: 13.0),
                           ),

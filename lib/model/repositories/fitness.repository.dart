@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:wandr/model/cache/fit.record.dao.dart';
 import 'package:wandr/model/fit.record.dart';
@@ -104,23 +105,47 @@ class FitnessRepository extends Repository {
   }
 
   ///
-  Future<void> syncPoints(
-      {String userKey,
-      String teamName,
-      FitnessRepositoryClient client,
-      bool pushData = false}) async {
+  Future<void> restorePoints({
+    String userKey,
+    FitnessRepositoryClient client,
+  }) async {
+    // restrict data to start on september, 1
+    final DateTime anchor = DateTime(2020, 9, 1);
+    final FitRecordDao dao = FitRecordDao();
+    final List<FitRecord> historicalData = await _readSnapshot(userKey);
+    final List<FitRecord> localData = await dao.fetch(
+      from: anchor,
+      onlyManualRecords: false,
+    );
+    await dao.restore(oldRecords: historicalData, records: localData);
+  }
+
+  ///
+  Future<void> syncPoints({
+    String userKey,
+    String teamName,
+    FitnessRepositoryClient client,
+    bool pushData = false,
+  }) async {
     FitSnapshot snapshot = FitSnapshot();
     final bool isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
 
-    // restrict local data to start on august, 24
-    final DateTime anchor = DateTime(2020, 8, 24);
+    // restrict data to start on september, 1
+    final DateTime anchor = DateTime(2020, 9, 1);
     final FitRecordDao dao = FitRecordDao();
-    final List<FitRecord> localData =
-        await dao.fetch(from: anchor, onlyManualRecords: !isAutoSyncEnabled);
+
+    final List<FitRecord> localData = await dao.fetch(
+      from: anchor,
+      onlyManualRecords: !isAutoSyncEnabled,
+    );
     await dao.delete(records: localData, exclude: true);
     snapshot.fillWithLocalData(localData, anchor: anchor);
-    client.fitnessRepositoryDidUpdate(this,
-        state: SyncState.FETCHING_DATA, day: anchor, snapshot: snapshot);
+    client.fitnessRepositoryDidUpdate(
+      this,
+      state: SyncState.FETCHING_DATA,
+      day: anchor,
+      snapshot: snapshot,
+    );
 
     try {
       if (isAutoSyncEnabled && await hasPermissions()) {
@@ -133,24 +158,62 @@ class FitnessRepository extends Repository {
     }
 
     localData.clear();
-    localData.addAll(
-        await dao.fetch(from: anchor, onlyManualRecords: !isAutoSyncEnabled));
+    localData.addAll(await dao.fetch(
+      from: anchor,
+      onlyManualRecords: !isAutoSyncEnabled,
+    ));
     snapshot.fillWithLocalData(localData, anchor: anchor);
 
-    client.fitnessRepositoryDidUpdate(this,
-        state: SyncState.DATA_READY, day: anchor, snapshot: snapshot);
+    client.fitnessRepositoryDidUpdate(
+      this,
+      state: SyncState.DATA_READY,
+      day: anchor,
+      snapshot: snapshot,
+    );
 
-    // restrict server data to start on august, 31
     snapshot = FitSnapshot();
-    snapshot.fillWithLocalData(localData, anchor: DateTime(2020, 8, 31));
+    snapshot.fillWithLocalData(localData, anchor: anchor);
     if (pushData) {
-      applySnapshot(snapshot, userKey: userKey, teamName: teamName);
+      _writeSnapshot(snapshot, userKey: userKey, teamName: teamName);
     }
   }
 
   ///
-  Future<void> applySnapshot(FitSnapshot snapshot,
-      {String userKey, String teamName}) async {
+  Future<List<FitRecord>> _readSnapshot(String userKey) async {
+    final FirebaseApp instance = await Storage().access();
+    final FirebaseDatabase db = FirebaseDatabase(app: instance);
+    db.setPersistenceEnabled(true);
+    db.setPersistenceCacheSizeBytes(1024 * 1024);
+    final DataSnapshot data =
+        await db.reference().child('users').child(userKey).get();
+    final Map<dynamic, dynamic> history =
+        data.value['history'] == null ? Map() : data.value['history'] ?? Map();
+    print('FitRepository#_readSnapshot:\n\t$userKey\n\t$history');
+
+    FitRecord record;
+    final List<FitRecord> records = <FitRecord>[];
+    DateTime timestamp;
+    history.forEach((key, value) {
+      timestamp = DateTime.parse(key.toString());
+      record = FitRecord(dateTime: timestamp);
+      record.fill(
+        source: value['source']?.toInt() ?? 0,
+        value: value['value']?.toInt() ?? 0,
+        type: value['type']?.toInt() ?? 0,
+        name: value['name']?.toString(),
+      );
+      print('FitRepository#_readSnapshot: \t${record.dateTimeString}');
+      records.add(record);
+    });
+    return records;
+  }
+
+  ///
+  Future<void> _writeSnapshot(
+    FitSnapshot snapshot, {
+    String userKey,
+    String teamName,
+  }) async {
     Storage().access().then((instance) async {
       final FirebaseDatabase db = FirebaseDatabase(app: instance);
       db.setPersistenceEnabled(true);
@@ -159,8 +222,9 @@ class FitnessRepository extends Repository {
       final Map<String, dynamic> snapshotData = Map();
       snapshotData.putIfAbsent('team', () => teamName);
       snapshotData.addAll(await snapshot.persist());
+      print('FitRepository#_writeSnapshot:\n\t$userKey\n\t$snapshotData');
 
-      db.reference().child('users').child(userKey).set(snapshotData);
+      await db.reference().child('users').child(userKey).set(snapshotData);
     });
   }
 }

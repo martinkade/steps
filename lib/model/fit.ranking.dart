@@ -27,14 +27,19 @@ class FitRanking {
     DateTime timestamp;
     String teamKey, categoryKey;
     int timestampKey;
+    dynamic data;
     Map<String, num> categoryValue;
     snapshot.value.forEach((key, value) {
       // key is user
       teamKey = value['team'];
-      timestampKey = value['timestamp']?.toInt() ?? 0;
+      timestampKey = value['meta'] == null
+          ? value['timestamp']?.toInt() ?? 0
+          : value['meta']['timestamp']?.toInt() ?? 0;
       timestamp = timestampKey > 0
           ? DateTime.fromMillisecondsSinceEpoch(timestampKey)
           : null;
+      data = value['stats'] == null ? value : value['stats'];
+      // print('FitRanking#createFromSnapshot:\n\t$key\n\t$data');
 
       // - sum user's weekly points if sync timestamp is within current week
       // - sum user's last weeks points if sync timestamp is within current week
@@ -48,9 +53,9 @@ class FitRanking {
         }
 
         if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + value[categoryKey]);
+          categoryValue.update(teamKey, (v) => v + data[categoryKey]);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => value[categoryKey]);
+          categoryValue.putIfAbsent(teamKey, () => data[categoryKey]);
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -68,9 +73,9 @@ class FitRanking {
         }
 
         if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + value[categoryKey]);
+          categoryValue.update(teamKey, (v) => v + data[categoryKey]);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => value[categoryKey]);
+          categoryValue.putIfAbsent(teamKey, () => data[categoryKey]);
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -88,9 +93,9 @@ class FitRanking {
         }
 
         if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + value['week']);
+          categoryValue.update(teamKey, (v) => v + data['week']);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => value['week']);
+          categoryValue.putIfAbsent(teamKey, () => data['week']);
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -111,9 +116,9 @@ class FitRanking {
         }
 
         if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + value[categoryKey]);
+          categoryValue.update(teamKey, (v) => v + data[categoryKey]);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => value[categoryKey]);
+          categoryValue.putIfAbsent(teamKey, () => data[categoryKey]);
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -131,9 +136,9 @@ class FitRanking {
         }
 
         if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + value[categoryKey]);
+          categoryValue.update(teamKey, (v) => v + data[categoryKey]);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => value[categoryKey]);
+          categoryValue.putIfAbsent(teamKey, () => data[categoryKey]);
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -151,9 +156,9 @@ class FitRanking {
         }
 
         if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + value['today']);
+          categoryValue.update(teamKey, (v) => v + data['today']);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => value['today']);
+          categoryValue.putIfAbsent(teamKey, () => data['today']);
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -165,8 +170,7 @@ class FitRanking {
 
       if (timestampKey > 0 &&
           !timestamp.isBefore(now.subtract(Duration(days: 14)))) {
-        print(
-            '[INFO] sync user $key ($timestamp) with app version ${value['client']} on ${value['device']}');
+        // print('[INFO] sync user $key ($timestamp) with app version ${value['client']} on ${value['device']}');
         // total
         categoryKey = 'total';
         if (summary.containsKey(categoryKey)) {
@@ -176,9 +180,9 @@ class FitRanking {
         }
 
         if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + value['total']);
+          categoryValue.update(teamKey, (v) => v + data['total']);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => value['total']);
+          categoryValue.putIfAbsent(teamKey, () => data['total']);
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -196,7 +200,7 @@ class FitRanking {
         print('!!! user $key is outdated, not synced within last 14 days');
       }
 
-      ranking.absolute += value['total'] ?? 0;
+      ranking.absolute += data['total'] ?? 0;
       if (value['challenges'] != null) {
         ranking.challenge1 += ((value['challenges']?.length ?? 0) > 0)
             ? (value['challenges'][0] ?? 0)
@@ -211,7 +215,7 @@ class FitRanking {
             ? (value['challenges'][3] ?? 0)
             : 0;
       } else {
-        ranking.challenge1 += value['total'] ?? 0;
+        ranking.challenge1 += data['total'] ?? 0;
       }
     });
 

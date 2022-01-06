@@ -8,7 +8,10 @@ import 'package:wandr/components/shared/page.default.dart';
 
 class SettingsComponent extends StatefulWidget {
   ///
-  SettingsComponent({Key key}) : super(key: key);
+  final String userKey;
+
+  ///
+  const SettingsComponent({Key key, this.userKey}) : super(key: key);
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -41,6 +44,7 @@ class _SettingsState extends State<SettingsComponent> {
               );
             case 3:
               return SettingsSyncItem(
+                userKey: widget.userKey,
                 title: Localizer.translate(context, 'lblSettingsDataSource'),
               );
             default:
