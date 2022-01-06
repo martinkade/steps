@@ -34,6 +34,7 @@ class FitSnapshot {
     int yesterday = 0;
     int week = 0;
     int lastWeek = 0;
+    int year = 0;
     int total = 0;
 
     int challenge1 = 0;
@@ -62,6 +63,9 @@ class FitSnapshot {
               MapEntry('name', record.name),
             ]),
           );
+        if (calendar.isThisYear(date, now)) {
+          year += points;
+        }
         if (calendar.isThisWeek(date, now)) {
           week += points;
           if (calendar.isToday(date, now)) {
@@ -105,6 +109,7 @@ class FitSnapshot {
     data['stats']['yesterday'] = yesterday;
     data['stats']['week'] = week;
     data['stats']['lastWeek'] = lastWeek;
+    data['stats']['year'] = year;
     data['stats']['total'] = total;
     data['history'] = history;
     data['challenges'] = [challenge1, challenge2, challenge3, challenge4];
@@ -169,6 +174,7 @@ class FitSnapshot {
       MapEntry('yesterday', yesterday),
       MapEntry('week', week),
       MapEntry('lastWeek', lastWeek),
+      MapEntry('year', year),
       MapEntry('total', total),
     ]);
     return Map.fromEntries([
@@ -196,6 +202,10 @@ class FitSnapshot {
   num get lastWeek => data['stats'] == null
       ? data['lastWeek'] ?? 0
       : data['stats']['lastWeek'] ?? 0;
+
+  ///
+  num get year =>
+      data['stats'] == null ? data['year'] ?? 0 : data['stats']['year'] ?? 0;
 
   ///
   num get total =>

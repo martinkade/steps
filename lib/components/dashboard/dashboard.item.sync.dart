@@ -115,10 +115,19 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
   }
 
   int get _delta => _goalDaily - (_snapshot?.today ?? 0);
+  int get _yearDelta =>
+      _goalDaily * DateTime.now().day - (_snapshot?.year ?? 0);
 
   bool get _showMotivation {
     final int hour = DateTime.now().hour;
     return _delta != _goalDaily && _delta > 0 && hour >= 18;
+  }
+
+  bool get _showYearProgress {
+    final int day = DateTime.now().year;
+    return _yearDelta != _goalDaily * day &&
+        _yearDelta > 0 &&
+        _yearDelta < _goalDaily * 3;
   }
 
   @override
@@ -141,6 +150,52 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
       _fitnessSyncState = state;
       _loading = false;
     });
+  }
+
+  Widget _yearProgressWidget(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Divider(
+            color: Colors.grey,
+          ),
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Icon(Icons.av_timer),
+            ),
+            Expanded(
+              child: RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context).style,
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: Localizer.translate(
+                              context, 'lblDashboardMotivation') +
+                          ' ',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextSpan(
+                      text: Localizer.translate(
+                              context, 'lblDashboardMotivationYear')
+                          .replaceFirst('%1', '$_yearDelta'),
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ],
+    );
   }
 
   Widget _motivationWidget(BuildContext context) {
@@ -166,7 +221,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                   children: <TextSpan>[
                     TextSpan(
                       text: Localizer.translate(
-                              context, 'lblDashboardMotivation1') +
+                              context, 'lblDashboardMotivation') +
                           ' ',
                       style: TextStyle(
                         fontSize: 16.0,
@@ -175,7 +230,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                     ),
                     TextSpan(
                       text: Localizer.translate(
-                              context, 'lblDashboardMotivation2')
+                              context, 'lblDashboardMotivationDay')
                           .replaceFirst('%1', '$_delta'),
                       style: TextStyle(fontSize: 16.0),
                     ),
@@ -318,7 +373,10 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
             ),
             _showMotivation
                 ? _motivationWidget(context)
-                : (!_autoSyncEnabled ? _autoSyncWidget(context) : Container()),
+                : (_showYearProgress
+                    ? _yearProgressWidget(context)
+                    : Container()),
+            !_autoSyncEnabled ? _autoSyncWidget(context) : Container()
           ],
         ),
       ),

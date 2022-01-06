@@ -56,6 +56,11 @@ class Calendar {
   }
 
   ///
+  bool isThisYear(DateTime moment, DateTime now) {
+    return moment.year == now.year;
+  }
+
+  ///
   Duration delta(DateTime moment, DateTime now) {
     return moment.difference(now);
   }

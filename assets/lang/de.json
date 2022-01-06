@@ -16,8 +16,9 @@
     "lblDashboardUserStatsAutoSyncOffApple": "Die automatische Synchronisation mit Apple Health ist deaktiviert. Das kannst du in den Einstellungen ändern.",
     "lblDashboardUserStatsAutoSyncOffGoogle": "Die automatische Synchronisation mit Google Fit ist deaktiviert. Das kannst du in den Einstellungen ändern.",
 
-    "lblDashboardMotivation1": "Dran bleiben!",
-    "lblDashboardMotivation2": "Sammle heute weitere %1 Punkte um dein Tagesziel zu erreichen.",
+    "lblDashboardMotivation": "Dran bleiben!",
+    "lblDashboardMotivationDay": "Sammle heute weitere %1 Punkte um dein Tagesziel zu erreichen.",
+    "lblDashboardMotivationYear": "Sammle heute weitere %1 Punkte um dein Jahresziel zu erreichen.",
     "lblDashboardActiveChallenges": "Aktuelle Challenges",
     "lblDashboardTeamStandings": "Teamstatistik",
     "lblDashboardActionHistory": "Mein Verlauf",

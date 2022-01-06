@@ -15,8 +15,10 @@
     "lblDashboardUserStatsKilometer": "or %1 kilometers",
     "lblDashboardUserStatsAutoSyncOffApple": "Automatic synchronization with Apple Health is disabled. You can change that in the settings.",
     "lblDashboardUserStatsAutoSyncOffGoogle": "Automatic synchronization with Google Fit is disabled. You can change that in the settings.",
-    "lblDashboardMotivation1": "Here we go!",
-    "lblDashboardMotivation2": "Collect %1 points today to reach your daily goal.",
+    
+    "lblDashboardMotivation": "Here we go!",
+    "lblDashboardMotivationDay": "Collect %1 points today to reach your daily goal.",
+    "lblDashboardMotivationYear": "Collect %1 points today to reach your annual goal.",
     "lblDashboardActiveChallenges": "Active challenges",
     "lblDashboardTeamStandings": "Team stats",
     "lblDashboardActionHistory": "My history",
