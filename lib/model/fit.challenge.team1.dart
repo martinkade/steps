@@ -1,7 +1,4 @@
 import 'dart:math';
-
-import 'package:flutter/material.dart';
-import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
@@ -12,15 +9,14 @@ class FitChallenge1Team extends FitChallenge {
   static DateTime kEndDate = DateTime(2020, 9, 13);
 
   ///
-  FitChallenge1Team(BuildContext context)
+  FitChallenge1Team()
       : super(
-          context,
           startDate: kStartDate,
           endDate: kEndDate,
-          title: Localizer.translate(context, 'lblTeamChallenge1Title'),
+          title: 'Auf nach Nizza',
           description:
-              Localizer.translate(context, 'lblTeamChallenge1Description'),
-          label: Localizer.translate(context, 'lblUnitKilometer'),
+              'Bei allen Team-Challenges geht es darum, gemeinsam einen virtuellen Trail zu absolvieren. Gesammelte Schritte oder aktive Minuten werden dabei in Kilometer umgerechnet.\n\nErstes Ziel ist Kreuztal (165 km), hier spendiert uns Markus ein Eis. Weiter gehts nach Nizza (1044 km), Thomas besuchen. 👋\n\nNur du siehst deine täglichen aktiven Minuten bzw. Schritte, aber jeder kann sehen wie viel der Strecke das Team schon geschafft hat. Anfeuern erwünscht. Los gehts!',
+          label: 'Kilometer',
           imageAsset: 'assets/images/challenge1.jpg',
         );
 
@@ -37,7 +33,7 @@ class FitChallenge1Team extends FitChallenge {
 
   @override
   void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = (ranking.challenge1?.toDouble() ?? 0.0) / 12.0;
+    progress = (ranking.challengeTotals[0]?.toDouble() ?? 0.0) / 12.0;
     final int totalHours = kEndDate.difference(kStartDate).inHours;
     final int hours = max(0, DateTime.now().difference(kStartDate).inHours);
     final double estimatedPercent = min(1.0, hours / totalHours.toDouble());

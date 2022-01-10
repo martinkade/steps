@@ -15,8 +15,11 @@ class DashboardChallengeDetail extends StatefulWidget {
   final int index;
 
   ///
-  DashboardChallengeDetail({Key key, this.challenge, this.index})
-      : super(key: key);
+  DashboardChallengeDetail({
+    Key key,
+    this.challenge,
+    this.index,
+  }) : super(key: key);
 
   @override
   _DashboardChallengeDetailState createState() =>

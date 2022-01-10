@@ -22,6 +22,8 @@ import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 import 'package:wandr/model/preferences.dart';
+import 'package:wandr/model/repositories/challenge.repository.dart';
+import 'package:wandr/model/repositories/repository.dart';
 import 'package:wandr/model/storage.dart';
 
 class DashboardComponent extends StatefulWidget {
@@ -29,7 +31,10 @@ class DashboardComponent extends StatefulWidget {
   final String title;
 
   ///
-  DashboardComponent({Key key, this.title}) : super(key: key);
+  DashboardComponent({
+    Key key,
+    this.title,
+  }) : super(key: key);
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -40,7 +45,8 @@ class _DashboardState extends State<DashboardComponent>
         DashboardTitleDelegate,
         DashboardSyncDelegate,
         DashboardInfoItemDelegate,
-        DashboardChallengeDelegate {
+        DashboardChallengeDelegate,
+        ChallengeRepositoryClient {
   ///
   String _userName;
 
@@ -60,6 +66,9 @@ class _DashboardState extends State<DashboardComponent>
   StreamSubscription<Event> _rankingSubscription;
 
   ///
+  List<FitChallenge> _challenges = [];
+
+  ///
   final GlobalKey<DashboardSyncItemState> _syncKey =
       GlobalKey<DashboardSyncItemState>(debugLabel: 'DashboardSyncItemState');
 
@@ -73,6 +82,8 @@ class _DashboardState extends State<DashboardComponent>
     super.initState();
 
     _unitKilometersEnabled = false;
+    ChallengeRepository().fetchChallenges(client: this);
+
     Preferences.getUserKey().then((userValue) {
       if (!mounted) return;
 
@@ -106,6 +117,7 @@ class _DashboardState extends State<DashboardComponent>
     Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
       if (!mounted) return;
       _unitKilometersEnabled = enabled;
+      print('$_unitKilometersEnabled');
       Storage().access().then((instance) {
         final FirebaseDatabase db = FirebaseDatabase(app: instance);
         db.reference().child('users').once().then((snapshot) {
@@ -129,6 +141,7 @@ class _DashboardState extends State<DashboardComponent>
   void _onSnapshotChanged(DataSnapshot snapshot) {
     if (!mounted) return;
     setState(() {
+      // create ranking from Firebase realtime database
       _ranking = FitRanking.createFromSnapshot(snapshot);
     });
   }
@@ -137,6 +150,7 @@ class _DashboardState extends State<DashboardComponent>
   void onFitnessDataUpdate(FitSnapshot snapshot) {
     if (!mounted) return;
     setState(() {
+      // apply local data snapshot with updated fitnes metrics from Google Fit or Apple health (or manually recorded data)
       _fitSnapshot = snapshot;
     });
   }
@@ -200,6 +214,24 @@ class _DashboardState extends State<DashboardComponent>
         ),
       ),
     );
+  }
+
+  @override
+  List<FitChallenge> getChallenges() {
+    return this._challenges;
+  }
+
+  @override
+  void challengeRepositoryDidUpdate(
+    ChallengeRepository repository, {
+    SyncState state,
+    List<FitChallenge> challengeList,
+  }) {
+    if (!mounted || challengeList.isEmpty) return;
+    _challenges.clear();
+    setState(() {
+      _challenges.addAll(challengeList);
+    });
   }
 
   @override

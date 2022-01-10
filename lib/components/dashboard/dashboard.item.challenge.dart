@@ -4,15 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:wandr/components/dashboard/dashboard.item.challenge.detail.dart';
 import 'package:wandr/components/dashboard/dashboard.item.dart';
 import 'package:wandr/model/fit.challenge.dart';
-import 'package:wandr/model/fit.challenge.team1.dart';
-import 'package:wandr/model/fit.challenge.team2.dart';
-import 'package:wandr/model/fit.challenge.team3.dart';
-import 'package:wandr/model/fit.challenge.team4.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 
 abstract class DashboardChallengeDelegate {
   void onChallengeRequested(FitChallenge challenge, int index);
+  List<FitChallenge> getChallenges();
 }
 
 class DashboardChallengeItem extends DashboardItem {
@@ -58,40 +55,29 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
 
   @override
   void initState() {
+    _challenges = widget.delegate.getChallenges();
+    _challenges.sort((a, b) => a.compareTo(b));
+    _cardCount = _challenges.length;
     super.initState();
 
     _scrollController = ScrollController();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final FitChallenge1Team challenge1 = FitChallenge1Team(context);
-    final FitChallenge2Team challenge2 = FitChallenge2Team(context);
-    final FitChallenge3Team challenge3 = FitChallenge3Team(context);
-    final FitChallenge4Team challenge4 = FitChallenge4Team(context);
-    _challenges = [
-      challenge3,
-      challenge2,
-      challenge1,
-    ];
-    if (challenge4.startDate.isBefore(DateTime.now())) {
-      _challenges.insert(0, challenge4);
-    } else {
-      _challenges.insert(1, challenge4);
-    }
-
-    _cardCount = _challenges.length;
+    print('Update team challenges: $_challenges');
+    _challenges.forEach((challenge) {
+      challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
+    });
   }
 
   @override
   void didUpdateWidget(DashboardChallengeItem oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    _challenges = widget.delegate.getChallenges();
+    _challenges.sort((a, b) => a.compareTo(b));
+    _cardCount = _challenges.length;
+
     print('Update team challenges: $_challenges');
     _challenges.forEach((challenge) {
-      challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
+      // challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
     });
   }
 

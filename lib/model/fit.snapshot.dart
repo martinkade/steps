@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:wandr/model/cache/fit.record.dao.dart';
 import 'package:wandr/model/calendar.dart';
+import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.challenge.team1.dart';
 import 'package:wandr/model/fit.challenge.team2.dart';
 import 'package:wandr/model/fit.challenge.team3.dart';
@@ -24,6 +25,7 @@ class FitSnapshot {
   ///
   void fillWithLocalData(
     List<FitRecord> records, {
+    List<FitChallenge> challenges,
     @required DateTime anchor,
   }) {
     _reset();
@@ -215,5 +217,7 @@ class FitSnapshot {
   Map<String, dynamic> get history => data['history'] ?? Map();
 
   ///
-  List<num> get challenges => data['challenges'] ?? [0, 0, 0, 0];
+  List<num> get challenges =>
+      List.castFrom<dynamic, int>(data['challenges'].map((c) => c).toList()) ??
+      [0, 0, 0, 0];
 }

@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:wandr/model/cache/fit.record.dao.dart';
+import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.record.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 import 'package:wandr/model/preferences.dart';
@@ -11,9 +13,13 @@ import 'package:wandr/model/storage.dart';
 
 ///
 abstract class FitnessRepositoryClient {
-  ///
-  void fitnessRepositoryDidUpdate(FitnessRepository repository,
-      {SyncState state, DateTime day, FitSnapshot snapshot});
+  /// Notify client with updated local data from Google Fit or Apple Health (or manually recordet data).
+  void fitnessRepositoryDidUpdate(
+    FitnessRepository repository, {
+    SyncState state,
+    DateTime day,
+    FitSnapshot snapshot,
+  });
 }
 
 class FitnessRepository extends Repository {
@@ -122,9 +128,10 @@ class FitnessRepository extends Repository {
 
   ///
   Future<void> syncPoints({
-    String userKey,
-    String teamName,
-    FitnessRepositoryClient client,
+    @required String userKey,
+    @required String teamName,
+    @required FitnessRepositoryClient client,
+    @required List<FitChallenge> challenges,
     bool pushData = false,
   }) async {
     FitSnapshot snapshot = FitSnapshot();
@@ -133,13 +140,16 @@ class FitnessRepository extends Repository {
     // restrict data to start on september, 1
     final DateTime anchor = DateTime(2020, 9, 1);
     final FitRecordDao dao = FitRecordDao();
-
     final List<FitRecord> localData = await dao.fetch(
       from: anchor,
       onlyManualRecords: !isAutoSyncEnabled,
     );
     await dao.delete(records: localData, exclude: true);
-    snapshot.fillWithLocalData(localData, anchor: anchor);
+    snapshot.fillWithLocalData(
+      localData,
+      challenges: challenges,
+      anchor: anchor,
+    );
     client.fitnessRepositoryDidUpdate(
       this,
       state: SyncState.FETCHING_DATA,
@@ -162,7 +172,11 @@ class FitnessRepository extends Repository {
       from: anchor,
       onlyManualRecords: !isAutoSyncEnabled,
     ));
-    snapshot.fillWithLocalData(localData, anchor: anchor);
+    snapshot.fillWithLocalData(
+      localData,
+      challenges: challenges,
+      anchor: anchor,
+    );
 
     client.fitnessRepositoryDidUpdate(
       this,
@@ -172,7 +186,11 @@ class FitnessRepository extends Repository {
     );
 
     snapshot = FitSnapshot();
-    snapshot.fillWithLocalData(localData, anchor: anchor);
+    snapshot.fillWithLocalData(
+      localData,
+      challenges: challenges,
+      anchor: anchor,
+    );
     if (pushData) {
       _writeSnapshot(snapshot, userKey: userKey, teamName: teamName);
     }

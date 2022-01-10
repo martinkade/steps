@@ -1,7 +1,4 @@
 import 'dart:math';
-
-import 'package:flutter/material.dart';
-import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
@@ -12,15 +9,14 @@ class FitChallenge2Team extends FitChallenge {
   static DateTime kEndDate = DateTime(2020, 11, 02);
 
   ///
-  FitChallenge2Team(BuildContext context)
+  FitChallenge2Team()
       : super(
-          context,
           startDate: kStartDate,
           endDate: kEndDate,
-          title: Localizer.translate(context, 'lblTeamChallenge2Title'),
+          title: 'Einmal rund um Deutschland',
           description:
-              Localizer.translate(context, 'lblTeamChallenge2Description'),
-          label: Localizer.translate(context, 'lblUnitKilometer'),
+              'Von Nizza aus fliegen wir Non-Stop zum Flughafen in Stadtlohn, packen unsere Rucksäcke und schon geht\'s weiter: Wir umrunden Deutschland - im Uhrzeigersinn, für die, die es ganz genau wissen wollen 😉. Lasst euch unterwegs beeindrucken und überraschen, da liegt einiges auf unserem Weg. Und bei 4800 km kommt keine Langeweile auf.\n\n♫ Das WANDRn ist des WANDRers Lust ♫',
+          label: 'Kilometer',
           imageAsset: 'assets/images/challenge2.jpg',
         );
 
@@ -37,7 +33,7 @@ class FitChallenge2Team extends FitChallenge {
 
   @override
   void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = (ranking.challenge2?.toDouble() ?? 0.0) / 12.0;
+    progress = (ranking.challengeTotals[1]?.toDouble() ?? 0.0) / 12.0;
     final int totalHours = kEndDate.difference(kStartDate).inHours;
     final int hours = max(0, DateTime.now().difference(kStartDate).inHours);
     final double estimatedPercent = min(1.0, hours / totalHours.toDouble());
