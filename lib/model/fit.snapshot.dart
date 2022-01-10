@@ -2,10 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:wandr/model/cache/fit.record.dao.dart';
 import 'package:wandr/model/calendar.dart';
 import 'package:wandr/model/fit.challenge.dart';
-import 'package:wandr/model/fit.challenge.team1.dart';
-import 'package:wandr/model/fit.challenge.team2.dart';
-import 'package:wandr/model/fit.challenge.team3.dart';
-import 'package:wandr/model/fit.challenge.team4.dart';
 import 'package:wandr/model/fit.plugin.dart';
 import 'package:wandr/model/fit.record.dart';
 import 'dart:io' show Platform;
@@ -31,6 +27,7 @@ class FitSnapshot {
     _reset();
 
     final Map<String, dynamic> history = Map();
+    final List<int> challengePoints = List.filled(challenges.length, 0);
 
     int today = 0;
     int yesterday = 0;
@@ -38,11 +35,6 @@ class FitSnapshot {
     int lastWeek = 0;
     int year = 0;
     int total = 0;
-
-    int challenge1 = 0;
-    int challenge2 = 0;
-    int challenge3 = 0;
-    int challenge4 = 0;
 
     int points;
     DateTime date;
@@ -82,27 +74,15 @@ class FitSnapshot {
           }
         }
 
-        if (date.isAfter(FitChallenge4Team.kStartDate) ||
-            date.isAtSameMomentAs(FitChallenge4Team.kStartDate)) {
-          if (date.isBefore(FitChallenge4Team.kEndDate) ||
-              date.isAtSameMomentAs(FitChallenge4Team.kEndDate))
-            challenge4 += points;
-        } else if (date.isAfter(FitChallenge3Team.kStartDate) ||
-            date.isAtSameMomentAs(FitChallenge3Team.kStartDate)) {
-          if (date.isBefore(FitChallenge3Team.kEndDate) ||
-              date.isAtSameMomentAs(FitChallenge3Team.kEndDate))
-            challenge3 += points;
-        } else if (date.isAfter(FitChallenge2Team.kStartDate) ||
-            date.isAtSameMomentAs(FitChallenge2Team.kStartDate)) {
-          if (date.isBefore(FitChallenge2Team.kEndDate) ||
-              date.isAtSameMomentAs(FitChallenge2Team.kEndDate))
-            challenge2 += points;
-        } else if (date.isAfter(FitChallenge1Team.kStartDate) ||
-            date.isAtSameMomentAs(FitChallenge1Team.kStartDate)) {
-          if (date.isBefore(FitChallenge1Team.kEndDate) ||
-              date.isAtSameMomentAs(FitChallenge1Team.kEndDate))
-            challenge1 += points;
-        }
+        challenges.forEach((challenge) {
+          if (date.isAfter(challenge.startDate) ||
+              date.isAtSameMomentAs(challenge.startDate)) {
+            if (date.isBefore(challenge.endDate) ||
+                date.isAtSameMomentAs(challenge.endDate)) {
+              challengePoints[challenge.index] += points;
+            }
+          }
+        });
       }
     });
 
@@ -114,7 +94,7 @@ class FitSnapshot {
     data['stats']['year'] = year;
     data['stats']['total'] = total;
     data['history'] = history;
-    data['challenges'] = [challenge1, challenge2, challenge3, challenge4];
+    data['challenges'] = challengePoints;
   }
 
   ///
@@ -126,7 +106,7 @@ class FitSnapshot {
     print('Import external data: $data');
     DateTime id;
     FitRecord record;
-    final List<FitRecord> records = List();
+    final List<FitRecord> records = <FitRecord>[];
     if (source == FitRecord.SOURCE_GOOGLE_FIT) {
       data['activeMinutes']?.forEach((key, value) {
         id = DateTime.parse(key);

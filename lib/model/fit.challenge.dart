@@ -6,6 +6,7 @@ import 'package:wandr/model/fit.snapshot.dart';
 const int DAILY_TARGET_POINTS = 75;
 
 abstract class FitChallenge implements Comparable {
+  final int index;
   final DateTime startDate, endDate;
   final String title;
   final String description;
@@ -19,6 +20,7 @@ abstract class FitChallenge implements Comparable {
   double get percent => progress / target;
 
   FitChallenge({
+    @required this.index,
     @required this.startDate,
     @required this.endDate,
     @required this.title,

@@ -11,6 +11,7 @@ class FitChallenge3Team extends FitChallenge {
   ///
   FitChallenge3Team()
       : super(
+          index: 2,
           startDate: kStartDate,
           endDate: kEndDate,
           title: 'Polarlichter angucken am Nordkap',
@@ -32,7 +33,7 @@ class FitChallenge3Team extends FitChallenge {
 
   @override
   void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = (ranking.challengeTotals[2]?.toDouble() ?? 0.0) / 12.0;
+    progress = (ranking.challengeTotals[index]?.toDouble() ?? 0.0) / 12.0;
     final int totalHours = kEndDate.difference(kStartDate).inHours;
     final int hours = max(0, DateTime.now().difference(kStartDate).inHours);
     final double estimatedPercent = min(1.0, hours / totalHours.toDouble());

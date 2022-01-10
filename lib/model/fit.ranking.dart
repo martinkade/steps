@@ -7,6 +7,7 @@ class FitRanking {
     MapEntry('yesterday', <FitRankingEntry>[]),
     MapEntry('week', <FitRankingEntry>[]),
     MapEntry('lastWeek', <FitRankingEntry>[]),
+    MapEntry('year', <FitRankingEntry>[]),
     MapEntry('total', <FitRankingEntry>[]),
   ]);
   int absolute = 0;
@@ -169,6 +170,15 @@ class FitRanking {
         }
       }
 
+      if (timestampKey > 0 && calendar.isThisYear(timestamp, now)) {
+        categoryKey = 'year';
+        if (summary.containsKey(categoryKey)) {
+          categoryValue = summary[categoryKey];
+        } else {
+          categoryValue = Map();
+        }
+      }
+
       // collect total points if user synced within last 14 days
       if (timestampKey > 0 &&
           !timestamp.isBefore(now.subtract(Duration(days: 14)))) {
@@ -208,13 +218,16 @@ class FitRanking {
         final int challengeCount = value['challenges'].length;
         final List<int> newTotals = List.castFrom<dynamic, int>(
             value['challenges'].map((c) => c).toList());
-        if (challengeCount != ranking.challengeTotals.length) {
-          ranking.challengeTotals = newTotals;
-        } else {
-          newTotals
-              .asMap()
-              .forEach((i, value) => {ranking.challengeTotals[i] += value});
+        if (challengeCount > ranking.challengeTotals.length) {
+          for (int i = ranking.challengeTotals.length;
+              i < newTotals.length;
+              i++) {
+            ranking.challengeTotals.add(0);
+          }
         }
+        newTotals
+            .asMap()
+            .forEach((i, value) => {ranking.challengeTotals[i] += value});
       }
     });
 

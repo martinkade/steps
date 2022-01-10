@@ -107,13 +107,15 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
       }
     });
 
-    _repository.syncPoints(
-      userKey: widget.userKey,
-      teamName: widget.teamName,
-      challenges: widget.delegate.getChallenges(),
-      client: this,
-      pushData: true,
-    );
+    _repository.restorePoints(userKey: widget.userKey, client: this).then((_) {
+      _repository.syncPoints(
+        userKey: widget.userKey,
+        teamName: widget.teamName,
+        challenges: widget.delegate.getChallenges(),
+        client: this,
+        pushData: true,
+      );
+    });
   }
 
   int get _delta => _goalDaily - (_snapshot?.today ?? 0);

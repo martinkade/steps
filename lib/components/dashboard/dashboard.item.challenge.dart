@@ -64,6 +64,8 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
     print('Update team challenges: $_challenges');
     _challenges.forEach((challenge) {
       challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
+      print(
+          ' - challenge #${challenge.index}: ${challenge.progress} (${challenge.title})');
     });
   }
 
@@ -77,7 +79,9 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
 
     print('Update team challenges: $_challenges');
     _challenges.forEach((challenge) {
-      // challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
+      challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
+      print(
+          ' - challenge #${challenge.index}: ${challenge.progress} (${challenge.title})');
     });
   }
 

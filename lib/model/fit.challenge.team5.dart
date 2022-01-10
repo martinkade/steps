@@ -3,22 +3,22 @@ import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 
-class FitChallenge2Team extends FitChallenge {
+class FitChallenge5Team extends FitChallenge {
   ///
-  static DateTime kStartDate = DateTime(2020, 9, 14);
-  static DateTime kEndDate = DateTime(2020, 11, 02);
+  static DateTime kStartDate = DateTime(2021, 12, 16);
+  static DateTime kEndDate = DateTime(2022, 1, 31);
 
   ///
-  FitChallenge2Team()
+  FitChallenge5Team()
       : super(
-          index: 1,
+          index: 4,
           startDate: kStartDate,
           endDate: kEndDate,
-          title: 'Einmal rund um Deutschland',
+          title: 'Walk Around NRW',
           description:
-              'Von Nizza aus fliegen wir Non-Stop zum Flughafen in Stadtlohn, packen unsere Rucksäcke und schon geht\'s weiter: Wir umrunden Deutschland - im Uhrzeigersinn, für die, die es ganz genau wissen wollen 😉. Lasst euch unterwegs beeindrucken und überraschen, da liegt einiges auf unserem Weg. Und bei 4800 km kommt keine Langeweile auf.\n\n♫ Das WANDRn ist des WANDRers Lust ♫',
+              'Nach unserer kurzen Verschnaufpause starten wir in die nächste Runde. Uns erwarten Berge, Flüsse, Schlösser und Sauerbraten 😊',
           label: 'Kilometer',
-          imageAsset: 'assets/images/challenge2.jpg',
+          imageAsset: 'assets/images/challenge4.jpg',
         );
 
   @override
@@ -29,7 +29,7 @@ class FitChallenge2Team extends FitChallenge {
 
   @override
   void initTargets() {
-    target = 4800.0; // km
+    target = 3216.0; // km
   }
 
   @override
