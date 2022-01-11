@@ -17,6 +17,18 @@ class Preferences {
   }
 
   ///
+  Future<void> setHasRestoredData(bool enabled) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool('kDidRestoreData', enabled);
+  }
+
+  ///
+  Future<bool> hasRestoredData() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getBool('kDidRestoreData') ?? false;
+  }
+
+  ///
   Future<void> setAutoSyncEnabled(bool enabled) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool('kAutoSync', enabled);

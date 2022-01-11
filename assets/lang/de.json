@@ -14,7 +14,9 @@
     "lblDashboardUserStatsWeek": "diese Woche",
     "lblDashboardUserStatsKilometer": "oder %1 Kilometer",
     "lblDashboardUserStatsAutoSyncOffApple": "Die automatische Synchronisation mit Apple Health ist deaktiviert. Das kannst du in den Einstellungen ändern.",
+    "lblDashboardUserStatsAutoSyncOnApple": "Die automatische Synchronisation mit Apple Health ist aktiviert.",
     "lblDashboardUserStatsAutoSyncOffGoogle": "Die automatische Synchronisation mit Google Fit ist deaktiviert. Das kannst du in den Einstellungen ändern.",
+    "lblDashboardUserStatsAutoSyncOnGoogle": "Die automatische Synchronisation mit Google Fit ist aktiviert.",
 
     "lblDashboardMotivation": "Dran bleiben!",
     "lblDashboardMotivationDay": "Sammle heute weitere %1 Punkte um dein Tagesziel zu erreichen.",
@@ -52,8 +54,6 @@
     "lblSettingsDataSourceApple": "Apple Health als Datenquelle verwenden",
     "lblSettingsDataSourceGoogle": "Google Fit als Datenquelle verwenden",
     "lblSettingsDataSourceInfo": "Wenn du diese Funktion aktivierst, werden deine Daten automatisch aus der entsprechenden Quelle ermittelt.",
-    "lblSettingsDataSourceRestoreTitle": "Punkte wiederherstellen",
-    "lblSettingsDataSourceRestoreInfo": "Wenn du %1 bereits auf einem anderen Gerät genutzt hast und deine gesammelten Punkte behalten möchtest, dann kannst hier deinen alten Stand wiederherstellen.",
     "lblSettingsGoals": "Ziele",
     "lblSettingsGoalDailyTitle": "Dein Tagesziel",
     "lblSettingsGoalDailyInfo": "Überlege dir, wie viele Punkte du täglich erreichen möchtest um die Motivation aufrecht zu erhalten.",
@@ -79,6 +79,7 @@
     "lblAboutPrivacyInfo": "Deine Daten bleiben grundsätzlich auf deinem Gerät. Nur du kannst deine Tagesleistungen einsehen.\n\nLediglich zum Synchronisieren der %1 Challenges wird eine anonymisierte Statistik auf dem Server gespeichert.",
 
     "lblActionGetStarted": "Los gehts!",
+    "lblLoading": "Lade...",
     "lblActionBack": "Zurück",
     "lblActionForward": "Weiter",
     "lblActionDone": "Fertig",

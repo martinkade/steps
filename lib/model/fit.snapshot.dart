@@ -164,6 +164,17 @@ class FitSnapshot {
       MapEntry('stats', stats),
       MapEntry('history', history),
       MapEntry('challenges', challenges),
+      // temporary, compatibility reasons: section 1
+      MapEntry('today', today),
+      MapEntry('yesterday', yesterday),
+      MapEntry('week', week),
+      MapEntry('lastWeek', lastWeek),
+      MapEntry('year', year),
+      MapEntry('total', total),
+      // temporary, compatibility reasons: section 2
+      MapEntry('timestamp', DateTime.now().millisecondsSinceEpoch),
+      MapEntry('device', await FitPlugin.getDeviceInfo()),
+      MapEntry('client', await FitPlugin.getAppInfo()),
     ]);
   }
 

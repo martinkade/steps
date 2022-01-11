@@ -39,7 +39,7 @@ class DashboardInfoItem extends StatelessWidget {
                     DashboardAction(
                       title: Localizer.translate(
                           context, 'lblDashboardActionHistory'),
-                      icon: Icons.account_circle,
+                      icon: Icons.analytics_rounded,
                       onTap: () {
                         delegate?.onHistoryRequested();
                       },

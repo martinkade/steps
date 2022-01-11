@@ -14,7 +14,9 @@
     "lblDashboardUserStatsWeek": "this week",
     "lblDashboardUserStatsKilometer": "or %1 kilometers",
     "lblDashboardUserStatsAutoSyncOffApple": "Automatic synchronization with Apple Health is disabled. You can change that in the settings.",
+    "lblDashboardUserStatsAutoSyncOnApple": "Automatic synchronization with Apple Health is enabled.",
     "lblDashboardUserStatsAutoSyncOffGoogle": "Automatic synchronization with Google Fit is disabled. You can change that in the settings.",
+    "lblDashboardUserStatsAutoSyncOnGoogle": "Automatic synchronization with Google Fit is enabled.",
     
     "lblDashboardMotivation": "Here we go!",
     "lblDashboardMotivationDay": "Collect %1 points today to reach your daily goal.",
@@ -52,8 +54,6 @@
     "lblSettingsDataSourceApple": "Use Apple Health as a data source",
     "lblSettingsDataSourceGoogle": "Use Google Fit as a data source",
     "lblSettingsDataSourceInfo": "If you activate this function, your data will automatically be determined from the corresponding source.",
-    "lblSettingsDataSourceRestoreTitle": "Restore points",
-    "lblSettingsDataSourceRestoreInfo": "If you have already used %1 on another device and want to keep the points you have collected, you can restore your old status here.",
     "lblSettingsGoals": "Goals",
     "lblSettingsGoalDailyTitle": "Your daily goal",
     "lblSettingsGoalDailyInfo": "Think about how many points you would like to achieve daily in order to maintain motivation.",
@@ -79,6 +79,7 @@
     "lblAboutPrivacyInfo": "Your data basically stay on your device. Only you can see your daily performance.\n\nAnonymous statistics are only saved on the server to synchronize the %1 challenges.",
 
     "lblActionGetStarted": "Here we go!",
+    "lblLoading": "Loading...",
     "lblActionBack": "Back",
     "lblActionForward": "Next",
     "lblActionDone": "Done",

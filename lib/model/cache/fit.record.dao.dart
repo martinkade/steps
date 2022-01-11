@@ -98,8 +98,10 @@ class FitRecordDao extends FitDao {
   }
 
   ///
-  Future<void> delete(
-      {@required List<FitRecord> records, bool exclude = false}) async {
+  Future<void> delete({
+    @required List<FitRecord> records,
+    bool exclude = false,
+  }) async {
     final String idList = records.map((it) => '${it.idString}').join(',');
     final Database db = await StructuredCache().getDb();
     await db.transaction((txn) async {
@@ -109,8 +111,10 @@ class FitRecordDao extends FitDao {
   }
 
   ///
-  Future<List<FitRecord>> fetch(
-      {@required DateTime from, bool onlyManualRecords}) async {
+  Future<List<FitRecord>> fetch({
+    @required DateTime from,
+    bool onlyManualRecords,
+  }) async {
     final Database db = await StructuredCache().getDb();
     final String statement = onlyManualRecords
         ? 'SELECT * FROM ${FitRecordDao.TBL_NAME} ' +
@@ -121,7 +125,7 @@ class FitRecordDao extends FitDao {
             'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC';
     final List<Map<String, dynamic>> result = await db.rawQuery(statement);
     FitRecord record;
-    final List<FitRecord> records = List();
+    final List<FitRecord> records = <FitRecord>[];
     for (Map<String, dynamic> cursor in result) {
       record = FitRecord();
       record.initWithCursor(cursor);
@@ -138,7 +142,7 @@ class FitRecordDao extends FitDao {
             'WHERE ${FitRecordDao.COL_TIMESTAMP} >= ${from?.millisecondsSinceEpoch ?? 0} ' +
             'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC');
     FitRecord record;
-    final List<FitRecord> records = List();
+    final List<FitRecord> records = <FitRecord>[];
     for (Map<String, dynamic> cursor in result) {
       record = FitRecord();
       record.initWithCursor(cursor);
@@ -148,8 +152,10 @@ class FitRecordDao extends FitDao {
   }
 
   ///
-  Future<List<FitRecord>> fetchAllByDayAndPoints(
-      {DateTime from, DateTime to}) async {
+  Future<List<FitRecord>> fetchAllByDayAndPoints({
+    DateTime from,
+    DateTime to,
+  }) async {
     final Database db = await StructuredCache().getDb();
     final List<Map<String, dynamic>> result = await db.rawQuery(
         'SELECT *, date(${FitRecordDao.COL_TIMESTAMP} / 1000, \'unixepoch\', \'localtime\') AS _day, ' +
@@ -160,7 +166,7 @@ class FitRecordDao extends FitDao {
             'GROUP BY _day ' +
             'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC');
     FitRecord record;
-    final List<FitRecord> records = List();
+    final List<FitRecord> records = <FitRecord>[];
     for (Map<String, dynamic> cursor in result) {
       record = FitRecord();
       record.initWithCursor(cursor);
@@ -179,7 +185,7 @@ class FitRecordDao extends FitDao {
             'WHERE _day = \'$day\' ' +
             'ORDER BY ${FitRecordDao.COL_TIMESTAMP} DESC');
     FitRecord record;
-    final List<FitRecord> records = List();
+    final List<FitRecord> records = <FitRecord>[];
     for (Map<String, dynamic> cursor in result) {
       record = FitRecord();
       record.initWithCursor(cursor);

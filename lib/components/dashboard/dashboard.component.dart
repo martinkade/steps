@@ -9,6 +9,7 @@ import 'package:wandr/components/dashboard/dashboard.item.challenge.dart';
 import 'package:wandr/components/dashboard/dashboard.item.footer.dart';
 import 'package:wandr/components/dashboard/dashboard.item.info.dart';
 import 'package:wandr/components/dashboard/dashboard.item.ranking.dart';
+import 'package:wandr/components/dashboard/dashboard.item.goal.dart';
 import 'package:wandr/components/dashboard/dashboard.item.sync.dart';
 import 'package:wandr/components/dashboard/dashboard.item.title.dart';
 import 'package:wandr/components/history/history.component.add.dart';
@@ -25,6 +26,12 @@ import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/challenge.repository.dart';
 import 'package:wandr/model/repositories/repository.dart';
 import 'package:wandr/model/storage.dart';
+
+abstract class DashboardSyncDelegate {
+  void onFitnessDataUpdate(FitSnapshot snapshot);
+  List<FitChallenge> getChallenges();
+  void onSettingsRequested();
+}
 
 class DashboardComponent extends StatefulWidget {
   ///
@@ -71,6 +78,10 @@ class _DashboardState extends State<DashboardComponent>
   ///
   final GlobalKey<DashboardSyncItemState> _syncKey =
       GlobalKey<DashboardSyncItemState>(debugLabel: 'DashboardSyncItemState');
+
+  ///
+  final GlobalKey<DashboardGoalItemState> _goalKey =
+      GlobalKey<DashboardGoalItemState>(debugLabel: 'DashboardGoalItemState');
 
   ///
   final GlobalKey<DashboardRankingItemState> _rankingKey =
@@ -149,6 +160,7 @@ class _DashboardState extends State<DashboardComponent>
   @override
   void onFitnessDataUpdate(FitSnapshot snapshot) {
     if (!mounted) return;
+    (_goalKey.currentState)?.reload(snapshot);
     setState(() {
       // apply local data snapshot with updated fitnes metrics from Google Fit or Apple health (or manually recorded data)
       _fitSnapshot = snapshot;
@@ -244,7 +256,7 @@ class _DashboardState extends State<DashboardComponent>
   Widget build(BuildContext context) {
     final Widget listWidget = ListView.builder(
       physics: BouncingScrollPhysics(),
-      itemCount: 6,
+      itemCount: 7,
       itemBuilder: (context, index) {
         switch (index) {
           case 0:
@@ -257,8 +269,8 @@ class _DashboardState extends State<DashboardComponent>
               onTap: () {
                 onHistoryRequested();
               },
-              child: DashboardSyncItem(
-                key: _syncKey,
+              child: DashboardGoalItem(
+                key: _goalKey,
                 title: Localizer.translate(context, 'lblDashboardUserStats'),
                 delegate: this,
                 userKey: _userName,
@@ -270,6 +282,14 @@ class _DashboardState extends State<DashboardComponent>
               delegate: this,
             );
           case 3:
+            return DashboardSyncItem(
+              key: _syncKey,
+              title: Localizer.translate(context, 'lblDashboardUserStats'),
+              delegate: this,
+              userKey: _userName,
+              teamName: _teamName,
+            );
+          case 4:
             return DashboardChallengeItem(
               title:
                   Localizer.translate(context, 'lblDashboardActiveChallenges'),
@@ -279,7 +299,7 @@ class _DashboardState extends State<DashboardComponent>
               teamName: _teamName,
               delegate: this,
             );
-          case 4:
+          case 5:
             return DashboardRankingItem(
               key: _rankingKey,
               title: Localizer.translate(context, 'lblDashboardTeamStandings'),
