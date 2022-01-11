@@ -14,11 +14,11 @@ class FitChallenge5Team extends FitChallenge {
           index: 4,
           startDate: kStartDate,
           endDate: kEndDate,
-          title: 'Walk Around NRW',
+          title: 'Ä TÄNNSCHEN, Ä TÄNNSCHEN...',
           description:
-              'Nach unserer kurzen Verschnaufpause starten wir in die nächste Runde. Uns erwarten Berge, Flüsse, Schlösser und Sauerbraten 😊',
+              'Nachdem wir uns rund um NRW warm gelaufen haben, besuchen wir in Tannenbaumfahrt alle Landeshauptstädte. 16 Bundesländer, keine Herausforderung für uns 😊',
           label: 'Kilometer',
-          imageAsset: 'assets/images/challenge4.jpg',
+          imageAsset: 'assets/images/challenge5.jpg',
         );
 
   @override

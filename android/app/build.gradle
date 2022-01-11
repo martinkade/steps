@@ -55,6 +55,7 @@ android {
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -88,6 +89,7 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'com.google.android.gms:play-services-fitness:20.0.0'
-    implementation 'com.google.android.gms:play-services-auth:19.2.0'
+    implementation 'com.google.android.gms:play-services-fitness:21.0.1'
+    implementation 'com.google.android.gms:play-services-auth:20.0.1'
+    implementation 'com.android.support:multidex:1.0.3'
 }
