@@ -15,11 +15,15 @@ class DashboardGoalCalendar extends StatefulWidget {
   final int dailyGoal, weeklyGoal;
 
   ///
+  final int timestamp;
+
+  ///
   DashboardGoalCalendar({
     Key key,
     @required this.snapshot,
     @required this.dailyGoal,
     @required this.weeklyGoal,
+    @required this.timestamp,
   }) : super(key: key);
 
   @override
@@ -37,7 +41,7 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
   void initState() {
     super.initState();
 
-    // _load(true);
+    _load();
   }
 
   void _load() {
@@ -60,7 +64,9 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
   @override
   void didUpdateWidget(DashboardGoalCalendar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _load();
+
+    final int timestamp = DateTime.now().millisecondsSinceEpoch;
+    if (oldWidget.timestamp + 1000 < timestamp) _load();
   }
 
   Future<List<_WeekModel>> _loadStats(BuildContext context) async {
@@ -159,6 +165,7 @@ class _CalendarWeekDisplay extends StatefulWidget {
     @required this.label,
     @required this.percent,
   }) : super(key: key);
+
   @override
   _CalendarWeekDisplayState createState() => _CalendarWeekDisplayState();
 }

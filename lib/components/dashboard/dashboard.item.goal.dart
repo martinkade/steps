@@ -93,6 +93,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem> {
           snapshot: _snapshot,
           dailyGoal: _goalDaily,
           weeklyGoal: _goalDaily * 7,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
         ),
       ],
     );
