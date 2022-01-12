@@ -51,6 +51,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem> {
 
   void reload(FitSnapshot snapshot) {
     _snapshot = snapshot;
+    print('RELOAD FROM SNAPSHOT');
     _syncSteps(context);
   }
 

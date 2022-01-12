@@ -37,14 +37,16 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
   void initState() {
     super.initState();
 
-    _load();
+    // _load(true);
   }
 
   void _load() {
+    if (_weeks.isEmpty) {
+      setState(() {
+        _loading = true;
+      });
+    }
     _weeks.clear();
-    setState(() {
-      _loading = true;
-    });
     _loadStats(context).then((weeks) {
       if (!mounted) return;
       _weeks.clear();
@@ -53,6 +55,12 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
         _loading = false;
       });
     });
+  }
+
+  @override
+  void didUpdateWidget(DashboardGoalCalendar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _load();
   }
 
   Future<List<_WeekModel>> _loadStats(BuildContext context) async {
@@ -75,6 +83,7 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
     int weekPoints;
     List<FitRecord> records;
     for (int i = week; i > 0; i--) {
+      print('Fetch Week stats $i: $weekStart to $weekEnd');
       records = await dao.fetchAllByDayAndPoints(
         from: weekStart,
         to: weekEnd,
@@ -87,7 +96,6 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
         ),
       );
 
-      // print('Week $i: $weekStart to $weekEnd');
       weekStart = weekStart.subtract(Duration(days: 7));
       weekEnd = weekEnd.subtract(Duration(days: 7));
     }
