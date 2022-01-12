@@ -55,29 +55,18 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
 
   @override
   void initState() {
-    _challenges = widget.delegate.getChallenges();
-    _challenges.sort((a, b) => a.compareTo(b));
-    _cardCount = _challenges.length;
+    _prepareChallengeList();
     super.initState();
 
-    _scrollController = ScrollController();
-    print('Update team challenges: $_challenges');
-    _challenges.forEach((challenge) {
-      challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
-      print(
-          ' - challenge #${challenge.index}: ${challenge.progress} (${challenge.title})');
-    });
+    _scrollController = new ScrollController();
   }
 
   @override
   void didUpdateWidget(DashboardChallengeItem oldWidget) {
+    _prepareChallengeList();
     super.didUpdateWidget(oldWidget);
 
-    _challenges = widget.delegate.getChallenges();
-    _challenges.sort((a, b) => a.compareTo(b));
-    _cardCount = _challenges.length;
-
-    print('Update team challenges: $_challenges');
+    print('DashboardChallengeItem#didUpdateWidget');
     _challenges.forEach((challenge) {
       challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
       print(
@@ -89,6 +78,12 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _prepareChallengeList() {
+    _challenges = widget.delegate.getChallenges();
+    _challenges.sort((a, b) => a.compareTo(b));
+    _cardCount = _challenges.length;
   }
 
   @override

@@ -128,7 +128,7 @@ class _DashboardState extends State<DashboardComponent>
     Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
       if (!mounted) return;
       _unitKilometersEnabled = enabled;
-      print('$_unitKilometersEnabled');
+      print('Kilometer unit enabled: $_unitKilometersEnabled');
       Storage().access().then((instance) {
         final FirebaseDatabase db = FirebaseDatabase(app: instance);
         db.reference().child('users').once().then((snapshot) {

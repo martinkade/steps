@@ -45,10 +45,18 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
     setState(() {
       _loading = true;
     });
-    _loadStats(context);
+    _loadStats(context).then((weeks) {
+      if (!mounted) return;
+      _weeks.clear();
+      _weeks.addAll(weeks);
+      setState(() {
+        _loading = false;
+      });
+    });
   }
 
-  Future<void> _loadStats(BuildContext context) async {
+  Future<List<_WeekModel>> _loadStats(BuildContext context) async {
+    print('DashboardGoalCalendar#_loadStats');
     final DateTime now = DateTime.now();
     DateTime weekStart = now
         .subtract(Duration(days: now.weekday - 1))
@@ -61,30 +69,29 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
         weekStart.add(Duration(days: 7)).subtract(Duration(microseconds: 1));
 
     final int week = _isoWeekOfYear(weekStart);
-
     final FitRecordDao dao = FitRecordDao();
-    List<FitRecord> records;
+    final List<_WeekModel> weeks = <_WeekModel>[];
+
     int weekPoints;
+    List<FitRecord> records;
     for (int i = week; i > 0; i--) {
       records = await dao.fetchAllByDayAndPoints(
         from: weekStart,
         to: weekEnd,
       );
       weekPoints = records.fold(0, (sum, item) => sum + item.value);
-      _weeks.add(
+      weeks.add(
         _WeekModel(
           index: i,
           percent: min(1.0, weekPoints / widget.weeklyGoal),
         ),
       );
 
-      print('Week $i: $weekStart to $weekEnd');
+      // print('Week $i: $weekStart to $weekEnd');
       weekStart = weekStart.subtract(Duration(days: 7));
       weekEnd = weekEnd.subtract(Duration(days: 7));
     }
-    setState(() {
-      _loading = false;
-    });
+    return weeks;
   }
 
   int _isoWeekOfYear(DateTime date) {

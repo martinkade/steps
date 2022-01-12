@@ -7,7 +7,7 @@ class FitRanking {
     MapEntry('yesterday', <FitRankingEntry>[]),
     MapEntry('week', <FitRankingEntry>[]),
     MapEntry('lastWeek', <FitRankingEntry>[]),
-    MapEntry('year', <FitRankingEntry>[]),
+    // MapEntry('year', <FitRankingEntry>[]),
     MapEntry('total', <FitRankingEntry>[]),
   ]);
   int absolute = 0;
@@ -210,7 +210,7 @@ class FitRanking {
           participation.putIfAbsent(teamKey, () => 1);
         }
       } else {
-        print('[INFO] ignore user $userId, has not synced within last 14 days');
+        // print('[INFO] ignore user $userId, has not synced within last 14 days');
       }
 
       ranking.absolute += data['total'] ?? 0;
