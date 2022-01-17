@@ -98,7 +98,7 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
       weeks.add(
         _WeekModel(
           index: i,
-          percent: min(1.0, weekPoints / widget.weeklyGoal),
+          percent: weekPoints / widget.weeklyGoal,
         ),
       );
 
@@ -182,7 +182,7 @@ class _CalendarWeekDisplayState extends State<_CalendarWeekDisplay> {
             CircularPercentIndicator(
               radius: 64.0,
               lineWidth: 4.0,
-              percent: this.widget.percent,
+              percent: min(1.0, this.widget.percent),
               center: Text('${(this.widget.percent * 100).round()}%'),
               animation: true,
               // circularStrokeCap: CircularStrokeCap.round,
@@ -192,7 +192,9 @@ class _CalendarWeekDisplayState extends State<_CalendarWeekDisplay> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: Text(widget.label),
+              child: Text(
+                widget.label,
+              ),
             )
           ],
         ),
