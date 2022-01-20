@@ -2,13 +2,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:wandr/components/shared/localizer.dart';
 
-class DashboardSettingsDialogContent extends StatelessWidget {
+class DashboardSettingsActivityLevelDialog extends StatelessWidget {
   final Function setDailyTargetPoints;
   final List<int> activityLevels;
   final int selectedLevel;
 
-  DashboardSettingsDialogContent(
-      {this.setDailyTargetPoints, this.activityLevels, this.selectedLevel});
+  DashboardSettingsActivityLevelDialog({
+    this.setDailyTargetPoints,
+    this.activityLevels,
+    this.selectedLevel,
+  });
 
   @override
   Widget build(BuildContext context) {

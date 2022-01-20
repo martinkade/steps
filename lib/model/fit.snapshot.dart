@@ -6,6 +6,8 @@ import 'package:wandr/model/fit.plugin.dart';
 import 'package:wandr/model/fit.record.dart';
 import 'dart:io' show Platform;
 
+import 'package:wandr/model/preferences.dart';
+
 class FitSnapshot {
   ///
   Map<dynamic, dynamic> data = Map();
@@ -150,6 +152,7 @@ class FitSnapshot {
       MapEntry('timestamp', DateTime.now().millisecondsSinceEpoch),
       MapEntry('device', await FitPlugin.getDeviceInfo()),
       MapEntry('client', await FitPlugin.getAppInfo()),
+      MapEntry('displayName', await Preferences().getDisplayName()),
     ]);
     final Map<String, dynamic> stats = Map.fromEntries([
       MapEntry('today', today),

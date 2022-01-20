@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wandr/components/settings/settings.item.dart';
+import 'package:wandr/components/settings/settings.item.display.dialog.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/preferences.dart';
 
@@ -15,6 +16,9 @@ class _SettingsDisplayItemState extends State<SettingsDisplayItem> {
   ///
   bool _unitKilometersEnabled;
 
+  ///
+  String _displayName;
+
   @override
   void initState() {
     super.initState();
@@ -24,13 +28,10 @@ class _SettingsDisplayItemState extends State<SettingsDisplayItem> {
     _load();
   }
 
-  void _load() {
-    Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
-      if (!mounted) return;
-      setState(() {
-        _unitKilometersEnabled = enabled;
-      });
-    });
+  void _load() async {
+    _unitKilometersEnabled = await Preferences().isFlagSet(kFlagUnitKilometers);
+    _displayName = await Preferences().getDisplayName();
+    setState(() {});
   }
 
   void _toggleUnits(bool enable) {
@@ -39,6 +40,28 @@ class _SettingsDisplayItemState extends State<SettingsDisplayItem> {
       setState(() {
         _unitKilometersEnabled = enable;
       });
+    });
+  }
+
+  void _changeDisplayName(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: DashboardSettingsDisplayNameDialog(
+              setDisplayName: (newDisplayName) {
+                _displayName = newDisplayName;
+                Preferences().setDisplayName(newDisplayName).then((_) {
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+          );
+        }).then((_) {
+      setState(() {});
     });
   }
 
@@ -96,6 +119,40 @@ class _SettingsDisplayItemState extends State<SettingsDisplayItem> {
                 },
               )
             ],
+          ),
+          Divider(),
+          GestureDetector(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  Localizer.translate(
+                    context,
+                    'lblSettingsDisplayNameMainTitle',
+                  ),
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  Localizer.translate(
+                    context,
+                    'lblSettingsDisplayNameMainInfo',
+                  ).replaceFirst('%1', _displayName ?? ''),
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                Text(
+                  Localizer.translate(context, 'lblActionAdjust'),
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.end,
+                ),
+              ],
+            ),
+            onTap: () => _changeDisplayName(context),
           )
         ],
       ),

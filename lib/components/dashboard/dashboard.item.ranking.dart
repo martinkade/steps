@@ -71,7 +71,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem> {
   List<OptionModel> _displayOptions(BuildContext context) {
     int index = 0;
     String title;
-    final List<OptionModel> options = List();
+    final List<OptionModel> options = <OptionModel>[];
     _boards.forEach((optionKey, value) {
       if (optionKey == 'today') {
         title = Localizer.translate(context, 'lblToday');
@@ -179,7 +179,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem> {
                           : DashboardRankingList(
                               list: _boards[
                                   _boards.keys.toList()[_selectedModeIndex]],
-                              teamName: widget.teamName,
+                              itemKey: widget.userKey,
                               unitKilometersEnabled: _unitKilometersEnabled,
                             ),
                 ),
@@ -195,15 +195,18 @@ class DashboardRankingList extends StatelessWidget {
   final List<FitRankingEntry> list;
 
   ///
-  final String teamName;
+  final String itemKey;
 
   ///
   final bool unitKilometersEnabled;
 
   ///
-  DashboardRankingList(
-      {Key key, this.list, this.teamName, this.unitKilometersEnabled})
-      : super(key: key);
+  DashboardRankingList({
+    Key key,
+    this.list,
+    this.itemKey,
+    this.unitKilometersEnabled,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +232,7 @@ class DashboardRankingList extends StatelessWidget {
               itemBuilder: (context, index) {
                 final FitRankingEntry item = list[index];
                 return Container(
-                  color: item.name == teamName
+                  color: item.key == itemKey
                       ? Theme.of(context).colorScheme.primary.withAlpha(50)
                       : Colors.transparent,
                   child: Row(
@@ -241,9 +244,9 @@ class DashboardRankingList extends StatelessWidget {
                         child: Container(
                           child: Center(
                             child: Text(
-                              '${index + 1}',
+                              item.value > 0 ? '${index + 1}' : '',
                               style: TextStyle(
-                                fontWeight: item.name == teamName
+                                fontWeight: item.name == itemKey
                                     ? FontWeight.bold
                                     : FontWeight.normal,
                                 fontSize: 16.0,
@@ -257,11 +260,14 @@ class DashboardRankingList extends StatelessWidget {
                             borderRadius: BorderRadius.all(
                               Radius.circular(16.0),
                             ),
-                            border: Border.all(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .color),
+                            border: item.value > 0
+                                ? Border.all(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .color,
+                                  )
+                                : null,
                           ),
                         ),
                       ),
@@ -274,8 +280,10 @@ class DashboardRankingList extends StatelessWidget {
                             children: [
                               Text(
                                 item.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontWeight: item.name == teamName
+                                  fontWeight: item.key == itemKey
                                       ? FontWeight.bold
                                       : FontWeight.normal,
                                   fontSize: 16.0,
@@ -283,7 +291,7 @@ class DashboardRankingList extends StatelessWidget {
                                 textAlign: TextAlign.left,
                               ),
                               Text(
-                                '${item.userCount} ${Localizer.translate(context, 'lblActiveUsers')}',
+                                'Sync: ${item.timestamp}',
                                 textAlign: TextAlign.left,
                               ),
                             ],
@@ -300,7 +308,7 @@ class DashboardRankingList extends StatelessWidget {
                                   ? (item.value / 12.0).toStringAsFixed(1)
                                   : item.value.toStringAsFixed(0),
                               style: TextStyle(
-                                fontWeight: item.name == teamName
+                                fontWeight: item.key == itemKey
                                     ? FontWeight.bold
                                     : FontWeight.normal,
                                 fontSize: 16.0,

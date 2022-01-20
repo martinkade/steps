@@ -133,6 +133,7 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
                 return _CalendarWeekDisplay(
                   label: 'KW${_weeks[index].index}',
                   percent: _weeks[index].percent,
+                  index: index,
                 );
               },
               itemCount: _weeks.length,
@@ -160,10 +161,14 @@ class _CalendarWeekDisplay extends StatefulWidget {
   final String label;
 
   ///
+  final int index;
+
+  ///
   _CalendarWeekDisplay({
     Key key,
     @required this.label,
     @required this.percent,
+    this.index = 0,
   }) : super(key: key);
 
   @override
@@ -183,7 +188,13 @@ class _CalendarWeekDisplayState extends State<_CalendarWeekDisplay> {
               radius: 64.0,
               lineWidth: 4.0,
               percent: min(1.0, this.widget.percent),
-              center: Text('${(this.widget.percent * 100).round()}%'),
+              center: Text(
+                '${(this.widget.percent * 100).round()}%',
+                style: TextStyle(
+                  fontWeight:
+                      widget.index == 0 ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
               animation: true,
               // circularStrokeCap: CircularStrokeCap.round,
               backgroundColor:
@@ -192,10 +203,36 @@ class _CalendarWeekDisplayState extends State<_CalendarWeekDisplay> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                widget.label,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: Icon(
+                      this.widget.percent >= 100.0
+                          ? Icons.check_circle_outline_rounded
+                          : Icons.block_rounded,
+                      size: 18.0,
+                      color: this.widget.percent >= 100.0
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.primary.withAlpha(50),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      widget.label,
+                      style: TextStyle(
+                        fontWeight: widget.index == 0
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            )
+            ),
           ],
         ),
       ),

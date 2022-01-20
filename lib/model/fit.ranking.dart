@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/calendar.dart';
+import 'package:intl/intl.dart';
 
 class FitRanking {
   final Map<String, List<FitRankingEntry>> entries = Map.fromEntries([
@@ -17,20 +19,24 @@ class FitRanking {
   static FitRanking createFromSnapshot(dynamic snapshot) {
     final FitRanking ranking = FitRanking._internal();
 
-    final Map<String, Map<String, num>> summary = Map();
+    final Map<String, Map<String, Map<String, dynamic>>> summary = Map();
     final Map<String, num> participation = Map();
     final Calendar calendar = Calendar();
     final DateTime now = DateTime.now();
 
     DateTime timestamp;
-    String teamKey, categoryKey;
+    String itemKey, itemName, categoryKey;
     int timestampKey;
     dynamic data;
-    Map<String, num> categoryValue;
+    Map<String, Map<String, dynamic>> categoryValue;
 
     // iterate through user documents
     snapshot.value.forEach((userId, value) {
-      teamKey = value['team'];
+      itemKey = userId;
+      // itemKey = value['team'];
+      itemName = value['meta'] == null
+          ? 'Anonym'
+          : value['meta']['displayName'] ?? 'Anonym';
       timestampKey = value['meta'] == null
           ? value['timestamp']?.toInt() ?? 0
           : value['meta']['timestamp']?.toInt() ?? 0;
@@ -52,10 +58,17 @@ class FitRanking {
           categoryValue = Map();
         }
 
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + data[categoryKey]);
+        if (categoryValue.containsKey(itemKey)) {
+          // categoryValue.update(itemKey, (v) => v + data[categoryKey]);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => data[categoryKey]);
+          categoryValue.putIfAbsent(
+            itemKey,
+            () => Map.fromEntries([
+              MapEntry('name', itemName),
+              MapEntry('value', data[categoryKey]),
+              MapEntry('sync', timestamp)
+            ]),
+          );
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -72,10 +85,17 @@ class FitRanking {
           categoryValue = Map();
         }
 
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + data[categoryKey]);
+        if (categoryValue.containsKey(itemKey)) {
+          // categoryValue.update(itemKey, (v) => v + data[categoryKey]);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => data[categoryKey]);
+          categoryValue.putIfAbsent(
+            itemKey,
+            () => Map.fromEntries([
+              MapEntry('name', itemName),
+              MapEntry('value', data[categoryKey]),
+              MapEntry('sync', timestamp)
+            ]),
+          );
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -92,10 +112,17 @@ class FitRanking {
           categoryValue = Map();
         }
 
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + data['week']);
+        if (categoryValue.containsKey(itemKey)) {
+          // categoryValue.update(itemKey, (v) => v + data['week']);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => data['week']);
+          categoryValue.putIfAbsent(
+            itemKey,
+            () => Map.fromEntries([
+              MapEntry('name', itemName),
+              MapEntry('value', data[categoryKey]),
+              MapEntry('sync', timestamp)
+            ]),
+          );
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -117,10 +144,17 @@ class FitRanking {
           categoryValue = Map();
         }
 
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + data[categoryKey]);
+        if (categoryValue.containsKey(itemKey)) {
+          // categoryValue.update(itemKey, (v) => v + data[categoryKey]);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => data[categoryKey]);
+          categoryValue.putIfAbsent(
+            itemKey,
+            () => Map.fromEntries([
+              MapEntry('name', itemName),
+              MapEntry('value', data[categoryKey]),
+              MapEntry('sync', timestamp)
+            ]),
+          );
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -137,10 +171,17 @@ class FitRanking {
           categoryValue = Map();
         }
 
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + data[categoryKey]);
+        if (categoryValue.containsKey(itemKey)) {
+          // categoryValue.update(itemKey, (v) => v + data[categoryKey]);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => data[categoryKey]);
+          categoryValue.putIfAbsent(
+            itemKey,
+            () => Map.fromEntries([
+              MapEntry('name', itemName),
+              MapEntry('value', data[categoryKey]),
+              MapEntry('sync', timestamp)
+            ]),
+          );
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -157,10 +198,17 @@ class FitRanking {
           categoryValue = Map();
         }
 
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + data['today']);
+        if (categoryValue.containsKey(itemKey)) {
+          // categoryValue.update(itemKey, (v) => v + data['today']);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => data['today']);
+          categoryValue.putIfAbsent(
+            itemKey,
+            () => Map.fromEntries([
+              MapEntry('name', itemName),
+              MapEntry('value', data[categoryKey]),
+              MapEntry('sync', timestamp)
+            ]),
+          );
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -171,11 +219,31 @@ class FitRanking {
       }
 
       if (timestampKey > 0 && calendar.isThisYear(timestamp, now)) {
+        // year
         categoryKey = 'year';
         if (summary.containsKey(categoryKey)) {
           categoryValue = summary[categoryKey];
         } else {
           categoryValue = Map();
+        }
+
+        if (categoryValue.containsKey(itemKey)) {
+          // categoryValue.update(itemKey, (v) => v + data['year']);
+        } else {
+          categoryValue.putIfAbsent(
+            itemKey,
+            () => Map.fromEntries([
+              MapEntry('name', itemName),
+              MapEntry('value', data[categoryKey]),
+              MapEntry('sync', timestamp)
+            ]),
+          );
+        }
+
+        if (summary.containsKey(categoryKey)) {
+          summary.update(categoryKey, (v) => categoryValue);
+        } else {
+          summary.putIfAbsent(categoryKey, () => categoryValue);
         }
       }
 
@@ -192,10 +260,17 @@ class FitRanking {
           categoryValue = Map();
         }
 
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue.update(teamKey, (v) => v + data['total']);
+        if (categoryValue.containsKey(itemKey)) {
+          // categoryValue.update(itemKey, (v) => v + data['total']);
         } else {
-          categoryValue.putIfAbsent(teamKey, () => data['total']);
+          categoryValue.putIfAbsent(
+            itemKey,
+            () => Map.fromEntries([
+              MapEntry('name', itemName),
+              MapEntry('value', data[categoryKey]),
+              MapEntry('sync', timestamp)
+            ]),
+          );
         }
 
         if (summary.containsKey(categoryKey)) {
@@ -204,10 +279,10 @@ class FitRanking {
           summary.putIfAbsent(categoryKey, () => categoryValue);
         }
 
-        if (participation.containsKey(teamKey)) {
-          participation.update(teamKey, (v) => v + 1);
+        if (participation.containsKey(itemKey)) {
+          participation.update(itemKey, (v) => v + 1);
         } else {
-          participation.putIfAbsent(teamKey, () => 1);
+          participation.putIfAbsent(itemKey, () => 1);
         }
       } else {
         // print('[INFO] ignore user $userId, has not synced within last 14 days');
@@ -231,15 +306,19 @@ class FitRanking {
       }
     });
 
-    List<String> teamKeys;
+    List<String> itemKeys;
     summary.forEach((categoryKey, categoryValue) {
-      teamKeys = categoryValue.keys.toList(growable: false);
-      teamKeys.sort((k1, k2) => categoryValue[k2].compareTo(categoryValue[k1]));
-      teamKeys.forEach((teamKey) {
+      itemKeys = categoryValue.keys.toList(growable: false);
+      // print('$itemKeys \n\t$categoryValue');
+      itemKeys.sort((k1, k2) => (categoryValue[k2]['value']?.toInt() ?? 0)
+          .compareTo((categoryValue[k1]['value']?.toInt() ?? 0)));
+      itemKeys.forEach((itemKey) {
         ranking.addEntry(categoryKey,
-            name: teamKey,
-            value: categoryValue[teamKey],
-            userCount: participation[teamKey] ?? 0);
+            userKey: itemKey,
+            name: categoryValue[itemKey]['name'],
+            value: categoryValue[itemKey]['value'],
+            sync: categoryValue[itemKey]['sync'],
+            userCount: participation[itemKey] ?? 0);
       });
     });
 
@@ -248,25 +327,40 @@ class FitRanking {
 
   void addEntry(
     String key, {
+    @required String userKey,
     @required String name,
     @required num value,
-    int userCount,
+    @required DateTime sync,
+    int userCount = 0,
   }) {
     entries[key]?.add(FitRankingEntry(
+      key: userKey,
       name: name,
       value: value,
+      sync: sync,
       userCount: userCount,
     ));
   }
 }
 
 class FitRankingEntry {
-  final String name;
+  final String key, name;
   final num value;
   final int userCount;
+  final DateTime sync;
   FitRankingEntry({
+    @required this.key,
     @required this.name,
     @required this.value,
-    this.userCount,
+    @required this.sync,
+    this.userCount = 0,
   });
+
+  String get timestamp {
+    final DateTime now = DateTime.now();
+    final Calendar calendar = Calendar();
+    if (calendar.isToday(sync, now))
+      return DateFormat('HH:mm', LOCALE ?? 'de_DE').format(sync);
+    return DateFormat('dd.MM.yyyy, HH:mm', LOCALE ?? 'de_DE').format(sync);
+  }
 }

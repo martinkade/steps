@@ -51,7 +51,7 @@ class _SettingsGoalItemState extends State<SettingsGoalItem> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
-            child: DashboardSettingsDialogContent(
+            child: DashboardSettingsActivityLevelDialog(
               setDailyTargetPoints: (level) {
                 final int newLevel = _activityLevels[level];
                 _activityLevel = newLevel;

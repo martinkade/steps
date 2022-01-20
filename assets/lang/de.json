@@ -63,6 +63,8 @@
     "lblSettingsDisplay": "Anzeige",
     "lblSettingsDisplayUnitMainTitle": "Umrechnung in Kilometer",
     "lblSettingsDisplayUnitMainInfo": "Wenn du möchtest, kannst du dir die Punkte in deinem Verlauf und in der Statistik direkt in Kilometer umrechnen lassen.",
+    "lblSettingsDisplayNameMainTitle": "Anzeigename",
+    "lblSettingsDisplayNameMainInfo": "Unter diesem Namen wirst du in sämtlichen Ranglisten geführt: %1",
 
     "lblDashboardSettingsTitle": "Tagesziel anpassen",
     "lblDashboardSettingsText": "Wähle dein Aktivitätsniveau!",

@@ -41,6 +41,18 @@ class Preferences {
   }
 
   ///
+  Future<void> setDisplayName(String value) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('kDisplayName', value);
+  }
+
+  ///
+  Future<String> getDisplayName() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString('kDisplayName') ?? 'Anonym';
+  }
+
+  ///
   Future<void> setDailyGoal(int value) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setInt('kChallengeGoalDaily', value);

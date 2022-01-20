@@ -63,6 +63,8 @@
     "lblSettingsDisplay": "Display",
     "lblSettingsDisplayUnitMainTitle": "Conversion to kilometers",
     "lblSettingsDisplayUnitMainInfo": "If you want, you can have the points in your history and in the statistics converted directly into kilometers.",
+    "lblSettingsDisplayNameMainTitle": "Anzeigename",
+    "lblSettingsDisplayNameMainInfo": "You will be listed under this name in all ranking lists: %1",
 
     "lblDashboardSettingsTitle": "Adjust your daily goal ",
     "lblDashboardSettingsText": "Choose your level of activity!",
