@@ -211,11 +211,11 @@ class _CalendarWeekDisplayState extends State<_CalendarWeekDisplay> {
                   Padding(
                     padding: const EdgeInsets.only(right: 4.0),
                     child: Icon(
-                      this.widget.percent >= 100.0
+                      this.widget.percent >= 1.0
                           ? Icons.check_circle_outline_rounded
                           : Icons.block_rounded,
                       size: 18.0,
-                      color: this.widget.percent >= 100.0
+                      color: this.widget.percent >= 1.0
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).colorScheme.primary.withAlpha(50),
                     ),
