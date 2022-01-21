@@ -43,7 +43,8 @@ class DashboardChallengeItem extends DashboardItem {
   _DashboardChallengeItemState createState() => _DashboardChallengeItemState();
 }
 
-class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
+class _DashboardChallengeItemState extends State<DashboardChallengeItem>
+    with AutomaticKeepAliveClientMixin<DashboardChallengeItem> {
   ///
   ScrollController _scrollController;
 
@@ -54,11 +55,19 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
   int _cardIndex = 0, _cardCount = 0;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     _prepareChallengeList();
     super.initState();
 
     _scrollController = new ScrollController();
+    _challenges.forEach((challenge) {
+      challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
+      print(
+          ' - challenge #${challenge.index}: ${challenge.progress} (${challenge.title})');
+    });
   }
 
   @override
@@ -66,7 +75,6 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem> {
     _prepareChallengeList();
     super.didUpdateWidget(oldWidget);
 
-    print('DashboardChallengeItem#didUpdateWidget');
     _challenges.forEach((challenge) {
       challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
       print(

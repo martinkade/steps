@@ -12,7 +12,7 @@ class FitRanking {
     // MapEntry('year', <FitRankingEntry>[]),
     MapEntry('total', <FitRankingEntry>[]),
   ]);
-  int absolute = 0;
+  int totalPoints = 0, totalUsers = 0;
   List<int> challengeTotals = <int>[];
   FitRanking._internal();
 
@@ -284,11 +284,13 @@ class FitRanking {
         } else {
           participation.putIfAbsent(itemKey, () => 1);
         }
+
+        ranking.totalUsers += 1;
       } else {
         // print('[INFO] ignore user $userId, has not synced within last 14 days');
       }
 
-      ranking.absolute += data['total'] ?? 0;
+      ranking.totalPoints += data['total'] ?? 0;
       if (value['challenges']?.isNotEmpty == true) {
         final int challengeCount = value['challenges'].length;
         final List<int> newTotals = List.castFrom<dynamic, int>(

@@ -34,6 +34,7 @@ class DashboardSyncItem extends DashboardItem {
 }
 
 class DashboardSyncItemState extends State<DashboardSyncItem>
+    with AutomaticKeepAliveClientMixin<DashboardSyncItem>
     implements FitnessRepositoryClient {
   ///
   bool _loading = true;
@@ -48,8 +49,13 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
   SyncState _fitnessSyncState = SyncState.NOT_FETCHED;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     super.initState();
+
+    print('DashboardSyncItemState#initState');
 
     WidgetsBinding.instance.addObserver(
       LifecycleEventHandler(

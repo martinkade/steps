@@ -28,7 +28,8 @@ class DashboardRankingItem extends DashboardItem {
   DashboardRankingItemState createState() => DashboardRankingItemState();
 }
 
-class DashboardRankingItemState extends State<DashboardRankingItem> {
+class DashboardRankingItemState extends State<DashboardRankingItem>
+    with AutomaticKeepAliveClientMixin<DashboardRankingItem> {
   ///
   Map<String, List<FitRankingEntry>> _boards;
 
@@ -37,6 +38,9 @@ class DashboardRankingItemState extends State<DashboardRankingItem> {
 
   ///
   bool _unitKilometersEnabled;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -117,7 +121,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem> {
     final Widget titleWidget = Padding(
       padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),
       child: Text(
-        widget.title,
+        '${widget.ranking.totalUsers} ${Localizer.translate(context, 'lblActiveUsers')}',
         style: TextStyle(
           fontSize: 16.0,
           color: Colors.grey,
