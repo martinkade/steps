@@ -121,7 +121,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
     final Widget titleWidget = Padding(
       padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),
       child: Text(
-        '${widget.ranking.totalUsers} ${Localizer.translate(context, 'lblActiveUsers')}',
+        '${widget.ranking?.totalUsers ?? 0} ${Localizer.translate(context, 'lblActiveUsers')}',
         style: TextStyle(
           fontSize: 16.0,
           color: Colors.grey,
