@@ -21,7 +21,7 @@ class App extends StatelessWidget {
     );
 
     return MaterialApp(
-        title: Localizer.translate(context, 'appName'),
+        title: 'WANDR',
         debugShowCheckedModeBanner: false,
         theme: theme.copyWith(
           colorScheme: theme.colorScheme.copyWith(secondary: Colors.blue),

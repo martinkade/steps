@@ -65,8 +65,7 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
   void didUpdateWidget(DashboardGoalCalendar oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    final int timestamp = DateTime.now().millisecondsSinceEpoch;
-    if (oldWidget.timestamp + 1000 < timestamp) _load();
+    _load();
   }
 
   Future<List<_WeekModel>> _loadStats(BuildContext context) async {
@@ -176,6 +175,15 @@ class _CalendarWeekDisplay extends StatefulWidget {
 }
 
 class _CalendarWeekDisplayState extends State<_CalendarWeekDisplay> {
+  ///
+  bool _animate = false;
+
+  @override
+  void didUpdateWidget(covariant _CalendarWeekDisplay oldWidget) {
+    _animate = oldWidget.percent != widget.percent;
+    super.didUpdateWidget(oldWidget);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -195,7 +203,7 @@ class _CalendarWeekDisplayState extends State<_CalendarWeekDisplay> {
                       widget.index == 0 ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
-              animation: true,
+              animation: _animate,
               // circularStrokeCap: CircularStrokeCap.round,
               backgroundColor:
                   Theme.of(context).colorScheme.primary.withAlpha(50),

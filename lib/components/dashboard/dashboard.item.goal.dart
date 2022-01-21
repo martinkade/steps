@@ -32,7 +32,8 @@ class DashboardGoalItem extends DashboardItem {
   DashboardGoalItemState createState() => DashboardGoalItemState();
 }
 
-class DashboardGoalItemState extends State<DashboardGoalItem> {
+class DashboardGoalItemState extends State<DashboardGoalItem>
+    with AutomaticKeepAliveClientMixin<DashboardGoalItem> {
   ///
   bool _loading = true;
 
@@ -43,6 +44,9 @@ class DashboardGoalItemState extends State<DashboardGoalItem> {
   int _goalDaily = DAILY_TARGET_POINTS;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     super.initState();
 
@@ -51,7 +55,6 @@ class DashboardGoalItemState extends State<DashboardGoalItem> {
 
   void reload(FitSnapshot snapshot) {
     _snapshot = snapshot;
-    print('RELOAD FROM SNAPSHOT');
     _syncSteps(context);
   }
 
