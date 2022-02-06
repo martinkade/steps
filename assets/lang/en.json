@@ -102,5 +102,9 @@
     "lblWeek": "week",
     "lblLastWeek": "last week",
     "lblOverall": "all in all",
-    "lblActiveUsers": "active WANDRers"
+    "lblActiveUsers": "active WANDRers",
+    "lblTeam": "team ranking",
+    "lblSingle": "individual ranking",
+    "lblSingleSync": "Sync",
+    "lblTeamUserCount": "Users"
 }
