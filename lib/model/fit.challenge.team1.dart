@@ -19,6 +19,7 @@ class FitChallenge1Team extends FitChallenge {
               'Bei allen Team-Challenges geht es darum, gemeinsam einen virtuellen Trail zu absolvieren. Gesammelte Schritte oder aktive Minuten werden dabei in Kilometer umgerechnet.\n\nErstes Ziel ist Kreuztal (165 km), hier spendiert uns Markus ein Eis. Weiter gehts nach Nizza (1044 km), Thomas besuchen. 👋\n\nNur du siehst deine täglichen aktiven Minuten bzw. Schritte, aber jeder kann sehen wie viel der Strecke das Team schon geschafft hat. Anfeuern erwünscht. Los gehts!',
           label: 'Kilometer',
           imageAsset: 'assets/images/challenge1.jpg',
+          routeAsset: null
         );
 
   @override
