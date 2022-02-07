@@ -70,6 +70,9 @@ class FitRecord {
   String get dateString => DateFormat('yyyy-MM-dd').format(dateTime);
 
   ///
+  int get dayOfWeek => DateTime.fromMillisecondsSinceEpoch(timestamp).weekday;
+
+  ///
   String get dateTimeString =>
       DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
 
