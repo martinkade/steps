@@ -19,6 +19,7 @@ class FitChallenge3Team extends FitChallenge {
               'An festes Schuhwerk sind wir schon gewöhnt, aber jetzt brauchen wir auch noch Mütze und Schal - es wird kalt 🥶 Diese WANDR Challenge bringt uns in den Norden, mit einem kleinen Abstecher zum Weihnachtsmann. Wenn wir schnell genug sind, können wir unsere Wunschzettel persönlich abgeben, ist ja immer besser 😉\n\nUnd dann ist unser Ziel auch nicht mehr weit - Polarlichter angucken am Nordkap."',
           label: 'Kilometer',
           imageAsset: 'assets/images/challenge3.jpg',
+          routeAsset: null
         );
   @override
   bool get requiresSnapshotData => false;

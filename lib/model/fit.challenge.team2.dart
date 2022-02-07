@@ -19,6 +19,7 @@ class FitChallenge2Team extends FitChallenge {
               'Von Nizza aus fliegen wir Non-Stop zum Flughafen in Stadtlohn, packen unsere Rucksäcke und schon geht\'s weiter: Wir umrunden Deutschland - im Uhrzeigersinn, für die, die es ganz genau wissen wollen 😉. Lasst euch unterwegs beeindrucken und überraschen, da liegt einiges auf unserem Weg. Und bei 4800 km kommt keine Langeweile auf.\n\n♫ Das WANDRn ist des WANDRers Lust ♫',
           label: 'Kilometer',
           imageAsset: 'assets/images/challenge2.jpg',
+          routeAsset: null
         );
 
   @override

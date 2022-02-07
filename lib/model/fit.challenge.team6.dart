@@ -18,6 +18,7 @@ class FitChallenge6Team extends FitChallenge {
           description: 'Der Ball ist rund und das Spiel dauert 90 Minuten. Bis November ist es noch ein bisschen länger, somit Zeit genug für uns uns auf den Weg nach Katar zu machen und den Weltmeistertitel abzuholen.',
           label: 'Kilometer',
           imageAsset: 'assets/images/challenge6.jpg',
+          routeAsset: 'assets/routes/challenge6.gpx',
         );
 
   @override

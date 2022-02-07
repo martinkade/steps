@@ -19,6 +19,7 @@ class FitChallenge4Team extends FitChallenge {
               'Nach unserer kurzen Verschnaufpause starten wir in die nächste Runde. Uns erwarten Berge, Flüsse, Schlösser und Sauerbraten 😊',
           label: 'Kilometer',
           imageAsset: 'assets/images/challenge4.jpg',
+          routeAsset: null
         );
 
   @override

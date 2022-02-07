@@ -12,6 +12,7 @@ abstract class FitChallenge implements Comparable {
   final String description;
   final String label;
   final String imageAsset;
+  final String routeAsset;
 
   int _points = 0;
   double target = 1.0;
@@ -27,6 +28,7 @@ abstract class FitChallenge implements Comparable {
     @required this.description,
     @required this.label,
     @required this.imageAsset,
+    @required this.routeAsset,
   }) {
     initTargets();
   }

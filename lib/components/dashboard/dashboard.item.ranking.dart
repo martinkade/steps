@@ -34,7 +34,10 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
   Map<String, List<FitRankingEntry>> _boards;
 
   ///
-  int _selectedModeIndex;
+  int _selectedTimeModeIndex;
+
+  ///
+  int _selectedGroupModeIndex;
 
   ///
   bool _unitKilometersEnabled;
@@ -46,7 +49,8 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
   void initState() {
     super.initState();
 
-    _selectedModeIndex = 0;
+    _selectedTimeModeIndex = 0;
+    _selectedGroupModeIndex = 0;
     _boards = widget.ranking?.entries ?? Map();
     _unitKilometersEnabled = false;
     Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
@@ -91,7 +95,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
       options.add(
         OptionModel(
           index: index,
-          isSelected: _selectedModeIndex == index,
+          isSelected: _selectedTimeModeIndex == index,
           title: title,
         ),
       );
@@ -100,23 +104,28 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
     return options;
   }
 
+  List<OptionModel> _displayGroupOptions(BuildContext context) {
+    final List<OptionModel> options = <OptionModel>[];
+
+      options.add(
+        OptionModel(
+          index: 0,
+          isSelected: _selectedGroupModeIndex == FitRanking.fitRankingTypeSingle,
+          title: Localizer.translate(context, 'lblSingle'),
+        )
+      );
+      options.add(
+          OptionModel(
+            index: 1,
+            isSelected: _selectedGroupModeIndex == FitRanking.fitRankingTypeTeam,
+            title: Localizer.translate(context, 'lblTeam'),
+          )
+      );
+    return options;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Widget loadingWidget = Container(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
-      height: 192.0,
-    );
-
-    final Widget placeholderWidget = Container(
-      child: Center(
-        child: Text(
-          Localizer.translate(context, 'lblNotAvailable'),
-        ),
-      ),
-      height: 196.0,
-    );
 
     final Widget titleWidget = Padding(
       padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),
@@ -131,6 +140,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
     );
 
     final List<OptionModel> displayOptions = _displayOptions(context);
+    final List<OptionModel> displayGroupOptions = _displayGroupOptions(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,6 +154,31 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                displayGroupOptions.length == 0
+                    ? Container()
+                    : Card(
+                  elevation: 8.0,
+                  shadowColor: Colors.grey.withAlpha(50),
+                  clipBehavior: Clip.antiAlias,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Container(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withAlpha(50),
+                    child: SegmentedControl(
+                      elevation: 0.0,
+                      onChange: (model) {
+                        setState(() {
+                          _selectedGroupModeIndex = model.index;
+                        });
+                      },
+                      options: displayGroupOptions,
+                    ),
+                  ),
+                ),
                 displayOptions.length == 0
                     ? Container()
                     : Card(
@@ -162,7 +197,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
                             elevation: 0.0,
                             onChange: (model) {
                               setState(() {
-                                _selectedModeIndex = model.index;
+                                _selectedTimeModeIndex = model.index;
                               });
                             },
                             options: displayOptions,
@@ -176,21 +211,40 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
-                  child: widget.ranking == null
-                      ? loadingWidget
-                      : displayOptions.length == 0
-                          ? placeholderWidget
-                          : DashboardRankingList(
-                              list: _boards[
-                                  _boards.keys.toList()[_selectedModeIndex]],
-                              itemKey: widget.userKey,
-                              unitKilometersEnabled: _unitKilometersEnabled,
-                            ),
+                  child: getList(displayOptions: displayOptions)
                 ),
               ],
             ))
       ],
     );
+  }
+
+  Widget getList({List<OptionModel> displayOptions}) {
+    if (widget.ranking == null) {
+      return Container(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+        height: 192.0,
+      );
+    } else if (displayOptions.length == 0) {
+      return Container(
+        child: Center(
+          child: Text(
+            Localizer.translate(context, 'lblNotAvailable'),
+          ),
+        ),
+        height: 196.0,
+      );
+    } else {
+      final List<FitRankingEntry> list = _boards[_boards.keys.toList()[_selectedTimeModeIndex]];
+      return DashboardRankingList(
+        list: list.where((element) => element.type == _selectedGroupModeIndex).toList(),
+        itemKey: widget.userKey,
+        unitKilometersEnabled: _unitKilometersEnabled,
+        groupType: _selectedGroupModeIndex
+      );
+    }
   }
 }
 
@@ -205,11 +259,15 @@ class DashboardRankingList extends StatelessWidget {
   final bool unitKilometersEnabled;
 
   ///
+  final int groupType;
+
+  ///
   DashboardRankingList({
     Key key,
     this.list,
     this.itemKey,
     this.unitKilometersEnabled,
+    this.groupType
   }) : super(key: key);
 
   @override
@@ -295,7 +353,9 @@ class DashboardRankingList extends StatelessWidget {
                                 textAlign: TextAlign.left,
                               ),
                               Text(
-                                'Sync: ${item.timestamp}',
+                                groupType == FitRanking.fitRankingTypeSingle ? ''
+                                    '${Localizer.translate(context, 'lblSingleSync')}: ${item.timestamp}' :
+                                '${Localizer.translate(context, 'lblTeamUserCount')}: ${item.userCount}',
                                 textAlign: TextAlign.left,
                               ),
                             ],

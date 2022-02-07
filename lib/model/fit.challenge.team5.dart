@@ -19,6 +19,7 @@ class FitChallenge5Team extends FitChallenge {
               'Nachdem wir uns rund um NRW warm gelaufen haben, besuchen wir in Tannenbaumfahrt alle Landeshauptstädte. 16 Bundesländer, keine Herausforderung für uns 😊',
           label: 'Kilometer',
           imageAsset: 'assets/images/challenge5.jpg',
+          routeAsset: null,
         );
 
   @override

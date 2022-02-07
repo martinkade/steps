@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wandr/components/challenge/challenge.item.map.dart';
 import 'package:wandr/components/shared/bezier.clipper.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/components/shared/progress.text.animated.dart';
@@ -196,8 +197,21 @@ class _ChallengeState extends State<Challenge> {
                           label: widget.challenge.label,
                         ),
                       ),
-                    ],
-                  ),
+                      widget.challenge.routeAsset != null && widget.challenge.routeAsset.isNotEmpty ?
+                        Card(
+                          clipBehavior: Clip.antiAlias,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Container(
+                              height: 400.0,
+                              child: ChallengeMap(
+                                  challenge: widget.challenge
+                              )
+                          ),
+                        ) : Container()
+                    ]
+                  )
                 ),
               ),
             ],
