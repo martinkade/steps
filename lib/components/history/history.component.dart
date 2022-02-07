@@ -167,7 +167,7 @@ class _HistoryState extends State<HistoryComponent> {
                   );
                 }
                 final FitRecord record = _records[index - 2];
-                final AverageRecord averageRecord = _averageList.firstWhere((e) => e.dayIndex == record.dayOfWeek, orElse: () => AverageRecord());
+                final AverageRecord averageRecord = _averageList.firstWhere((e) => e.isSameDay(record.dateTime), orElse: () => AverageRecord());
                 return GestureDetector(
                   child: HistoryRecordSummaryItem(
                     record: record,

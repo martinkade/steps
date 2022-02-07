@@ -27,7 +27,7 @@ class FitRanking {
     final DateTime now = DateTime.now();
 
     DateTime timestamp;
-    String itemKey, itemName, categoryKey, teamKey;
+    String itemKey, itemName, teamKey;
     int timestampKey;
     dynamic data;
     Map<String, Map<String, dynamic>> categoryValue;
