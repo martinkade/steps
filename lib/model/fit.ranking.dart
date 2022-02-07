@@ -22,7 +22,7 @@ class FitRanking {
     final FitRanking ranking = FitRanking._internal();
 
     final Map<String, Map<String, Map<String, dynamic>>> summary = Map();
-    final Map<String, num> participation = Map();
+    final Map<String, Map<String,num>> participation = Map();
     final Calendar calendar = Calendar();
     final DateTime now = DateTime.now();
 
@@ -52,306 +52,27 @@ class FitRanking {
       // - sum user's weekly points if sync timestamp is within current week
       // - sum user's last weeks points if sync timestamp is within current week
       if (timestampKey != 0 && calendar.isThisWeek(timestamp, now)) {
-        // this week
-        categoryKey = 'week';
-        if (summary.containsKey(categoryKey)) {
-          categoryValue = summary[categoryKey];
-        } else {
-          categoryValue = Map();
-        }
-
-        if (categoryValue.containsKey(itemKey)) {
-          // categoryValue.update(itemKey, (v) => v + data[categoryKey]);
-        } else {
-          categoryValue.putIfAbsent(
-            itemKey,
-            () => Map.fromEntries([
-              MapEntry('name', itemName),
-              MapEntry('value', data[categoryKey]),
-              MapEntry('sync', timestamp),
-              MapEntry('type', fitRankingTypeSingle)
-            ]),
-          );
-        }
-
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue[teamKey]["value"] += data[categoryKey];
-        } else {
-          categoryValue.putIfAbsent(
-            teamKey,
-                () => Map.fromEntries([
-                  MapEntry('name', teamKey),
-                  MapEntry('value', data[categoryKey]),
-                  MapEntry('sync', timestamp),
-                  MapEntry('type', fitRankingTypeTeam)
-            ]),
-          );
-        }
-
-        if (summary.containsKey(categoryKey)) {
-          summary.update(categoryKey, (v) => categoryValue);
-        } else {
-          summary.putIfAbsent(categoryKey, () => categoryValue);
-        }
-
-        // last week
-        categoryKey = 'lastWeek';
-        if (summary.containsKey(categoryKey)) {
-          categoryValue = summary[categoryKey];
-        } else {
-          categoryValue = Map();
-        }
-
-        if (categoryValue.containsKey(itemKey)) {
-          // categoryValue.update(itemKey, (v) => v + data[categoryKey]);
-        } else {
-          categoryValue.putIfAbsent(
-            itemKey,
-            () => Map.fromEntries([
-              MapEntry('name', itemName),
-              MapEntry('value', data[categoryKey]),
-              MapEntry('sync', timestamp),
-              MapEntry('type', fitRankingTypeSingle)
-            ]),
-          );
-        }
-
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue[teamKey]["value"] += data[categoryKey];
-        } else {
-          categoryValue.putIfAbsent(
-            teamKey,
-                () => Map.fromEntries([
-                  MapEntry('name', teamKey),
-                  MapEntry('value', data[categoryKey]),
-                  MapEntry('sync', timestamp),
-                  MapEntry('type', fitRankingTypeTeam)
-            ]),
-          );
-        }
-
-        if (summary.containsKey(categoryKey)) {
-          summary.update(categoryKey, (v) => categoryValue);
-        } else {
-          summary.putIfAbsent(categoryKey, () => categoryValue);
-        }
+        // this week, last week
+        readCategoriesData(['week', 'lastWeek'], itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
       } else if (timestampKey != 0 && calendar.isLastWeek(timestamp, now)) {
         // last week
-        categoryKey = 'lastWeek';
-        if (summary.containsKey(categoryKey)) {
-          categoryValue = summary[categoryKey];
-        } else {
-          categoryValue = Map();
-        }
-
-        if (categoryValue.containsKey(itemKey)) {
-          // categoryValue.update(itemKey, (v) => v + data['week']);
-        } else {
-          categoryValue.putIfAbsent(
-            itemKey,
-            () => Map.fromEntries([
-              MapEntry('name', itemName),
-              MapEntry('value', data[categoryKey]),
-              MapEntry('sync', timestamp),
-              MapEntry('type', fitRankingTypeSingle)
-            ]),
-          );
-        }
-
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue[teamKey]["value"] += data[categoryKey];
-        } else {
-          categoryValue.putIfAbsent(
-            teamKey,
-                () => Map.fromEntries([
-                  MapEntry('name', teamKey),
-                  MapEntry('value', data[categoryKey]),
-                  MapEntry('sync', timestamp),
-                  MapEntry('type', fitRankingTypeTeam)
-            ]),
-          );
-        }
-
-        if (summary.containsKey(categoryKey)) {
-          summary.update(categoryKey, (v) => categoryValue);
-        } else {
-          summary.putIfAbsent(categoryKey, () => categoryValue);
-        }
+        readCategoryData('lastWeek', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
       }
 
       // collect points
       // - sum user's today points if sync timestamp is today
       // - sum user's yesterday points if sync timestamp is today
       if (timestampKey > 0 && calendar.isToday(timestamp, now)) {
-        // today
-        categoryKey = 'today';
-        if (summary.containsKey(categoryKey)) {
-          categoryValue = summary[categoryKey];
-        } else {
-          categoryValue = Map();
-        }
-
-        if (categoryValue.containsKey(itemKey)) {
-          // categoryValue.update(itemKey, (v) => v + data[categoryKey]);
-        } else {
-          categoryValue.putIfAbsent(
-            itemKey,
-            () => Map.fromEntries([
-              MapEntry('name', itemName),
-              MapEntry('value', data[categoryKey]),
-              MapEntry('sync', timestamp),
-              MapEntry('type', fitRankingTypeSingle)
-            ]),
-          );
-        }
-
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue[teamKey]["value"] += data[categoryKey];
-        } else {
-          categoryValue.putIfAbsent(
-            teamKey,
-                () => Map.fromEntries([
-                  MapEntry('name', teamKey),
-                  MapEntry('value', data[categoryKey]),
-                  MapEntry('sync', timestamp),
-                  MapEntry('type', fitRankingTypeTeam)
-            ]),
-          );
-        }
-
-        if (summary.containsKey(categoryKey)) {
-          summary.update(categoryKey, (v) => categoryValue);
-        } else {
-          summary.putIfAbsent(categoryKey, () => categoryValue);
-        }
-
-        // yesterday
-        categoryKey = 'yesterday';
-        if (summary.containsKey(categoryKey)) {
-          categoryValue = summary[categoryKey];
-        } else {
-          categoryValue = Map();
-        }
-
-        if (categoryValue.containsKey(itemKey)) {
-          // categoryValue.update(itemKey, (v) => v + data[categoryKey]);
-        } else {
-          categoryValue.putIfAbsent(
-            itemKey,
-            () => Map.fromEntries([
-              MapEntry('name', itemName),
-              MapEntry('value', data[categoryKey]),
-              MapEntry('sync', timestamp),
-              MapEntry('type', fitRankingTypeSingle)
-            ]),
-          );
-        }
-
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue[teamKey]["value"] += data[categoryKey];
-        } else {
-          categoryValue.putIfAbsent(
-            teamKey,
-                () => Map.fromEntries([
-                  MapEntry('name', teamKey),
-                  MapEntry('value', data[categoryKey]),
-                  MapEntry('sync', timestamp),
-                  MapEntry('type', fitRankingTypeTeam)
-            ]),
-          );
-        }
-
-        if (summary.containsKey(categoryKey)) {
-          summary.update(categoryKey, (v) => categoryValue);
-        } else {
-          summary.putIfAbsent(categoryKey, () => categoryValue);
-        }
+        // today, yesterday
+        readCategoriesData(['today', 'yesterday'], itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
       } else if (timestampKey > 0 && calendar.isYesterday(timestamp, now)) {
         // yesterday
-        categoryKey = 'yesterday';
-        if (summary.containsKey(categoryKey)) {
-          categoryValue = summary[categoryKey];
-        } else {
-          categoryValue = Map();
-        }
-
-        if (categoryValue.containsKey(itemKey)) {
-          // categoryValue.update(itemKey, (v) => v + data['today']);
-        } else {
-          categoryValue.putIfAbsent(
-            itemKey,
-            () => Map.fromEntries([
-              MapEntry('name', itemName),
-              MapEntry('value', data[categoryKey]),
-              MapEntry('sync', timestamp),
-              MapEntry('type', fitRankingTypeSingle)
-            ]),
-          );
-        }
-
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue[teamKey]["value"] += data[categoryKey];
-        } else {
-          categoryValue.putIfAbsent(
-            teamKey,
-                () => Map.fromEntries([
-                  MapEntry('name', teamKey),
-                  MapEntry('value', data[categoryKey]),
-                  MapEntry('sync', timestamp),
-                  MapEntry('type', fitRankingTypeTeam)
-            ]),
-          );
-        }
-
-        if (summary.containsKey(categoryKey)) {
-          summary.update(categoryKey, (v) => categoryValue);
-        } else {
-          summary.putIfAbsent(categoryKey, () => categoryValue);
-        }
+        readCategoryData('yesterday', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
       }
 
       if (timestampKey > 0 && calendar.isThisYear(timestamp, now)) {
         // year
-        categoryKey = 'year';
-        if (summary.containsKey(categoryKey)) {
-          categoryValue = summary[categoryKey];
-        } else {
-          categoryValue = Map();
-        }
-
-        if (categoryValue.containsKey(itemKey)) {
-          // categoryValue.update(itemKey, (v) => v + data['year']);
-        } else {
-          categoryValue.putIfAbsent(
-            itemKey,
-            () => Map.fromEntries([
-              MapEntry('name', itemName),
-              MapEntry('value', data[categoryKey]),
-              MapEntry('sync', timestamp),
-              MapEntry('type', fitRankingTypeSingle)
-            ]),
-          );
-        }
-
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue[teamKey]["value"] += data[categoryKey];
-        } else {
-          categoryValue.putIfAbsent(
-            teamKey,
-                () => Map.fromEntries([
-                  MapEntry('name', teamKey),
-                  MapEntry('value', data[categoryKey]),
-                  MapEntry('sync', timestamp),
-                  MapEntry('type', fitRankingTypeTeam)
-            ]),
-          );
-        }
-
-        if (summary.containsKey(categoryKey)) {
-          summary.update(categoryKey, (v) => categoryValue);
-        } else {
-          summary.putIfAbsent(categoryKey, () => categoryValue);
-        }
+        readCategoryData('year', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
       }
 
       // collect total points if user synced within last 14 days
@@ -360,53 +81,7 @@ class FitRanking {
         // print('[INFO] sync user $userId ($timestamp)\n\t - with app version ${value['client']}\n\t - on ${value['device']}');
 
         // total
-        categoryKey = 'total';
-        if (summary.containsKey(categoryKey)) {
-          categoryValue = summary[categoryKey];
-        } else {
-          categoryValue = Map();
-        }
-
-        if (categoryValue.containsKey(itemKey)) {
-          // categoryValue.update(itemKey, (v) => v + data['total']);
-        } else {
-          categoryValue.putIfAbsent(
-            itemKey,
-            () => Map.fromEntries([
-              MapEntry('name', itemName),
-              MapEntry('value', data[categoryKey]),
-              MapEntry('sync', timestamp),
-              MapEntry('type', fitRankingTypeSingle)
-            ]),
-          );
-        }
-
-        if (categoryValue.containsKey(teamKey)) {
-          categoryValue[teamKey]["value"] += data[categoryKey];
-        } else {
-          categoryValue.putIfAbsent(
-            teamKey,
-                () => Map.fromEntries([
-              MapEntry('name', teamKey),
-              MapEntry('value', data[categoryKey]),
-              MapEntry('sync', timestamp),
-              MapEntry('type', fitRankingTypeTeam)
-            ]),
-          );
-        }
-
-        if (summary.containsKey(categoryKey)) {
-          summary.update(categoryKey, (v) => categoryValue);
-        } else {
-          summary.putIfAbsent(categoryKey, () => categoryValue);
-        }
-
-        if (participation.containsKey(teamKey)) {
-          participation.update(teamKey, (v) => v + 1);
-        } else {
-          participation.putIfAbsent(teamKey, () => 1);
-        }
-
+        readCategoryData('total', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
         ranking.totalUsers += 1;
       } else {
         // print('[INFO] ignore user $userId, has not synced within last 14 days');
@@ -443,11 +118,78 @@ class FitRanking {
             value: categoryValue[itemKey]['value'],
             sync: categoryValue[itemKey]['sync'],
             type: categoryValue[itemKey]['type'],
-            userCount: participation[itemKey] ?? 0);
+            userCount: participation[categoryKey][itemKey] ?? 0);
       });
     });
 
     return ranking;
+  }
+
+  static void readCategoriesData(List<String> categories, String itemKey, String itemName, String teamKey,
+      DateTime timestamp, dynamic data, Map<String, Map<String, dynamic>> categoryValue,
+      Map<String, Map<String, Map<String, dynamic>>> summary,
+      Map<String, Map<String,num>> participation) {
+    categories.forEach((categoryKey) {
+      readCategoryData(categoryKey, itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+    });
+  }
+
+  static void readCategoryData(String categoryKey, String itemKey, String itemName, String teamKey,
+      DateTime timestamp, dynamic data, Map<String, Map<String, dynamic>> categoryValue,
+      Map<String, Map<String, Map<String, dynamic>>> summary,
+      Map<String, Map<String,num>> participation) {
+    if (summary.containsKey(categoryKey)) {
+      categoryValue = summary[categoryKey];
+    } else {
+      categoryValue = Map();
+    }
+
+    if (!categoryValue.containsKey(itemKey)) {
+      categoryValue.putIfAbsent(
+        itemKey,
+            () => Map.fromEntries([
+          MapEntry('name', itemName),
+          MapEntry('value', data[categoryKey]),
+          MapEntry('sync', timestamp),
+          MapEntry('type', fitRankingTypeSingle)
+        ]),
+      );
+    }
+
+    if (categoryValue.containsKey(teamKey)) {
+      categoryValue[teamKey]["value"] += data[categoryKey];
+    } else {
+      categoryValue.putIfAbsent(
+        teamKey,
+            () => Map.fromEntries([
+          MapEntry('name', teamKey),
+          MapEntry('value', data[categoryKey]),
+          MapEntry('sync', timestamp),
+          MapEntry('type', fitRankingTypeTeam)
+        ]),
+      );
+    }
+
+    if (summary.containsKey(categoryKey)) {
+      summary.update(categoryKey, (v) => categoryValue);
+    } else {
+      summary.putIfAbsent(categoryKey, () => categoryValue);
+    }
+
+    if (participation.containsKey(categoryKey)) {
+      if (participation[categoryKey].containsKey(teamKey)) {
+        participation[categoryKey][teamKey] += 1;
+      } else {
+        participation[categoryKey].putIfAbsent(teamKey, () => 1);
+      }
+    } else {
+      participation.putIfAbsent(
+          categoryKey,
+              () => Map.fromEntries([
+            MapEntry(teamKey, 1)
+          ])
+      );
+    }
   }
 
   void addEntry(
