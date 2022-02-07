@@ -15,6 +15,9 @@ class HistoryRecordSummaryItem extends HistoryItem {
   final int goal;
 
   ///
+  final int trend;
+
+  ///
   final bool unitKilometersEnabled;
 
   ///
@@ -23,6 +26,7 @@ class HistoryRecordSummaryItem extends HistoryItem {
     this.record,
     this.isLastItem,
     this.goal,
+    this.trend,
     this.unitKilometersEnabled,
   }) : super(key: key);
 
@@ -110,6 +114,18 @@ class _HistoryRecordSummaryItemState extends State<HistoryRecordSummaryItem> {
                 ),
               ],
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: widget.trend < 0
+                ? Icon(
+                    Icons.arrow_downward_rounded,
+                    color: Colors.red,
+                  )
+                : Icon(
+                    Icons.arrow_upward_rounded,
+                    color: Colors.green,
+                  ),
           ),
           Icon(Icons.navigate_next),
         ],

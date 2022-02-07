@@ -204,8 +204,12 @@ class FitnessRepository extends Repository {
     db.setPersistenceCacheSizeBytes(1024 * 1024);
     final DataSnapshot data =
         await db.reference().child('users').child(userKey).get();
-    final Map<dynamic, dynamic> history =
-        data.value['history'] == null ? Map() : data.value['history'] ?? Map();
+    Map<dynamic, dynamic> history;
+    if (data?.value != null) {
+      history = data.value['history'] == null ? Map() : data.value['history'] ?? Map();
+    } else {
+      history = Map();
+    }
     print('FitRepository#_readSnapshot:\n\t$userKey\n\t$history');
 
     FitRecord record;

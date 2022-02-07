@@ -5,6 +5,7 @@ import 'package:wandr/components/history/history.item.record.summary.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/components/shared/page.default.dart';
 import 'package:wandr/components/shared/route.transition.dart';
+import 'package:wandr/model/cache/fit.record.dao.dart';
 import 'package:wandr/model/fit.record.dart';
 import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/fitness.repository.dart';
@@ -19,7 +20,10 @@ class HistoryComponent extends StatefulWidget {
 
 class _HistoryState extends State<HistoryComponent> {
   ///
-  final List<FitRecord> _records = List();
+  final List<FitRecord> _records = <FitRecord>[];
+
+  ///
+  final List<AverageRecord> _averageList = <AverageRecord>[];
 
   ///
   final FitnessRepository _repository = FitnessRepository();
@@ -44,6 +48,14 @@ class _HistoryState extends State<HistoryComponent> {
   }
 
   void _load() {
+    FitRecordDao().fetchAverageByDayOfWeek().then((averageList) {
+      if (!mounted) return;
+      _averageList.clear();
+      setState(() {
+        _averageList.addAll(averageList);
+      });
+    }).catchError((_) {});
+
     Preferences().getDailyGoal().then((value) {
       if (!mounted) return;
       _goalDaily = value;
@@ -155,11 +167,16 @@ class _HistoryState extends State<HistoryComponent> {
                   );
                 }
                 final FitRecord record = _records[index - 2];
+                final AverageRecord averageRecord = _averageList.firstWhere((e) => e.dayIndex == record.dayOfWeek, orElse: () => AverageRecord());
                 return GestureDetector(
                   child: HistoryRecordSummaryItem(
                     record: record,
                     isLastItem: index + 1 == _records.length,
                     goal: _goalDaily,
+                    trend:
+                    averageRecord.value <= record.value
+                            ? 1
+                            : -1,
                     unitKilometersEnabled: _unitKilometersEnabled,
                   ),
                   onTap: () {
