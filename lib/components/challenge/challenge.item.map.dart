@@ -1,5 +1,3 @@
-
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -14,14 +12,10 @@ class ChallengeMap extends StatefulWidget {
   final FitChallenge challenge;
 
   ///
-  ChallengeMap({
-    Key key,
-    this.challenge
-  }) : super(key: key);
+  ChallengeMap({Key key, this.challenge}) : super(key: key);
 
   @override
-  _ChallengeMapState createState() =>
-      _ChallengeMapState();
+  _ChallengeMapState createState() => _ChallengeMapState();
 }
 
 class _ChallengeMapState extends State<ChallengeMap> {
@@ -32,8 +26,12 @@ class _ChallengeMapState extends State<ChallengeMap> {
   LatLngBounds _bounds;
   List<LatLngDistance> _polylinePoints = [];
 
+  MapController mapController;
+  bool currentPositionZoomed = false;
+
   Future<Polyline> getPolyline() async {
-    final String gpxContent = await DefaultAssetBundle.of(context).loadString(widget.challenge.routeAsset);
+    final String gpxContent = await DefaultAssetBundle.of(context)
+        .loadString(widget.challenge.routeAsset);
     final Gpx gpx = GpxReader().fromString(gpxContent);
     final Distance distance = Distance();
 
@@ -41,13 +39,10 @@ class _ChallengeMapState extends State<ChallengeMap> {
     double lastDistance = 0;
     if (gpx.wpts.isNotEmpty) {
       for (Wpt point in gpx.wpts) {
-
         LatLngDistance currentPoint = LatLngDistance(point.lat, point.lon);
         if (lastPoint != null) {
-          lastDistance += distance.as(
-              LengthUnit.Kilometer,
-              currentPoint,
-              lastPoint);
+          lastDistance +=
+              distance.as(LengthUnit.Kilometer, currentPoint, lastPoint);
         }
         currentPoint.distanceFromStart = lastDistance;
         _polylinePoints.add(currentPoint);
@@ -59,10 +54,8 @@ class _ChallengeMapState extends State<ChallengeMap> {
           for (Wpt point in treks.trkpts) {
             LatLngDistance currentPoint = LatLngDistance(point.lat, point.lon);
             if (lastPoint != null) {
-              lastDistance += distance.as(
-                  LengthUnit.Kilometer,
-                  currentPoint,
-                  lastPoint);
+              lastDistance +=
+                  distance.as(LengthUnit.Kilometer, currentPoint, lastPoint);
             }
             currentPoint.distanceFromStart = lastDistance;
             _polylinePoints.add(currentPoint);
@@ -75,8 +68,7 @@ class _ChallengeMapState extends State<ChallengeMap> {
     if (gpx.metadata.bounds != null) {
       _bounds = LatLngBounds(
           LatLng(gpx.metadata.bounds.maxlat, gpx.metadata.bounds.maxlon),
-        LatLng(gpx.metadata.bounds.minlat, gpx.metadata.bounds.minlon)
-      );
+          LatLng(gpx.metadata.bounds.minlat, gpx.metadata.bounds.minlon));
     } else {
       _bounds = LatLngBounds.fromPoints(_polylinePoints);
     }
@@ -92,6 +84,7 @@ class _ChallengeMapState extends State<ChallengeMap> {
   void initState() {
     super.initState();
 
+    mapController = MapController();
     _loadPolyline();
   }
 
@@ -117,17 +110,19 @@ class _ChallengeMapState extends State<ChallengeMap> {
       return null;
     }
 
-    final double ratio = _polylinePoints.last.distanceFromStart / widget.challenge.target;
-    final double currentProgress = min(ratio * widget.challenge.target, ratio * widget.challenge.progress);
+    final double ratio =
+        _polylinePoints.last.distanceFromStart / widget.challenge.target;
+    final double currentProgress =
+        min(ratio * widget.challenge.target, ratio * widget.challenge.progress);
 
-    LatLngDistance currentProgressPoint = _polylinePoints.firstWhere((element) => element.distanceFromStart >= currentProgress);
+    LatLngDistance currentProgressPoint = _polylinePoints
+        .firstWhere((element) => element.distanceFromStart >= currentProgress);
     _marker = Marker(
       width: 48.0,
       height: 48.0,
       point: currentProgressPoint,
       anchorPos: AnchorPos.align(AnchorAlign.top),
-      builder: (ctx) =>
-      new Container(
+      builder: (ctx) => new Container(
         child: Image.asset('assets/images/map_marker.png', color: Colors.blue),
       ),
     );
@@ -135,36 +130,72 @@ class _ChallengeMapState extends State<ChallengeMap> {
 
   @override
   Widget build(BuildContext context) {
-
     return _loading
         ? LoadingIndicator()
-        : FlutterMap(
-      options: MapOptions(
-        bounds: _bounds,
-        boundsOptions: FitBoundsOptions(
-          padding: EdgeInsets.all(14.0)
-        )
-      ),
-      layers: [
-        PolylineLayerOptions(
-          polylines: _polyline != null ? [_polyline] : []
-        ),
-        MarkerLayerOptions(
-          markers: _marker!= null ? [_marker] : []
-        )
-      ],
-      children: <Widget>[
-        TileLayerWidget(options: TileLayerOptions(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: ['a', 'b', 'c']
-        )),
-      ],
-    );
+        : new Stack(children: <Widget>[
+            FlutterMap(
+              mapController: mapController,
+              options: MapOptions(
+                  bounds: _bounds,
+                  boundsOptions:
+                      FitBoundsOptions(padding: EdgeInsets.all(14.0))),
+              layers: [
+                PolylineLayerOptions(
+                    polylines: _polyline != null ? [_polyline] : []),
+                MarkerLayerOptions(markers: _marker != null ? [_marker] : [])
+              ],
+              children: <Widget>[
+                TileLayerWidget(
+                    options: TileLayerOptions(
+                  urlTemplate:
+                      "https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png",
+                  subdomains: ['a', 'b', 'c'],
+                  attributionBuilder: (_) {
+                    return Text(
+                      "© OpenStreetMap contributors",
+                      style: TextStyle(color: Colors.black),
+                    );
+                  },
+                )),
+              ],
+            ),
+            new Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                padding: EdgeInsets.fromLTRB(0, 0, 8, 16),
+                width: 50.0,
+                height: 58.0,
+                child: FloatingActionButton(
+                    child: currentPositionZoomed
+                        ? Icon(
+                            Icons.zoom_out_map_rounded,
+                            color: Colors.white,
+                          )
+                        : Image.asset('assets/images/map_marker.png',
+                            color: Colors.white, width: 30.0),
+                    onPressed: () {
+                      if (currentPositionZoomed && _bounds != null) {
+                        mapController.rotate(0);
+                        mapController.fitBounds(_bounds);
+                        setState(() {
+                          currentPositionZoomed = false;
+                        });
+                      } else if (_marker != null) {
+                        mapController.moveAndRotate(_marker.point, 14.0, 0);
+                        setState(() {
+                          currentPositionZoomed = true;
+                        });
+                      }
+                    }),
+              ),
+            )
+          ]);
   }
 }
 
 class LatLngDistance extends LatLng {
-  LatLngDistance(double latitude, double longitude) : super(latitude, longitude);
+  LatLngDistance(double latitude, double longitude)
+      : super(latitude, longitude);
 
   double distanceFromStart = 0;
 }
