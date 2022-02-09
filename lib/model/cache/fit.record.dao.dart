@@ -217,4 +217,8 @@ class FitRecordDao extends FitDao {
 class AverageRecord {
   int dayIndex = 0;
   double value = 0.0;
+
+  bool isSameDay(DateTime dateTime) {
+    return dayIndex == (dateTime.weekday % 7);
+  }
 }
