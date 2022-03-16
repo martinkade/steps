@@ -114,8 +114,8 @@ class _HistoryAddState extends State<HistoryAdd> {
     showDatePicker(
             context: context,
             initialDate: date,
-            firstDate: date.subtract(Duration(days: date.day)),
-            lastDate: date)
+            firstDate: FitnessRepository.firstPossibleDate(),
+            lastDate: DateTime.now())
         .then((value) {
       if (value != null) {
         _selectedDate = value;
