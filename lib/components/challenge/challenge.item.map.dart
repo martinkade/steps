@@ -36,13 +36,13 @@ class _ChallengeMapState extends State<ChallengeMap> {
     final Distance distance = Distance();
 
     LatLngDistance lastPoint;
-    double lastDistance = 0;
+    double lastDistance = 0.0;
     if (gpx.wpts.isNotEmpty) {
       for (Wpt point in gpx.wpts) {
         LatLngDistance currentPoint = LatLngDistance(point.lat, point.lon);
         if (lastPoint != null) {
           lastDistance +=
-              distance.as(LengthUnit.Kilometer, currentPoint, lastPoint);
+          (distance.as(LengthUnit.Meter, currentPoint, lastPoint) / 1000.0);
         }
         currentPoint.distanceFromStart = lastDistance;
         _polylinePoints.add(currentPoint);
@@ -55,7 +55,7 @@ class _ChallengeMapState extends State<ChallengeMap> {
             LatLngDistance currentPoint = LatLngDistance(point.lat, point.lon);
             if (lastPoint != null) {
               lastDistance +=
-                  distance.as(LengthUnit.Kilometer, currentPoint, lastPoint);
+              (distance.as(LengthUnit.Meter, currentPoint, lastPoint) / 1000.0);
             }
             currentPoint.distanceFromStart = lastDistance;
             _polylinePoints.add(currentPoint);

@@ -28,6 +28,11 @@ class FitnessRepository extends Repository {
   static const notification = const MethodChannel('com.mediabeam/notification');
 
   ///
+  static DateTime firstPossibleDate() {
+    return DateTime(2020, 9, 1);
+  }
+
+  ///
   Future<bool> isNotificationsEnabled() async {
     try {
       final bool notificationsEnabled =
@@ -116,7 +121,7 @@ class FitnessRepository extends Repository {
     FitnessRepositoryClient client,
   }) async {
     // restrict data to start on september, 1
-    final DateTime anchor = DateTime(2020, 9, 1);
+    final DateTime anchor = FitnessRepository.firstPossibleDate();
     final FitRecordDao dao = FitRecordDao();
     final List<FitRecord> historicalData = await _readSnapshot(userKey);
     final List<FitRecord> localData = await dao.fetch(
@@ -138,7 +143,7 @@ class FitnessRepository extends Repository {
     final bool isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
 
     // restrict data to start on september, 1
-    final DateTime anchor = DateTime(2020, 9, 1);
+    final DateTime anchor = FitnessRepository.firstPossibleDate();
     final FitRecordDao dao = FitRecordDao();
     final List<FitRecord> localData = await dao.fetch(
       from: anchor,
