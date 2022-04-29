@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:wandr/components/dashboard/dashboard.item.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/components/shared/segmented.control.dart';
@@ -270,6 +271,21 @@ class DashboardRankingList extends StatelessWidget {
     this.groupType
   }) : super(key: key);
 
+  int getJokeExtraValue() {
+    if (DateTime.now().day == 1 && DateTime.now().month == DateTime.april) {
+      final FitRankingEntry me = list.firstWhereOrNull((element) =>
+      element.key == itemKey);
+      final int extraValue = me?.value ?? 0;
+      list.sort((a, b) {
+        if (a.key == itemKey) {
+          return 1;
+        }
+        return a.value >= b.value ? -1 : 1;
+      });
+      return extraValue;
+    }
+    return 0;
+  }
   @override
   Widget build(BuildContext context) {
     final Widget placeholderWidget = Container(
@@ -280,120 +296,132 @@ class DashboardRankingList extends StatelessWidget {
       ),
       height: 164.0,
     );
+    if (list.isEmpty) {
+      return placeholderWidget;
+    } else {
+      final int extraValue = getJokeExtraValue();
 
-    return list.length == 0
-        ? placeholderWidget
-        : Container(
-            constraints: BoxConstraints(
-              minHeight: 164.0,
-            ),
-            child: ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-                final FitRankingEntry item = list[index];
-                return Container(
-                  color: item.key == itemKey
-                      ? Theme.of(context).colorScheme.primary.withAlpha(50)
-                      : Colors.transparent,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 8.0),
-                        child: Container(
-                          child: Center(
-                            child: Text(
-                              item.value > 0 ? '${index + 1}' : '',
-                              style: TextStyle(
-                                fontWeight: item.name == itemKey
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                fontSize: 16.0,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
+      return Container(
+        constraints: BoxConstraints(
+          minHeight: 164.0,
+        ),
+        child: ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: list.length,
+          itemBuilder: (context, index) {
+            final FitRankingEntry item = list[index];
+            final int value = item.key == itemKey ? item.value : item.value + extraValue;
+            return Container(
+              color: item.key == itemKey
+                  ? Theme
+                  .of(context)
+                  .colorScheme
+                  .primary
+                  .withAlpha(50)
+                  : Colors.transparent,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 8.0),
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                          value > 0 ? '${index + 1}' : '',
+                          style: TextStyle(
+                            fontWeight: item.name == itemKey
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            fontSize: 16.0,
                           ),
-                          width: 32.0,
-                          height: 32.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(16.0),
-                            ),
-                            border: item.value > 0
-                                ? Border.all(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .color,
-                                  )
-                                : null,
-                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      Expanded(
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: item.key == itemKey
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  fontSize: 16.0,
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                              Text(
-                                groupType == FitRanking.fitRankingTypeSingle ? ''
-                                    '${Localizer.translate(context, 'lblSingleSync')}: ${item.timestamp}' :
-                                '${Localizer.translate(context, 'lblTeamUserCount')}: ${item.userCount}',
-                                textAlign: TextAlign.left,
-                              ),
-                            ],
-                          ),
+                      width: 32.0,
+                      height: 32.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(16.0),
                         ),
+                        border: value > 0
+                            ? Border.all(
+                          color: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyText1
+                              .color,
+                        )
+                            : null,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 8.0, 16.0, 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              unitKilometersEnabled
-                                  ? (item.value / 12.0).toStringAsFixed(1)
-                                  : item.value.toStringAsFixed(0),
-                              style: TextStyle(
-                                fontWeight: item.key == itemKey
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                fontSize: 16.0,
-                              ),
-                              textAlign: TextAlign.right,
-                            ),
-                            Text(
-                              unitKilometersEnabled
-                                  ? Localizer.translate(
-                                      context, 'lblUnitKilometer')
-                                  : Localizer.translate(
-                                      context, 'lblUnitPoints'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                );
-              },
-            ),
-          );
+                  Expanded(
+                    child: Padding(
+                      padding:
+                      const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: item.key == itemKey
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              fontSize: 16.0,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                          Text(
+                            groupType == FitRanking.fitRankingTypeSingle ? ''
+                                '${Localizer.translate(
+                                context, 'lblSingleSync')}: ${item.timestamp}' :
+                            '${Localizer.translate(
+                                context, 'lblTeamUserCount')}: ${item
+                                .userCount}',
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8.0, 8.0, 16.0, 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          unitKilometersEnabled
+                              ? (value / 12.0).toStringAsFixed(1)
+                              : value.toStringAsFixed(0),
+                          style: TextStyle(
+                            fontWeight: item.key == itemKey
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            fontSize: 16.0,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                        Text(
+                          unitKilometersEnabled
+                              ? Localizer.translate(
+                              context, 'lblUnitKilometer')
+                              : Localizer.translate(
+                              context, 'lblUnitPoints'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    }
   }
 }

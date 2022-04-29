@@ -3,22 +3,22 @@ import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 
-class FitChallenge6Team extends FitChallenge {
+class FitChallenge7Team extends FitChallenge {
   ///
-  static DateTime kStartDate = DateTime(2022, 2, 1);
-  static DateTime kEndDate = DateTime(2022, 4, 30);
+  static DateTime kStartDate = DateTime(2022, 5, 1);
+  static DateTime kEndDate = DateTime(2022, 7, 31);
 
   ///
-  FitChallenge6Team()
+  FitChallenge7Team()
       : super(
-          index: 5,
+          index: 6,
           startDate: kStartDate,
           endDate: kEndDate,
-          title: 'Finale wir kommen',
-          description: 'Der Ball ist rund und das Spiel dauert 90 Minuten. Bis November ist es noch ein bisschen länger, somit Zeit genug für uns uns auf den Weg nach Katar zu machen und den Weltmeistertitel abzuholen.',
+          title: 'WANDR "Rhein"kultur Challenge',
+          description: '1357 km am Rhein entlang – 3 Länder, etliche Flußbiegungen, hunderte Brücken und noch viel mehr Schiffe. Da gibt es immer etwas zu sehen. Schuhe zubinden, Rucksack schultern und los geht’s 😊',
           label: 'Kilometer',
-          imageAsset: 'assets/images/challenge6.jpg',
-          routeAsset: 'assets/routes/challenge6.gpx',
+          imageAsset: 'assets/images/challenge7.jpg',
+          routeAsset: 'assets/routes/challenge7.gpx',
         );
 
   @override
@@ -29,7 +29,7 @@ class FitChallenge6Team extends FitChallenge {
 
   @override
   void initTargets() {
-    target = 6780.0; // km
+    target = 1357.0; // km
   }
 
   @override

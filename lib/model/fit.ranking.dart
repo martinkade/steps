@@ -53,10 +53,10 @@ class FitRanking {
       // - sum user's last weeks points if sync timestamp is within current week
       if (timestampKey != 0 && calendar.isThisWeek(timestamp, now)) {
         // this week, last week
-        readCategoriesData(['week', 'lastWeek'], itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+        readCategoriesData(['week', 'lastWeek'], ['week', 'lastWeek'], itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
       } else if (timestampKey != 0 && calendar.isLastWeek(timestamp, now)) {
         // last week
-        readCategoryData('lastWeek', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+        readCategoryData('week', 'lastWeek', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
       }
 
       // collect points
@@ -64,15 +64,15 @@ class FitRanking {
       // - sum user's yesterday points if sync timestamp is today
       if (timestampKey > 0 && calendar.isToday(timestamp, now)) {
         // today, yesterday
-        readCategoriesData(['today', 'yesterday'], itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+        readCategoriesData(['today', 'yesterday'], ['today', 'yesterday'], itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
       } else if (timestampKey > 0 && calendar.isYesterday(timestamp, now)) {
         // yesterday
-        readCategoryData('yesterday', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+        readCategoryData('today', 'yesterday', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
       }
 
       if (timestampKey > 0 && calendar.isThisYear(timestamp, now)) {
         // year
-        readCategoryData('year', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+        readCategoryData('year', 'year', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
       }
 
       // collect total points if user synced within last 14 days
@@ -81,7 +81,7 @@ class FitRanking {
         // print('[INFO] sync user $userId ($timestamp)\n\t - with app version ${value['client']}\n\t - on ${value['device']}');
 
         // total
-        readCategoryData('total', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+        readCategoryData('total', 'total', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
         ranking.totalUsers += 1;
       } else {
         // print('[INFO] ignore user $userId, has not synced within last 14 days');
@@ -125,21 +125,22 @@ class FitRanking {
     return ranking;
   }
 
-  static void readCategoriesData(List<String> categories, String itemKey, String itemName, String teamKey,
+  static void readCategoriesData(List<String> categories, List<String> destinations, String itemKey, String itemName, String teamKey,
       DateTime timestamp, dynamic data, Map<String, Map<String, dynamic>> categoryValue,
       Map<String, Map<String, Map<String, dynamic>>> summary,
       Map<String, Map<String,num>> participation) {
-    categories.forEach((categoryKey) {
-      readCategoryData(categoryKey, itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
-    });
+
+    for (var i = 0; i < categories.length; i++) {
+      readCategoryData(categories[i], destinations[i], itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+    }
   }
 
-  static void readCategoryData(String categoryKey, String itemKey, String itemName, String teamKey,
+  static void readCategoryData(String categoryKey, String destinationKey, String itemKey, String itemName, String teamKey,
       DateTime timestamp, dynamic data, Map<String, Map<String, dynamic>> categoryValue,
       Map<String, Map<String, Map<String, dynamic>>> summary,
       Map<String, Map<String,num>> participation) {
-    if (summary.containsKey(categoryKey)) {
-      categoryValue = summary[categoryKey];
+    if (summary.containsKey(destinationKey)) {
+      categoryValue = summary[destinationKey];
     } else {
       categoryValue = Map();
     }
@@ -170,21 +171,21 @@ class FitRanking {
       );
     }
 
-    if (summary.containsKey(categoryKey)) {
-      summary.update(categoryKey, (v) => categoryValue);
+    if (summary.containsKey(destinationKey)) {
+      summary.update(destinationKey, (v) => categoryValue);
     } else {
-      summary.putIfAbsent(categoryKey, () => categoryValue);
+      summary.putIfAbsent(destinationKey, () => categoryValue);
     }
 
-    if (participation.containsKey(categoryKey)) {
-      if (participation[categoryKey].containsKey(teamKey)) {
-        participation[categoryKey][teamKey] += 1;
+    if (participation.containsKey(destinationKey)) {
+      if (participation[destinationKey].containsKey(teamKey)) {
+        participation[destinationKey][teamKey] += 1;
       } else {
-        participation[categoryKey].putIfAbsent(teamKey, () => 1);
+        participation[destinationKey].putIfAbsent(teamKey, () => 1);
       }
     } else {
       participation.putIfAbsent(
-          categoryKey,
+          destinationKey,
               () => Map.fromEntries([
             MapEntry(teamKey, 1)
           ])
