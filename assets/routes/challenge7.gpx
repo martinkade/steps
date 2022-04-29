@@ -1,0 +1,1252 @@
+<?xml version="1.0"?>
+<gpx version="1.1" creator="GDAL 3.0.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogr="http://osgeo.org/gdal" xmlns="http://www.topografix.com/GPX/1/1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+<metadata><bounds minlat="46.634712000000000" minlon="4.125428000000000" maxlat="51.977454999999999" maxlon="9.656539000000000"/></metadata>                    
+<wpt lat="46.634712" lon="8.596375">
+  <name>Andermatt</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Andermatt&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="46.6586416" lon="8.6710315">
+  <name>Oberalppass</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Oberalppass&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="46.7053485" lon="8.8556555">
+  <name>Disentis</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Disentis&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="46.7741986" lon="9.2047259">
+  <name>Ilanz</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Ilanz&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="46.7924586" lon="9.3371733">
+  <name>Versam</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Versam&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="46.812338" lon="9.39927">
+  <name>Bonaduz</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Bonaduz&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="46.829858" lon="9.406825">
+  <name>Tamins</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Tamins&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="46.853842" lon="9.527621">
+  <name>Chur</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Chur&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="46.965345" lon="9.55265">
+  <name>Landquart</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Landquart&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.0103806" lon="9.5090389">
+  <name>Bad Ragaz</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Bad_Ragaz&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.053347" lon="9.473924">
+  <name>Sargans, Rheindamm</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Sargans.2C_Rheindamm&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.0697722" lon="9.4804306">
+  <name>Trübbach</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Tr.C3.BCbbach&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.1674333" lon="9.4803417">
+  <name>Buchs</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Buchs&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.3089361" lon="9.5667111">
+  <name>Oberriet</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Oberriet&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.37785" lon="9.5397889">
+  <name>Altstätten</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Altst.C3.A4tten&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.448715" lon="9.656539">
+  <name>St. Margarethen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#St._Margarethen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.467467" lon="9.591498">
+  <name>Rheineck</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rheineck&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.4789083" lon="9.4921528">
+  <name>Rorschach</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rorschach&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.5139222" lon="9.4376583">
+  <name>Arbon</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Arbon&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.5643444" lon="9.3791389">
+  <name>Romanshorn</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Romanshorn&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6212528" lon="9.2662111">
+  <name>Altnau-Ruederbomm</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Altnau-Ruederbomm&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.65151" lon="9.180436">
+  <name>Kreuzlingen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Kreuzlingen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.655273" lon="9.175437">
+  <name>Konstanz</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Konstanz&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6724917" lon="9.0848028">
+  <name>Stad</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Stad&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6679833" lon="8.9822722">
+  <name>Steckborn</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Steckborn&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6545667" lon="8.8570722">
+  <name>Stein am Rhein (SH)</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Stein_am_Rhein_.28SH.29&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6893889" lon="8.7505806">
+  <name>Diessenhofen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Diessenhofen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6931028" lon="8.6394667">
+  <name>Schaffhausen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Schaffhausen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6514528" lon="8.5710639">
+  <name>Jestetten</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Jestetten&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6300028" lon="8.5730528">
+  <name>Lottstetten</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Lottstetten&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6122333" lon="8.5372111">
+  <name>Rafz</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rafz&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.5951722" lon="8.4935444">
+  <name>Hüntwangen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#H.C3.BCntwangen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.5846389" lon="8.4605111">
+  <name>Günzgen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#G.C3.BCnzgen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.5879333" lon="8.3049917">
+  <name>Küssaberg-Rheinheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#K.C3.BCssaberg-Rheinheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6076111" lon="8.2961444">
+  <name>Kadelburg</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Kadelburg&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6176556" lon="8.26735">
+  <name>Ettikon</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Ettikon&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.610125" lon="8.2324">
+  <name>Waldshut</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Waldshut&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.6061944" lon="8.1764556">
+  <name>Dogern</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Dogern&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.5890389" lon="8.1253472">
+  <name>Albbruck</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Albbruck&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.5642028" lon="8.0608111">
+  <name>Laufenburg</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Laufenburg&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.5544333" lon="7.9474778">
+  <name>Bad Säckingen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Bad_S.C3.A4ckingen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.5928583" lon="7.8802944">
+  <name>Schwörstadt</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Schw.C3.B6rstadt&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.5570361" lon="7.7866472">
+  <name>Rheinfelden</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rheinfelden&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.5607" lon="7.59085">
+  <name>Basel</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Basel&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.589855" lon="7.593492">
+  <name>Weil am Rhein</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Weil_am_Rhein&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="47.816811" lon="7.549717">
+  <name>Neuenburg</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Neuenburg&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="48.023269" lon="7.58295">
+  <name>Breisach</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Breisach&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="48.151864" lon="7.600812">
+  <name>Rheinbrücke Sasbach</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rheinbr.C3.BCcke_Sasbach&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="48.311403" lon="7.714643">
+  <name>Fähre Rhinau</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#F.C3.A4hre_Rhinau&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="48.569583" lon="7.806445">
+  <name>Kehl</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Kehl&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="48.753803" lon="7.973363">
+  <name>Fähre Drusenheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#F.C3.A4hre_Drusenheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="48.844897" lon="8.11742">
+  <name>Wintersdorfer Brücke (rechtes Ufer)</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Wintersdorfer_Br.C3.BCcke_.28rechtes_Ufer.29&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="48.883947" lon="8.150931">
+  <name>Plittersdorf</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Plittersdorf&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="48.890859" lon="8.192256">
+  <name>Steinmauern</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Steinmauern&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="48.975449" lon="8.261418">
+  <name>Neuburgweier</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Neuburgweier&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.038183" lon="8.298168">
+  <name>Maximiliansau</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Maximiliansau&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.125675" lon="8.3567083">
+  <name>Leimersheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Leimersheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.2186389" lon="8.3831333">
+  <name>Germersheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Germersheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.2453556" lon="8.3520806">
+  <name>Lingenfeld</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Lingenfeld&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.2873639" lon="8.39925">
+  <name>Berghausen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Berghausen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.317225" lon="8.4413694">
+  <name>Speyer</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Speyer&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.3739194" lon="8.4581194">
+  <name>Otterstadt</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Otterstadt&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.4337083" lon="8.5054833">
+  <name>Altrip</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Altrip&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.4466583" lon="8.4290556">
+  <name>Rheingönheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rheing.C3.B6nheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.4826917" lon="8.4506556">
+  <name>Ludwigshafen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Ludwigshafen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.5729472" lon="8.4193056">
+  <name>Petersau</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Petersau&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.630585" lon="8.376271">
+  <name>Worms</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Worms&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.6977556" lon="8.3584028">
+  <name>Rheindürkheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rheind.C3.BCrkheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.7303917" lon="8.4317139">
+  <name>Hamm</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Hamm&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.7610111" lon="8.4345389">
+  <name>Steinwörth</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Steinw.C3.B6rth&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.8084139" lon="8.3917667">
+  <name>Fähranleger Guntersblum</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#F.C3.A4hranleger_Guntersblum&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.8574722" lon="8.3604806">
+  <name>Oppenheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Oppenheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.8714111" lon="8.3445111">
+  <name>Nierstein</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Nierstein&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.915675" lon="8.3475667">
+  <name>Nackenheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Nackenheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.967574" lon="8.324229">
+  <name>Mainz-Laubenheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Mainz-Laubenheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.9910639" lon="8.2902583">
+  <name>Mainz-Weisenau</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Mainz-Weisenau&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.0052056" lon="8.2734028">
+  <name>Mainz</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Mainz&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.026775" lon="8.1713083">
+  <name>Budenheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Budenheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.0091917" lon="8.0986556">
+  <name>Heidenfahrt</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Heidenfahrt&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.9923083" lon="8.0225806">
+  <name>Ingelheim Frei-Weinheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Ingelheim_Frei-Weinheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.96629" lon="7.961204">
+  <name>Gaulsheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Gaulsheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="49.9688556" lon="7.8903361">
+  <name>Bingen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Bingen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.0099333" lon="7.8518028">
+  <name>Trechtingshausen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Trechtingshausen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.033227" lon="7.809173">
+  <name>Niederheimbach</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Niederheimbach&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.0599222" lon="7.7695944">
+  <name>Bacharach</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Bacharach&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.1076222" lon="7.7281917">
+  <name>Oberwesel</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Oberwesel&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.1514528" lon="7.7135">
+  <name>St. Goar</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#St._Goar&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.1783083" lon="7.6441389">
+  <name>Hirzenach</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Hirzenach&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.2066833" lon="7.63545">
+  <name>Bad Salzig</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Bad_Salzig&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.2328917" lon="7.5888167">
+  <name>Boppard</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Boppard&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.2601472" lon="7.6499167">
+  <name>Spay</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Spay&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.2820278" lon="7.6202639">
+  <name>Rhens</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rhens&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.3045889" lon="7.5937444">
+  <name>Stolzenfels</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Stolzenfels&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.364478" lon="7.605987">
+  <name>Koblenz</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Koblenz&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.4130167" lon="7.5621806">
+  <name>Sankt Sebastian</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Sankt_Sebastian&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.4158417" lon="7.4600361">
+  <name>Weißenthurm</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Wei.C3.9Fenthurm&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.4416806" lon="7.4052917">
+  <name>Andernach</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Andernach&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.4546528" lon="7.3605972">
+  <name>Namedy</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Namedy&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.4865833" lon="7.3279167">
+  <name>Brohl-Lützing</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Brohl-L.C3.BCtzing&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.511775" lon="7.299972">
+  <name>Bad Breisig</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Bad_Breisig&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.5618306" lon="7.2750889">
+  <name>Kripp</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Kripp&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.579275" lon="7.2346972">
+  <name>Remagen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Remagen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.6145694" lon="7.2094417">
+  <name>Oberwinter</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Oberwinter&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.63178" lon="7.20871">
+  <name>Rolandseck</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rolandseck&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.644979" lon="7.206348">
+  <name>Rolandswerth</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rolandswerth&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.662379" lon="7.196027">
+  <name>Mehlem</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Mehlem&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.6885722" lon="7.1726056">
+  <name>Bad Godesberg</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Bad_Godesberg&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.7377944" lon="7.1071389">
+  <name>Bonn</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Bonn&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.7764056" lon="7.0429944">
+  <name>Hersel</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Hersel&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.8266667" lon="6.9838">
+  <name>Wesseling</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Wesseling&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.8731167" lon="7.0344028">
+  <name>Weiß</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Wei.C3.9F&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="50.9414917" lon="6.9626583">
+  <name>Köln</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#K.C3.B6ln&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.0253806" lon="6.9588278">
+  <name>Merkenich</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Merkenich&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.0678694" lon="6.8649528">
+  <name>Worringen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Worringen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.084565" lon="6.848459">
+  <name>Dormagen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Dormagen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.1258572" lon="6.8500217">
+  <name>Zons</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Zons&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.1408841" lon="6.815685">
+  <name>Stürzelberg</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#St.C3.BCrzelberg&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.187376" lon="6.775289">
+  <name>Düsseldorf-Flehe</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#D.C3.BCsseldorf-Flehe&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.21782" lon="6.76242">
+  <name>Düsseldorf</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#D.C3.BCsseldorf&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.301561" lon="6.733225">
+  <name>Düsseldorf-Kaiserswerth</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#D.C3.BCsseldorf-Kaiserswerth&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.352643" lon="6.682958">
+  <name>Duisburg-Mündelheim</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Duisburg-M.C3.BCndelheim&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.348646" lon="6.654437">
+  <name>Uerdingen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Uerdingen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.4114691" lon="6.7307344">
+  <name>Rheinhausen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rheinhausen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.4364632" lon="6.7098322">
+  <name>Rheinbrücke A40</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rheinbr.C3.BCcke_A40&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.44345" lon="6.7462889">
+  <name>Duisburg-Kasslerfeld</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Duisburg-Kasslerfeld&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.455911" lon="6.728522">
+  <name>Duisburg-Ruhrort</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Duisburg-Ruhrort&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.4725397" lon="6.7011907">
+  <name>Duisburg-Beeckerwerth</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Duisburg-Beeckerwerth&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.4788055" lon="6.6680417">
+  <name>Lohmannsheide</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Lohmannsheide&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.4913342" lon="6.6720572">
+  <name>Baerl</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Baerl&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.5233322" lon="6.6875628">
+  <name>Orsoy</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Orsoy&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.5332094" lon="6.6388545">
+  <name>Budberg</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Budberg&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.5453373" lon="6.602587">
+  <name>Rheinberg</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rheinberg&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.58119" lon="6.5786">
+  <name>Ossenberg</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Ossenberg&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.6271354" lon="6.5855612">
+  <name>Büderich</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#B.C3.BCderich&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.644402" lon="6.595048">
+  <name>Fort Blücher</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Fort_Bl.C3.BCcher&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.653082" lon="6.547672">
+  <name>Perrich</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Perrich&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.661239" lon="6.453299">
+  <name>Xanten</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Xanten&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.6944018" lon="6.4320949">
+  <name>Wardt</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Wardt&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.7290218" lon="6.402022">
+  <name>Obermörmter</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Oberm.C3.B6rmter&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.7446914" lon="6.3839837">
+  <name>Niedermörmter</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Niederm.C3.B6rmter&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.77377" lon="6.290174">
+  <name>Wissel</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Wissel&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.8213751" lon="6.2257249">
+  <name>Rheinbrücke bei Emmerich</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rheinbr.C3.BCcke_bei_Emmerich&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.7904104" lon="6.1376132">
+  <name>Kleve</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Kleve&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.8601687" lon="6.0603112">
+  <name>Niederländische Grenze</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Niederl.C3.A4ndische_Grenze&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.84877" lon="5.869789">
+  <name>Nijmegen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Nijmegen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.9072228" lon="5.6566868">
+  <name>Dodewaard</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Dodewaard&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.9046308" lon="5.5662391">
+  <name>Ochten</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Ochten&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.883926" lon="5.4377542">
+  <name>Tiel</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Tiel&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.8125825" lon="5.2149005">
+  <name>Haaften</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Haaften&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.8293066" lon="4.9818125">
+  <name>Binnenstad</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Binnenstad&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.8246237" lon="4.7659945">
+  <name>Sliedrecht</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Sliedrecht&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.9124274" lon="4.4823466">
+  <name>Rotterdam</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Rotterdam&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.9177124" lon="4.3966273">
+  <name>Schiedam</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Schiedam&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.909355" lon="4.344498">
+  <name>Vlaardingen</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Vlaardingen&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.918695" lon="4.2498819">
+  <name>Maassluis</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Maassluis&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+<wpt lat="51.977455" lon="4.125428">
+  <name>Hoek van Holland, Fähranleger</name>
+  <extensions>
+    <ogr:description>
+				&lt;a href=&quot;http://radreise-wiki.de/Rhein#Hoek_van_Holland.2C_F.C3.A4hranleger&quot;&gt;Rhein&lt;/a&gt; 
+			</ogr:description>
+  </extensions>
+</wpt>
+</gpx>
