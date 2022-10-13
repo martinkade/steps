@@ -11,8 +11,16 @@ class SegmentedControl extends StatefulWidget {
   final double elevation;
 
   ///
-  SegmentedControl({Key key, this.options, this.onChange, this.elevation = 8.0})
-      : super(key: key);
+  final bool scrollable;
+
+  ///
+  SegmentedControl({
+    Key key,
+    this.options,
+    this.onChange,
+    this.elevation = 8.0,
+    this.scrollable = true,
+  }) : super(key: key);
 
   @override
   _SegmentedControlState createState() => _SegmentedControlState();
@@ -37,6 +45,13 @@ class _SegmentedControlState extends State<SegmentedControl> {
         )
         .toList();
 
+    final Widget content = Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: options,
+    );
+
     return Card(
       elevation: widget.elevation,
       shadowColor: Colors.grey.withAlpha(50),
@@ -44,15 +59,12 @@ class _SegmentedControlState extends State<SegmentedControl> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: options,
-        ),
-      ),
+      child: widget.scrollable
+          ? SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: content,
+            )
+          : content,
     );
   }
 }

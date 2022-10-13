@@ -46,7 +46,7 @@ class _LandingWelcomeItemState extends State<LandingWelcomeItem> {
             ),
           ),
         ),
-        FlatButton(
+        TextButton(
           child: Text(
             Localizer.translate(context, 'lblActionGetStarted'),
             style: TextStyle(

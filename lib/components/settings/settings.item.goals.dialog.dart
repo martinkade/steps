@@ -44,7 +44,7 @@ class DashboardSettingsActivityLevelDialog extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: activityLevels.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return FlatButton(
+                    return TextButton(
                       child: Text(
                         Localizer.translate(context,
                             'lblDashboardSettingsOption' + index.toString()),
@@ -54,19 +54,6 @@ class DashboardSettingsActivityLevelDialog extends StatelessWidget {
                               ? FontWeight.bold
                               : FontWeight.normal,
                         ),
-                      ),
-                      splashColor:
-                          Theme.of(context).colorScheme.primary.withAlpha(50),
-                      color: selectedLevel == activityLevels[index]
-                          ? Theme.of(context).colorScheme.primary.withAlpha(50)
-                          : Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Theme.of(context).textTheme.bodyText1.color,
-                          width: 1.0,
-                          style: BorderStyle.solid,
-                        ),
-                        borderRadius: BorderRadius.circular(8.0),
                       ),
                       onPressed: () {
                         setDailyTargetPoints(index);

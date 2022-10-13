@@ -113,7 +113,7 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FlatButton(
+            TextButton(
               child: Text(
                 Localizer.translate(context, 'lblActionBack'),
                 style: TextStyle(
@@ -125,8 +125,7 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
                 widget.delegate.previousItem(widget);
               },
             ),
-            FlatButton(
-              disabledTextColor: Colors.grey,
+            TextButton(
               child: Text(
                 Localizer.translate(context, 'lblActionForward'),
                 style: TextStyle(

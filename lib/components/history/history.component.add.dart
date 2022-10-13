@@ -256,7 +256,7 @@ class _HistoryAddState extends State<HistoryAdd> {
                     children: [
                       widget.oldRecord == null
                           ? Container()
-                          : FlatButton(
+                          : TextButton(
                               child: Text(
                                 Localizer.translate(context, 'lblActionDelete'),
                                 style: TextStyle(
@@ -267,7 +267,7 @@ class _HistoryAddState extends State<HistoryAdd> {
                                 _delete();
                               },
                             ),
-                      FlatButton(
+                      TextButton(
                         child: Text(
                           Localizer.translate(context, 'lblActionDone'),
                           style: TextStyle(

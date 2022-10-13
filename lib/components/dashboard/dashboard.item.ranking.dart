@@ -108,26 +108,21 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
   List<OptionModel> _displayGroupOptions(BuildContext context) {
     final List<OptionModel> options = <OptionModel>[];
 
-      options.add(
-        OptionModel(
-          index: 0,
-          isSelected: _selectedGroupModeIndex == FitRanking.fitRankingTypeSingle,
-          title: Localizer.translate(context, 'lblSingle'),
-        )
-      );
-      options.add(
-          OptionModel(
-            index: 1,
-            isSelected: _selectedGroupModeIndex == FitRanking.fitRankingTypeTeam,
-            title: Localizer.translate(context, 'lblTeam'),
-          )
-      );
+    options.add(OptionModel(
+      index: 0,
+      isSelected: _selectedGroupModeIndex == FitRanking.fitRankingTypeSingle,
+      title: Localizer.translate(context, 'lblSingle'),
+    ));
+    options.add(OptionModel(
+      index: 1,
+      isSelected: _selectedGroupModeIndex == FitRanking.fitRankingTypeTeam,
+      title: Localizer.translate(context, 'lblTeam'),
+    ));
     return options;
   }
 
   @override
   Widget build(BuildContext context) {
-
     final Widget titleWidget = Padding(
       padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),
       child: Text(
@@ -158,28 +153,29 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
                 displayGroupOptions.length == 0
                     ? Container()
                     : Card(
-                  elevation: 8.0,
-                  shadowColor: Colors.grey.withAlpha(50),
-                  clipBehavior: Clip.antiAlias,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Container(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primary
-                        .withAlpha(50),
-                    child: SegmentedControl(
-                      elevation: 0.0,
-                      onChange: (model) {
-                        setState(() {
-                          _selectedGroupModeIndex = model.index;
-                        });
-                      },
-                      options: displayGroupOptions,
-                    ),
-                  ),
-                ),
+                        elevation: 8.0,
+                        shadowColor: Colors.grey.withAlpha(50),
+                        clipBehavior: Clip.antiAlias,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Container(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(50),
+                          child: SegmentedControl(
+                            elevation: 0.0,
+                            onChange: (model) {
+                              setState(() {
+                                _selectedGroupModeIndex = model.index;
+                              });
+                            },
+                            options: displayGroupOptions,
+                            scrollable: false,
+                          ),
+                        ),
+                      ),
                 displayOptions.length == 0
                     ? Container()
                     : Card(
@@ -206,14 +202,13 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
                         ),
                       ),
                 Card(
-                  elevation: 8.0,
-                  shadowColor: Colors.grey.withAlpha(50),
-                  clipBehavior: Clip.antiAlias,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: getList(displayOptions: displayOptions)
-                ),
+                    elevation: 8.0,
+                    shadowColor: Colors.grey.withAlpha(50),
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: getList(displayOptions: displayOptions)),
               ],
             ))
       ],
@@ -238,13 +233,15 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
         height: 196.0,
       );
     } else {
-      final List<FitRankingEntry> list = _boards[_boards.keys.toList()[_selectedTimeModeIndex]];
+      final List<FitRankingEntry> list =
+          _boards[_boards.keys.toList()[_selectedTimeModeIndex]];
       return DashboardRankingList(
-        list: list.where((element) => element.type == _selectedGroupModeIndex).toList(),
-        itemKey: widget.userKey,
-        unitKilometersEnabled: _unitKilometersEnabled,
-        groupType: _selectedGroupModeIndex
-      );
+          list: list
+              .where((element) => element.type == _selectedGroupModeIndex)
+              .toList(),
+          itemKey: widget.userKey,
+          unitKilometersEnabled: _unitKilometersEnabled,
+          groupType: _selectedGroupModeIndex);
     }
   }
 }
@@ -263,18 +260,18 @@ class DashboardRankingList extends StatelessWidget {
   final int groupType;
 
   ///
-  DashboardRankingList({
-    Key key,
-    this.list,
-    this.itemKey,
-    this.unitKilometersEnabled,
-    this.groupType
-  }) : super(key: key);
+  DashboardRankingList(
+      {Key key,
+      this.list,
+      this.itemKey,
+      this.unitKilometersEnabled,
+      this.groupType})
+      : super(key: key);
 
   int getJokeExtraValue() {
     if (DateTime.now().day == 1 && DateTime.now().month == DateTime.april) {
-      final FitRankingEntry me = list.firstWhereOrNull((element) =>
-      element.key == itemKey);
+      final FitRankingEntry me =
+          list.firstWhereOrNull((element) => element.key == itemKey);
       final int extraValue = me?.value ?? 0;
       list.sort((a, b) {
         if (a.key == itemKey) {
@@ -286,6 +283,7 @@ class DashboardRankingList extends StatelessWidget {
     }
     return 0;
   }
+
   @override
   Widget build(BuildContext context) {
     final Widget placeholderWidget = Container(
@@ -311,14 +309,11 @@ class DashboardRankingList extends StatelessWidget {
           itemCount: list.length,
           itemBuilder: (context, index) {
             final FitRankingEntry item = list[index];
-            final int value = item.key == itemKey ? item.value : item.value + extraValue;
+            final int value =
+                item.key == itemKey ? item.value : item.value + extraValue;
             return Container(
               color: item.key == itemKey
-                  ? Theme
-                  .of(context)
-                  .colorScheme
-                  .primary
-                  .withAlpha(50)
+                  ? Theme.of(context).colorScheme.primary.withAlpha(50)
                   : Colors.transparent,
               child: Row(
                 mainAxisSize: MainAxisSize.max,
@@ -347,20 +342,16 @@ class DashboardRankingList extends StatelessWidget {
                         ),
                         border: value > 0
                             ? Border.all(
-                          color: Theme
-                              .of(context)
-                              .textTheme
-                              .bodyText1
-                              .color,
-                        )
+                                color:
+                                    Theme.of(context).textTheme.bodyText1.color,
+                              )
                             : null,
                       ),
                     ),
                   ),
                   Expanded(
                     child: Padding(
-                      padding:
-                      const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+                      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -377,12 +368,10 @@ class DashboardRankingList extends StatelessWidget {
                             textAlign: TextAlign.left,
                           ),
                           Text(
-                            groupType == FitRanking.fitRankingTypeSingle ? ''
-                                '${Localizer.translate(
-                                context, 'lblSingleSync')}: ${item.timestamp}' :
-                            '${Localizer.translate(
-                                context, 'lblTeamUserCount')}: ${item
-                                .userCount}',
+                            groupType == FitRanking.fitRankingTypeSingle
+                                ? ''
+                                    '${Localizer.translate(context, 'lblSingleSync')}: ${item.timestamp}'
+                                : '${Localizer.translate(context, 'lblTeamUserCount')}: ${item.userCount}',
                             textAlign: TextAlign.left,
                           ),
                         ],
@@ -408,10 +397,8 @@ class DashboardRankingList extends StatelessWidget {
                         ),
                         Text(
                           unitKilometersEnabled
-                              ? Localizer.translate(
-                              context, 'lblUnitKilometer')
-                              : Localizer.translate(
-                              context, 'lblUnitPoints'),
+                              ? Localizer.translate(context, 'lblUnitKilometer')
+                              : Localizer.translate(context, 'lblUnitPoints'),
                         ),
                       ],
                     ),

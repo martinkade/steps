@@ -81,7 +81,7 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
                           size: 32.0,
                           color: Colors.green,
                         )
-                      : FlatButton(
+                      : TextButton(
                           onPressed: () {
                             _repository.requestPermissions().then((authorized) {
                               if (!mounted) return;
@@ -109,7 +109,7 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FlatButton(
+            TextButton(
               child: Text(
                 Localizer.translate(context, 'lblActionBack'),
                 style: TextStyle(
@@ -121,7 +121,7 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
                 widget.delegate.previousItem(widget);
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 Localizer.translate(context, 'lblActionDone'),
                 style: TextStyle(
