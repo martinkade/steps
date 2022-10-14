@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
+import android.os.Bundle
 import androidx.annotation.NonNull
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -12,6 +13,7 @@ import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.DataType
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.util.*
 
@@ -30,34 +32,50 @@ class MainActivity : FlutterActivity() {
     private var pendingResult: MethodChannel.Result? = null
     private val fitnessOptions: FitnessOptions
         get() = FitnessOptions.builder()
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_MOVE_MINUTES, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.AGGREGATE_MOVE_MINUTES, FitnessOptions.ACCESS_READ)
-                .build()
+            .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+            .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+            .addDataType(DataType.TYPE_MOVE_MINUTES, FitnessOptions.ACCESS_READ)
+            .addDataType(DataType.AGGREGATE_MOVE_MINUTES, FitnessOptions.ACCESS_READ)
+            .build()
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL_FITNESS).setMethodCallHandler { call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CHANNEL_FITNESS
+        ).setMethodCallHandler { call, result ->
             // Note: this method is invoked on the main thread.
             if (call.method == "getFitnessMetrics") {
                 MainActivity@ this.pendingResult = result
                 MainActivity@ this.pendingCall = call
-                val account: GoogleSignInAccount = GoogleSignIn.getAccountForExtension(this, fitnessOptions)
+                val account: GoogleSignInAccount =
+                    GoogleSignIn.getAccountForExtension(this, fitnessOptions)
                 if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
-                    GoogleSignIn.requestPermissions(this, REQUEST_CODE_DATA_AUTH, account, fitnessOptions)
+                    GoogleSignIn.requestPermissions(
+                        this,
+                        REQUEST_CODE_DATA_AUTH,
+                        account,
+                        fitnessOptions
+                    )
                 } else {
                     handleDataCall(call, result)
                 }
             } else if (call.method == "isAuthenticated") {
-                val account: GoogleSignInAccount = GoogleSignIn.getAccountForExtension(this, fitnessOptions)
+                val account: GoogleSignInAccount =
+                    GoogleSignIn.getAccountForExtension(this, fitnessOptions)
                 result.success(GoogleSignIn.hasPermissions(account, fitnessOptions))
             } else if (call.method == "authenticate") {
-                val account: GoogleSignInAccount = GoogleSignIn.getAccountForExtension(this, fitnessOptions)
+                val account: GoogleSignInAccount =
+                    GoogleSignIn.getAccountForExtension(this, fitnessOptions)
                 if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
                     MainActivity@ this.pendingResult = result
                     MainActivity@ this.pendingCall = call
-                    GoogleSignIn.requestPermissions(this, REQUEST_CODE_AUTH, account, fitnessOptions)
+                    GoogleSignIn.requestPermissions(
+                        this,
+                        REQUEST_CODE_AUTH,
+                        account,
+                        fitnessOptions
+                    )
                 } else {
                     result.success(true)
                 }
@@ -69,7 +87,10 @@ class MainActivity : FlutterActivity() {
                 result.notImplemented()
             }
         }
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL_NOTIFICATION).setMethodCallHandler { call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CHANNEL_NOTIFICATION
+        ).setMethodCallHandler { call, result ->
             // Note: this method is invoked on the main thread.
             if (call.method == "isNotificationsEnabled") {
                 result.success(isNotificationsEnabled())
@@ -98,7 +119,11 @@ class MainActivity : FlutterActivity() {
         task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR)
     }
 
-    private fun handleAuthCall(pendingCall: MethodCall?, pendingResult: MethodChannel.Result?, granted: Boolean) {
+    private fun handleAuthCall(
+        pendingCall: MethodCall?,
+        pendingResult: MethodChannel.Result?,
+        granted: Boolean
+    ) {
         val call = pendingCall
         this.pendingCall = null
 
@@ -172,7 +197,12 @@ class MainActivity : FlutterActivity() {
     private fun cancelNotifications() {
         val intent = Intent(this, JobCommandReceiver::class.java)
         intent.putExtra("notification_type", 1)
-        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_ALARM, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(
+            this,
+            REQUEST_CODE_ALARM,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
         val am: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         am.cancel(pendingIntent)
     }
@@ -190,9 +220,19 @@ class MainActivity : FlutterActivity() {
 
         val intent = Intent(this, JobCommandReceiver::class.java)
         intent.putExtra("notification_type", 1)
-        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_ALARM, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(
+            this,
+            REQUEST_CODE_ALARM,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
         val am: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        am.setRepeating(AlarmManager.RTC_WAKEUP, currentDate.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+        am.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            currentDate.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
     }
 
     private fun createNotificationChannel() {
@@ -200,10 +240,12 @@ class MainActivity : FlutterActivity() {
             val name = getString(R.string.lblNotificationChannelResults)
             val descriptionText = getString(R.string.lblNotificationChannelResultsInfo)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("$packageName.notification.results", name, importance).apply {
-                description = descriptionText
-            }
-            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val channel =
+                NotificationChannel("$packageName.notification.results", name, importance).apply {
+                    description = descriptionText
+                }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }

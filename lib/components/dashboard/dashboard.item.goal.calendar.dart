@@ -190,10 +190,11 @@ class _CalendarWeekDisplayState extends State<_CalendarWeekDisplay> {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
         width: 64.0,
+        height: 64.0,
         child: Column(
           children: [
             CircularPercentIndicator(
-              radius: 64.0,
+              radius: 32.0,
               lineWidth: 4.0,
               percent: min(1.0, this.widget.percent),
               center: Text(

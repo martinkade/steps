@@ -34,20 +34,29 @@ class _SegmentedControlState extends State<SegmentedControl> {
 
   @override
   Widget build(BuildContext context) {
-    final List<SegmentedControlOption> options = widget.options
+    final List<Widget> options = widget.options
         .map(
-          (model) => SegmentedControlOption(
-            model: model,
-            onTap: () {
-              widget.onChange(model);
-            },
-          ),
+          (model) => widget.scrollable
+              ? SegmentedControlOption(
+                  model: model,
+                  onTap: () {
+                    widget.onChange(model);
+                  },
+                )
+              : Expanded(
+                  child: SegmentedControlOption(
+                    model: model,
+                    onTap: () {
+                      widget.onChange(model);
+                    },
+                  ),
+                ),
         )
         .toList();
 
     final Widget content = Row(
       mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: options,
     );
