@@ -8,7 +8,7 @@ class AprilJokes {
   static String botName;
 
   bool isJokeActive(Jokes joke) {
-    if (DateTime.now().day != 1 || DateTime.now().month == DateTime.april) {
+    if (DateTime.now().day != 1 || DateTime.now().month != DateTime.april) {
       return false;
     }
 
