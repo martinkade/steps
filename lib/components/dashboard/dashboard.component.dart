@@ -29,7 +29,9 @@ import 'package:wandr/model/storage.dart';
 
 abstract class DashboardSyncDelegate {
   void onFitnessDataUpdate(FitSnapshot snapshot);
+
   List<FitChallenge> getChallenges();
+
   void onSettingsRequested();
 }
 
@@ -200,8 +202,9 @@ class _DashboardState extends State<DashboardComponent>
       ),
     ).then((_) async {
       (_syncKey.currentState)?.reload();
-      (_rankingKey.currentState)
-          ?.reload(await Preferences().isFlagSet(kFlagUnitKilometers));
+      (_rankingKey.currentState)?.reload(
+          await Preferences().isFlagSet(kFlagUnitKilometers),
+          await Preferences().getDifficultyLevel());
     });
   }
 

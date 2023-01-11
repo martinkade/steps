@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wandr/components/settings/settings.item.difficulty.dart';
 import 'package:wandr/model/fit.challenge.dart';
 
 const kFlagInitialNotifications = 'kFlagInitialNotifications';
@@ -64,6 +65,17 @@ class Preferences {
     return preferences.getInt('kChallengeGoalDaily') ?? DAILY_TARGET_POINTS;
   }
 
+  ///
+  Future<void> setDifficultyLevel(int value) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setInt('kChallengeDifficulty', value);
+  }
+
+  ///
+  Future<int> getDifficultyLevel() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getInt('kChallengeDifficulty') ?? Difficulties.hard.index;
+  }
   ///
   Future<void> setFlag(String key, bool value) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();

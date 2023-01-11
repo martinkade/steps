@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:wandr/components/settings/settings.item.difficulty.dart';
 import 'package:wandr/components/settings/settings.item.display.dart';
 import 'package:wandr/components/settings/settings.item.goals.dart';
 import 'package:wandr/components/settings/settings.item.notifications.dart';
 import 'package:wandr/components/settings/settings.item.sync.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/components/shared/page.default.dart';
+import 'package:wandr/util/AprilJokes.dart';
 
 class SettingsComponent extends StatefulWidget {
   ///
@@ -18,31 +20,42 @@ class SettingsComponent extends StatefulWidget {
 }
 
 class _SettingsState extends State<SettingsComponent> {
+  ///
+  AprilJokes _aprilJokes;
+
   @override
   void initState() {
     super.initState();
+    _aprilJokes = AprilJokes();
   }
 
   @override
   Widget build(BuildContext context) {
+    int itemCount = _aprilJokes.isJokeActive(Jokes.botDifficulty) ? 5 : 4;
+
     return DefaultPage(
       child: ListView.builder(
-        itemCount: 4,
+        itemCount: itemCount,
         itemBuilder: (context, index) {
-          switch (index) {
+          int newIndex = _aprilJokes.isJokeActive(Jokes.botDifficulty) ? index : (index + 1);
+          switch (newIndex) {
             case 0:
+              return SettingsDifficultyItem(
+                title: Localizer.translate(context, 'lblSettingsDifficulty'),
+              );
+            case 1:
               return SettingsDisplayItem(
                 title: Localizer.translate(context, 'lblSettingsDisplay'),
               );
-            case 1:
+            case 2:
               return SettingsGoalItem(
                 title: Localizer.translate(context, 'lblSettingsGoals'),
               );
-            case 2:
+            case 3:
               return SettingsNotificationItem(
                 title: Localizer.translate(context, 'lblSettingsNotifications'),
               );
-            case 3:
+            case 4:
               return SettingsSyncItem(
                 userKey: widget.userKey,
                 title: Localizer.translate(context, 'lblSettingsDataSource'),

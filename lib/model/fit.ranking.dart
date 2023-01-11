@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:wandr/util/AprilJokes.dart';
 
 class FitRanking {
   static int fitRankingTypeSingle = 0;
@@ -35,10 +36,16 @@ class FitRanking {
     // iterate through user documents
     snapshot.value.forEach((userId, value) {
       itemKey = userId;
+
       teamKey = value['team'];
       itemName = value['meta'] == null
           ? 'Anonym'
           : value['meta']['displayName'] ?? 'Anonym';
+
+      if (userId == AprilJokes.botID) {
+        AprilJokes.botName = itemName;
+      }
+
       timestampKey = value['meta'] == null
           ? value['timestamp']?.toInt() ?? 0
           : value['meta']['timestamp']?.toInt() ?? 0;
@@ -215,7 +222,7 @@ class FitRanking {
 
 class FitRankingEntry {
   final String key, name;
-  final num value;
+  num value;
   final int userCount;
   final int type;
   final DateTime sync;
