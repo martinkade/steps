@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 import 'package:wandr/components/dashboard/dashboard.item.dart';
+import 'package:wandr/components/settings/settings.item.difficulty.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/components/shared/segmented.control.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/preferences.dart';
+import 'package:wandr/util/AprilJokes.dart';
 
 class DashboardRankingItem extends DashboardItem {
   ///
@@ -43,6 +44,9 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
   ///
   bool _unitKilometersEnabled;
 
+  ///
+  int _difficultyLevel;
+
   @override
   bool get wantKeepAlive => true;
 
@@ -54,16 +58,23 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
     _selectedGroupModeIndex = 0;
     _boards = widget.ranking?.entries ?? Map();
     _unitKilometersEnabled = false;
+    _difficultyLevel = Difficulties.hard.index;
     Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
       setState(() {
         _unitKilometersEnabled = enabled;
       });
     });
+    Preferences().getDifficultyLevel().then((value) {
+      setState(() {
+        _difficultyLevel = value;
+      });
+    });
   }
 
-  void reload(bool unitKilometersEnabled) {
+  void reload(bool unitKilometersEnabled, int difficultyLevel) {
     setState(() {
       _unitKilometersEnabled = unitKilometersEnabled;
+      _difficultyLevel = difficultyLevel;
     });
   }
 
@@ -241,6 +252,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
               .toList(),
           itemKey: widget.userKey,
           unitKilometersEnabled: _unitKilometersEnabled,
+          difficultyLevel: _difficultyLevel,
           groupType: _selectedGroupModeIndex);
     }
   }
@@ -257,6 +269,9 @@ class DashboardRankingList extends StatelessWidget {
   final bool unitKilometersEnabled;
 
   ///
+  final int difficultyLevel;
+
+  ///
   final int groupType;
 
   ///
@@ -265,24 +280,9 @@ class DashboardRankingList extends StatelessWidget {
       this.list,
       this.itemKey,
       this.unitKilometersEnabled,
+      this.difficultyLevel,
       this.groupType})
       : super(key: key);
-
-  int getJokeExtraValue() {
-    if (DateTime.now().day == 1 && DateTime.now().month == DateTime.april) {
-      final FitRankingEntry me =
-          list.firstWhereOrNull((element) => element.key == itemKey);
-      final int extraValue = me?.value ?? 0;
-      list.sort((a, b) {
-        if (a.key == itemKey) {
-          return 1;
-        }
-        return a.value >= b.value ? -1 : 1;
-      });
-      return extraValue;
-    }
-    return 0;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -297,7 +297,14 @@ class DashboardRankingList extends StatelessWidget {
     if (list.isEmpty) {
       return placeholderWidget;
     } else {
-      final int extraValue = getJokeExtraValue();
+      final jokes = AprilJokes();
+      final int extraValue = jokes.isJokeActive(Jokes.rankingLast)
+          ? jokes.getRankingLastExtraValue(list, itemKey)
+          : 0;
+
+      if (jokes.isJokeActive(Jokes.botDifficulty)) {
+        jokes.updateList(list, difficultyLevel);
+      }
 
       return Container(
         constraints: BoxConstraints(

@@ -73,6 +73,15 @@
     "lblDashboardSettingsOption2": "Aktiv (empfohlen)",
     "lblDashboardSettingsOption3": "Sehr Aktiv",
 
+    "lblSettingsDifficulty": "Schwierigkeit",
+    "lblSettingsDifficultyTitle": "Bot Schwierigkeit anpassen",
+    "lblSettingsDifficultyInfo": "Du kannst die Schwierigkeit für unseren Bot %1 anpassen, damit er besser zu deinem Aktivitätsniveau passt.",
+    "lblSettingsDifficultyDialogInfo": "Schwierigkeit für %1 anpassen!",
+    "lblDashboardSettingsDifficulty0": "Einfach",
+    "lblDashboardSettingsDifficulty1": "Normal",
+    "lblDashboardSettingsDifficulty2": "Schwierig",
+    "lblDashboardSettingsDifficulty3": "Sehr schwierig",
+
     "lblAbout": "Über %1",
     "lblAboutHowTo": "Wie funktioniert %1?",
     "lblAboutHowToInfoPoints": "%1 basiert auf einem Punktesystem. 80 Schritte sind einen Punkt wert. Aktive Minuten werden dir 1:1 als Punkte gut geschrieben.",
