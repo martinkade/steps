@@ -1,5 +1,5 @@
 abstract class FitDao {
-  String buildStatement(String placeholderStatement, List<dynamic> values) {
+  String buildStatement(String placeholderStatement, List<dynamic>? values) {
     final List<String> components = placeholderStatement.split('?');
     if (components.length != (values?.length ?? 0) + 1) {
       final String error =

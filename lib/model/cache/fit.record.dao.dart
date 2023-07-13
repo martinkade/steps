@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:wandr/model/cache/fit.dao.spec.dart';
 import 'package:wandr/model/cache/structured.cache.dart';
@@ -27,27 +26,27 @@ class FitRecordDao extends FitDao {
       'DROP TABLE IF EXISTS ${FitRecordDao.TBL_NAME}';
 
   ///
-  static Future<void> create({@required Transaction txn}) async {
+  static Future<void> create({required Transaction txn}) async {
     await txn.execute(FitRecordDao.CMD_DROP_TABLE);
     await txn.execute(FitRecordDao.CMD_CREATE_TABLE);
   }
 
   ///
   static Future<void> upgrade(int fromVersion, int toVersion,
-      {@required Transaction txn}) async {
+      {required Transaction txn}) async {
     await txn.execute(FitRecordDao.CMD_DROP_TABLE);
     await txn.execute(FitRecordDao.CMD_CREATE_TABLE);
   }
 
   ///
   static Future<void> downgrade(int fromVersion, int toVersion,
-      {@required Transaction txn}) async {
+      {required Transaction txn}) async {
     await txn.execute(FitRecordDao.CMD_DROP_TABLE);
     await txn.execute(FitRecordDao.CMD_CREATE_TABLE);
   }
 
   ///
-  Future<void> insertOrReplace({@required List<FitRecord> records}) async {
+  Future<void> insertOrReplace({required List<FitRecord> records}) async {
     final Database db = await StructuredCache().getDb();
     await db.transaction((txn) async {
       String statement;
@@ -72,8 +71,8 @@ class FitRecordDao extends FitDao {
 
   ///
   Future<void> restore({
-    @required List<FitRecord> oldRecords,
-    @required List<FitRecord> records,
+    required List<FitRecord> oldRecords,
+    required List<FitRecord> records,
   }) async {
     final Database db = await StructuredCache().getDb();
     await db.transaction((txn) async {
@@ -99,7 +98,7 @@ class FitRecordDao extends FitDao {
 
   ///
   Future<void> delete({
-    @required List<FitRecord> records,
+    required List<FitRecord> records,
     bool exclude = false,
   }) async {
     final String idList = records.map((it) => '${it.idString}').join(',');
@@ -112,8 +111,8 @@ class FitRecordDao extends FitDao {
 
   ///
   Future<List<FitRecord>> fetch({
-    @required DateTime from,
-    bool onlyManualRecords,
+    required DateTime from,
+    bool onlyManualRecords = false,
   }) async {
     final Database db = await StructuredCache().getDb();
     final String statement = onlyManualRecords
@@ -135,7 +134,7 @@ class FitRecordDao extends FitDao {
   }
 
   ///
-  Future<List<FitRecord>> fetchAll({DateTime from}) async {
+  Future<List<FitRecord>> fetchAll({DateTime? from}) async {
     final Database db = await StructuredCache().getDb();
     final List<Map<String, dynamic>> result = await db.rawQuery(
         'SELECT * FROM ${FitRecordDao.TBL_NAME} ' +
@@ -153,8 +152,8 @@ class FitRecordDao extends FitDao {
 
   ///
   Future<List<FitRecord>> fetchAllByDayAndPoints({
-    DateTime from,
-    DateTime to,
+    DateTime? from,
+    DateTime? to,
   }) async {
     final Database db = await StructuredCache().getDb();
     final List<Map<String, dynamic>> result = await db.rawQuery(
@@ -178,7 +177,7 @@ class FitRecordDao extends FitDao {
   }
 
   ///
-  Future<List<FitRecord>> fetchAllOfDay({String day}) async {
+  Future<List<FitRecord>> fetchAllOfDay({required String day}) async {
     final Database db = await StructuredCache().getDb();
     final List<Map<String, dynamic>> result = await db.rawQuery(
         'SELECT *, date(${FitRecordDao.COL_TIMESTAMP} / 1000, \'unixepoch\', \'localtime\') AS _day FROM ${FitRecordDao.TBL_NAME} ' +
@@ -206,7 +205,7 @@ class FitRecordDao extends FitDao {
     final List<AverageRecord> records = <AverageRecord>[];
     for (Map<String, dynamic> cursor in result) {
       record = AverageRecord();
-      record.dayIndex = int.tryParse(cursor['_day']);
+      record.dayIndex = int.tryParse(cursor['_day']) ?? 0;
       record.value = cursor['_avg'];
       records.add(record);
     }

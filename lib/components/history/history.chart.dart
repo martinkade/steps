@@ -1,16 +1,12 @@
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/calendar.dart';
 import 'package:wandr/model/fit.record.dart';
 
-import 'dart:math' show Rectangle, max;
-import 'package:charts_flutter/src/text_element.dart' as chartsTextElement;
-import 'package:charts_flutter/src/text_style.dart' as chartsTextStyle;
-
 class HistoryChart extends StatefulWidget {
   ///
-  final List<charts.Series> series;
+  final _ChartData series;
 
   ///
   final bool animate;
@@ -26,12 +22,12 @@ class HistoryChart extends StatefulWidget {
 
   ///
   HistoryChart({
-    Key key,
-    @required this.series,
-    @required this.target,
-    @required this.unitKilometersEnabled,
-    @required this.theme,
-    this.animate,
+    Key? key,
+    required this.series,
+    required this.target,
+    required this.unitKilometersEnabled,
+    required this.theme,
+    this.animate = false,
   }) : super(key: key);
 
   @override
@@ -40,10 +36,10 @@ class HistoryChart extends StatefulWidget {
   ///
   factory HistoryChart.withData(List<FitRecord> data,
       {int target = 0,
-      @required bool unitKilometersEnabled,
-      Color color,
-      @required ThemeData theme,
-      bool animate}) {
+      required bool unitKilometersEnabled,
+      Color? color,
+      required ThemeData theme,
+      bool animate = false}) {
     return HistoryChart(
       series: _createData(
         data,
@@ -58,94 +54,209 @@ class HistoryChart extends StatefulWidget {
   }
 
   ///
-  static charts.Color colorFrom(Color color) {
-    return charts.Color(
-      r: color.red,
-      g: color.green,
-      b: color.blue,
-      a: color.alpha,
+  static _ChartData _createData(List<FitRecord> data,
+      {required ThemeData theme, bool unitKilometersEnabled = false}) {
+    final double minX = 0.0, maxX = data.length - 1;
+    double minY = 1000.0, maxY = 0.0, x = 0.0, y = 0.0;
+    final List<FlSpot> dataset = <FlSpot>[];
+    data.forEach((record) {
+      y = unitKilometersEnabled
+          ? (record.value / 12.0).toDouble()
+          : record.value.toDouble();
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+      dataset.add(FlSpot(
+          x.toDouble(), // record.dateTime,
+          y));
+      x += 1;
+    });
+    return _ChartData(
+      dataset: dataset,
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
     );
-  }
-
-  ///
-  static List<charts.Series<FitRecord, DateTime>> _createData(
-      List<FitRecord> data,
-      {ThemeData theme,
-      bool unitKilometersEnabled}) {
-    final charts.Color seriesColor = colorFrom(theme.colorScheme.primary);
-    return [
-      charts.Series<FitRecord, DateTime>(
-        id: 'points',
-        colorFn: (FitRecord record, _) => seriesColor,
-        domainFn: (FitRecord record, _) => record.dateTime,
-        measureFn: (FitRecord record, _) =>
-            unitKilometersEnabled ? record.value / 12.0 : record.value,
-        data: data,
-      ),
-    ];
   }
 }
 
-class _HistoryChartState extends State<HistoryChart>
-    implements TooltipRendererDelegate {
+class _ChartData {
+  final List<FlSpot> dataset;
+  final double minX, maxX, minY, maxY;
+  const _ChartData(
+      {required this.dataset,
+      required this.minX,
+      required this.maxX,
+      required this.minY,
+      required this.maxY});
+}
+
+class _HistoryChartState extends State<HistoryChart> {
   ///
-  FitRecord _record;
+  FitRecord? _record;
 
   @override
   void initState() {
     super.initState();
   }
 
-  @override
-  String tooltipGetValue() {
-    return _record == null
-        ? '-'
-        : '${_record?.valueString(displayKilometers: widget.unitKilometersEnabled)} ${widget.unitKilometersEnabled ? Localizer.translate(context, 'lblUnitKilometer') : Localizer.translate(context, 'lblUnitPoints')}';
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+
+    print(value.toInt());
+
+    Widget text;
+    if (value.toInt() == widget.series.maxX)
+      text = Text(Localizer.translate(context, 'lblToday'),
+          style: style, textAlign: TextAlign.left);
+    else
+      text = const Text('', style: style);
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: text,
+      fitInside: const SideTitleFitInsideData(
+        enabled: true,
+        distanceFromEdge: 0.0,
+        parentAxisSize: 0,
+        axisPosition: 0,
+      ),
+    );
   }
 
-  @override
-  String tooltipGetDate() {
-    return _record == null
-        ? '-'
-        : '${_record?.relativeDate(context, calendar: Calendar(), now: DateTime.now()) ?? '-'}';
-  }
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 15,
+    );
 
-  ///
-  void _infoSelectionModelUpdated(charts.SelectionModel<DateTime> model) {
-    FitRecord record;
-    if (model.selectedDatum.isNotEmpty) {
-      record = model.selectedDatum.first.datum;
-    }
-    if (record != null && _record?.dateString != record.dateString) {
-      _record = record;
-    }
+    int mod = 50;
+    if (widget.series.maxY < 100) mod = 25;
+
+    String text;
+    if (value.toInt() % mod == 0)
+      text = '${value.toInt()}';
+    else
+      return Container();
+
+    return Text(text, style: style, textAlign: TextAlign.left);
   }
 
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-    final charts.Color primaryColor = HistoryChart.colorFrom(
-      widget.theme.colorScheme.primary.withAlpha(128),
-    );
-    final charts.Color tooltipBackgoundColor = HistoryChart.colorFrom(
-      widget.theme.scaffoldBackgroundColor.withAlpha(172),
-    );
-    final charts.Color tooltipTextColor = HistoryChart.colorFrom(
-      widget.theme.textTheme.bodyText1.color,
+    final LineChartData chartData = LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+        getDrawingHorizontalLine: (value) {
+          return const FlLine(
+            color: const Color(0xffcccccc),
+            strokeWidth: 0,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return const FlLine(
+            color: const Color(0xffcccccc),
+            strokeWidth: 0,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            interval: 1,
+            getTitlesWidget: bottomTitleWidgets,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 30,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border(
+            left: BorderSide(color: const Color(0xffcccccc)),
+            bottom: BorderSide(color: const Color(0xffcccccc)),
+            right: BorderSide.none,
+            top: BorderSide.none),
+      ),
+      minX: widget.series.minX,
+      maxX: widget.series.maxX,
+      minY: widget.series.minY,
+      maxY: widget.series.maxY,
+      lineBarsData: [
+        LineChartBarData(
+          spots: widget.series.dataset,
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: <Color>[
+              widget.theme.colorScheme.secondary.withAlpha(32),
+              widget.theme.colorScheme.secondary.withAlpha(192),
+            ],
+          ),
+          barWidth: 2.0,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: <Color>[
+                widget.theme.colorScheme.primary.withAlpha(16),
+                widget.theme.colorScheme.primary.withAlpha(96),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          Localizer.translate(context, 'lblHistoryChartTapInstruction'),
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Text(
+            Localizer.translate(
+              context,
+              widget.unitKilometersEnabled
+                  ? 'lblUnitKilometer'
+                  : 'lblUnitPoints',
+            ),
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-        Container(
-          height: width * 0.33,
-          child: charts.TimeSeriesChart(
+        Container(height: width * 0.33, child: LineChart(chartData)),
+      ],
+    );
+  }
+}
+
+/*
+ charts.TimeSeriesChart(
             widget.series,
             selectionModels: [
               charts.SelectionModelConfig(
@@ -219,104 +330,4 @@ class _HistoryChartState extends State<HistoryChart>
               ),
             ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-abstract class TooltipRendererDelegate {
-  String tooltipGetValue();
-  String tooltipGetDate();
-}
-
-class TooltipRenderer extends charts.CircleSymbolRenderer {
-  ///
-  final TooltipRendererDelegate delegate;
-
-  ///
-  final charts.Color dotColor;
-
-  ///
-  final charts.Color backgroundColor;
-
-  ///
-  final charts.Color textColor;
-
-  ///
-  final num chartWidth;
-
-  ///
-  TooltipRenderer({
-    @required this.delegate,
-    this.chartWidth = 0,
-    this.dotColor = charts.Color.black,
-    this.backgroundColor = charts.Color.black,
-    this.textColor = charts.Color.white,
-  });
-
-  @override
-  void paint(charts.ChartCanvas canvas, Rectangle<num> bounds,
-      {List<int> dashPattern,
-      charts.Color fillColor,
-      charts.FillPatternType fillPattern,
-      charts.Color strokeColor,
-      double strokeWidthPx}) {
-    super.paint(canvas, bounds,
-        dashPattern: dashPattern,
-        fillColor: dotColor,
-        strokeColor: dotColor,
-        strokeWidthPx: 1);
-
-    final textStyle = chartsTextStyle.TextStyle();
-    textStyle.color = textColor;
-    textStyle.fontSize = 12;
-
-    final chartsTextElement.TextElement valueElement =
-        chartsTextElement.TextElement(delegate.tooltipGetValue(),
-            style: textStyle);
-
-    final chartsTextElement.TextElement dateElement =
-        chartsTextElement.TextElement(delegate.tooltipGetDate(),
-            style: textStyle);
-
-    final num bubblePadding = 8.0;
-    final num bubbleElementSpacing = 4.0;
-    final num bubbleHeight = 2.0 * bubblePadding +
-        bubbleElementSpacing +
-        valueElement.measurement.verticalSliceWidth +
-        dateElement.measurement.verticalSliceWidth;
-    final num bubbleWidth = max(valueElement.measurement.horizontalSliceWidth,
-            dateElement.measurement.horizontalSliceWidth) +
-        2.0 * bubblePadding;
-    final num bubbleRadius = 8.0;
-    final num bubbleBoundLeft = bounds.left + bubbleWidth > chartWidth - 44.0
-        ? bounds.left - bubbleWidth
-        : bounds.left;
-    final num bubbleBoundTop = bounds.top - bubbleHeight - 4.0;
-
-    canvas.drawRRect(
-      Rectangle(bubbleBoundLeft, bubbleBoundTop, bubbleWidth, bubbleHeight),
-      fill: backgroundColor,
-      stroke: backgroundColor,
-      radius: bubbleRadius,
-      roundTopLeft: true,
-      roundBottomLeft: true,
-      roundBottomRight: true,
-      roundTopRight: true,
-    );
-
-    final num valueElementBoundsLeft = bubbleBoundLeft + bubblePadding;
-    final num valueElementBoundsTop = bubbleBoundTop + bubblePadding;
-    canvas.drawText(valueElement, valueElementBoundsLeft.toInt(),
-        valueElementBoundsTop.toInt());
-
-    final num dateElementBoundsLeft = bubbleBoundLeft + bubblePadding;
-    final num dateElementBoundsTop = bubbleBoundTop +
-        bubblePadding +
-        valueElement.measurement.verticalSliceWidth +
-        bubbleElementSpacing;
-    canvas.drawText(dateElement, dateElementBoundsLeft.toInt(),
-        dateElementBoundsTop.toInt());
-  }
-}
+ */

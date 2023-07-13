@@ -12,10 +12,10 @@ import 'package:wandr/components/shared/route.transition.dart';
 
 class Landing extends StatefulWidget {
   ///
-  final String title;
+  final String? title;
 
   ///
-  Landing({Key key, this.title}) : super(key: key);
+  Landing({Key? key, this.title}) : super(key: key);
 
   @override
   _LandingState createState() => _LandingState();
@@ -23,16 +23,16 @@ class Landing extends StatefulWidget {
 
 class _LandingState extends State<Landing> implements LandingDelegate {
   ///
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
 
   ///
   int _cardIndex = 0;
 
   ///
-  String _title;
+  String? _title;
 
   ///
-  String _subtitle;
+  String? _subtitle;
 
   @override
   void initState() {
@@ -219,7 +219,7 @@ class _LandingState extends State<Landing> implements LandingDelegate {
                         padding:
                             const EdgeInsets.fromLTRB(22.0, 64.0, 22.0, 0.0),
                         child: Text(
-                          _subtitle,
+                          _subtitle ?? '{{ subtitle }}',
                           style: TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.normal,
@@ -230,7 +230,7 @@ class _LandingState extends State<Landing> implements LandingDelegate {
                         padding:
                             const EdgeInsets.fromLTRB(22.0, 0.0, 22.0, 24.0),
                         child: Text(
-                          _title,
+                          _title ?? '{{ title }}',
                           style: TextStyle(
                             fontSize: 28.0,
                             fontWeight: FontWeight.bold,

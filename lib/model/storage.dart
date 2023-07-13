@@ -3,12 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:wandr/__secrets.dart';
 
 class Storage {
-  FirebaseApp _app;
+  FirebaseApp? _app;
   static final Storage _instance = Storage._internal();
   factory Storage() => _instance;
   Storage._internal();
 
-  Future<FirebaseApp> access() async {
+  Future<FirebaseApp?> access() async {
     const String projectName = 'jovial-engine-286206';
     if (_app == null) {
       if (Firebase.apps.isEmpty) {

@@ -4,7 +4,8 @@ import 'package:wandr/model/fit.plugin.dart';
 
 class DashboardFooterItem extends DashboardItem {
   ///
-  DashboardFooterItem({Key key, String title}) : super(key: key, title: title);
+  DashboardFooterItem({Key? key, required String title})
+      : super(key: key, title: title);
 
   @override
   _DashboardFooterItemState createState() => _DashboardFooterItemState();
@@ -12,7 +13,7 @@ class DashboardFooterItem extends DashboardItem {
 
 class _DashboardFooterItemState extends State<DashboardFooterItem> {
   ///
-  String _appVersion;
+  late String _appVersion;
 
   @override
   void initState() {

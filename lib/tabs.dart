@@ -14,7 +14,7 @@ class Tabs extends StatefulWidget {
   final String title;
 
   ///
-  Tabs({Key key, this.title}) : super(key: key);
+  Tabs({Key? key, required this.title}) : super(key: key);
 
   @override
   _TabsState createState() => _TabsState();
@@ -22,13 +22,13 @@ class Tabs extends StatefulWidget {
 
 class _TabsState extends State<Tabs> {
   ///
-  String _userName;
+  String? _userName;
 
   ///
-  String _teamName;
+  String? _teamName;
 
   ///
-  int _tabIndex;
+  int _tabIndex = 0;
 
   ///
   final List<Widget> _tabWidgets = [];
@@ -37,16 +37,14 @@ class _TabsState extends State<Tabs> {
   void initState() {
     super.initState();
 
-    _tabIndex = 0;
-
     Preferences.getUserKey().then((userValue) {
       if (!mounted) return;
 
-      if (userValue != null) {
+      if (userValue?.isNotEmpty == true) {
         setState(() {
-          _userName = userValue.split('@').first?.replaceAll('.', '_');
+          _userName = userValue!.split('@').first.replaceAll('.', '_');
           print('Init data for kUser=$_userName');
-          _userName = _md5(_userName);
+          _userName = _md5(_userName!);
           _teamName = 'Team mediaBEAM';
         });
 

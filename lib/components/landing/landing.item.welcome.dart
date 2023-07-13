@@ -4,7 +4,8 @@ import 'package:wandr/components/shared/localizer.dart';
 
 class LandingWelcomeItem extends LandingItem {
   ///
-  LandingWelcomeItem({Key key, int index, LandingDelegate delegate})
+  LandingWelcomeItem(
+      {Key? key, required int index, required LandingDelegate delegate})
       : super(key: key, index: index, delegate: delegate);
 
   @override
@@ -28,7 +29,7 @@ class _LandingWelcomeItemState extends State<LandingWelcomeItem> {
             child: Center(
               child: SizedBox(
                 child: Image.asset('assets/images/landing.png',
-                    color: Theme.of(context).textTheme.bodyText1.color),
+                    color: Theme.of(context).textTheme.bodyText1?.color),
                 width: 192.0,
                 height: 128.0,
               ),

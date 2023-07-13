@@ -6,7 +6,8 @@ import 'package:wandr/model/preferences.dart';
 
 class SettingsDisplayItem extends SettingsItem {
   ///
-  SettingsDisplayItem({Key key, String title}) : super(key: key, title: title);
+  SettingsDisplayItem({Key? key, required String title})
+      : super(key: key, title: title);
 
   @override
   _SettingsDisplayItemState createState() => _SettingsDisplayItemState();
@@ -14,10 +15,10 @@ class SettingsDisplayItem extends SettingsItem {
 
 class _SettingsDisplayItemState extends State<SettingsDisplayItem> {
   ///
-  bool _unitKilometersEnabled;
+  bool _unitKilometersEnabled = false;
 
   ///
-  String _displayName;
+  String? _displayName;
 
   @override
   void initState() {

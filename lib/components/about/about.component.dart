@@ -6,7 +6,7 @@ import 'package:wandr/components/shared/page.default.dart';
 
 class About extends StatefulWidget {
   ///
-  About({Key key}) : super(key: key);
+  About({Key? key}) : super(key: key);
 
   @override
   _AboutState createState() => _AboutState();

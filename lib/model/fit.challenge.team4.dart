@@ -11,16 +11,15 @@ class FitChallenge4Team extends FitChallenge {
   ///
   FitChallenge4Team()
       : super(
-          index: 3,
-          startDate: kStartDate,
-          endDate: kEndDate,
-          title: 'Walk Around NRW',
-          description:
-              'Nach unserer kurzen Verschnaufpause starten wir in die nächste Runde. Uns erwarten Berge, Flüsse, Schlösser und Sauerbraten 😊',
-          label: 'Kilometer',
-          imageAsset: 'assets/images/challenge4.jpg',
-          routeAsset: null
-        );
+            index: 3,
+            startDate: kStartDate,
+            endDate: kEndDate,
+            title: 'Walk Around NRW',
+            description:
+                'Nach unserer kurzen Verschnaufpause starten wir in die nächste Runde. Uns erwarten Berge, Flüsse, Schlösser und Sauerbraten 😊',
+            label: 'Kilometer',
+            imageAsset: 'assets/images/challenge4.jpg',
+            routeAsset: null);
 
   @override
   bool get requiresSnapshotData => false;
@@ -34,8 +33,8 @@ class FitChallenge4Team extends FitChallenge {
   }
 
   @override
-  void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = (ranking.challengeTotals[index]?.toDouble() ?? 0.0) / 12.0;
+  void evaluate({FitSnapshot? snapshot, FitRanking? ranking}) {
+    progress = (ranking?.challengeTotals[index].toDouble() ?? 0.0) / 12.0;
     final int totalHours = kEndDate.difference(kStartDate).inHours;
     final int hours = max(0, DateTime.now().difference(kStartDate).inHours);
     final double estimatedPercent = min(1.0, hours / totalHours.toDouble());

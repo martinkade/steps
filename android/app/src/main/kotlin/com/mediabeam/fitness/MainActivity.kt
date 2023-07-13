@@ -1,12 +1,15 @@
 package com.mediabeam.fitness
 
-import android.app.*
+import android.app.Activity
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import androidx.annotation.NonNull
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.fitness.FitnessOptions
@@ -15,7 +18,8 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import java.util.*
+import java.lang.ref.WeakReference
+import java.util.Calendar
 
 // https://developers.google.com/fit/datatypes/activity
 class MainActivity : FlutterActivity() {
@@ -38,7 +42,7 @@ class MainActivity : FlutterActivity() {
             .addDataType(DataType.AGGREGATE_MOVE_MINUTES, FitnessOptions.ACCESS_READ)
             .build()
 
-    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -92,12 +96,16 @@ class MainActivity : FlutterActivity() {
             CHANNEL_NOTIFICATION
         ).setMethodCallHandler { call, result ->
             // Note: this method is invoked on the main thread.
-            if (call.method == "isNotificationsEnabled") {
-                result.success(isNotificationsEnabled())
-            } else if (call.method == "enableNotifications") {
-                result.success(call.argument<Boolean>("enable")?.let { enableNotifications(it) })
-            } else {
-                result.notImplemented()
+            when (call.method) {
+                "isNotificationsEnabled" -> {
+                    result.success(isNotificationsEnabled())
+                }
+                "enableNotifications" -> {
+                    result.success(call.argument<Boolean>("enable")?.let { enableNotifications(it) })
+                }
+                else -> {
+                    result.notImplemented()
+                }
             }
         }
     }
@@ -115,7 +123,7 @@ class MainActivity : FlutterActivity() {
         val result = pendingResult
         this.pendingResult = null
 
-        val task = FitSummaryTask(this, fitnessOptions, result)
+        val task = FitSummaryTask(WeakReference(applicationContext), fitnessOptions, result)
         task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR)
     }
 

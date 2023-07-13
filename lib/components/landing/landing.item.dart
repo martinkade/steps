@@ -8,5 +8,6 @@ abstract class LandingDelegate {
 abstract class LandingItem extends StatefulWidget {
   final int index;
   final LandingDelegate delegate;
-  LandingItem({Key key, this.index, this.delegate}) : super(key: key);
+  LandingItem({Key? key, required this.index, required this.delegate})
+      : super(key: key);
 }

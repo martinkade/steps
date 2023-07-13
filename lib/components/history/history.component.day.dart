@@ -16,7 +16,8 @@ class HistoryDay extends StatefulWidget {
   final int goal;
 
   ///
-  HistoryDay({Key key, this.summary, this.goal}) : super(key: key);
+  HistoryDay({Key? key, required this.summary, required this.goal})
+      : super(key: key);
 
   @override
   _HistoryDayState createState() => _HistoryDayState();
@@ -30,7 +31,7 @@ class _HistoryDayState extends State<HistoryDay> {
   final Calendar _calendar = Calendar();
 
   ///
-  final List<FitRecord> _records = List();
+  final List<FitRecord> _records = <FitRecord>[];
 
   ///
   final FitnessRepository _repository = FitnessRepository();

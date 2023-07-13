@@ -12,9 +12,9 @@ class SettingsSyncItem extends SettingsItem {
 
   ///
   SettingsSyncItem({
-    Key key,
-    String title,
-    this.userKey,
+    Key? key,
+    required String title,
+    required this.userKey,
   }) : super(key: key, title: title);
 
   @override
@@ -26,7 +26,7 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
   final FitnessRepository _repository = FitnessRepository();
 
   ///
-  bool _autoSyncEnabled;
+  bool _autoSyncEnabled = false;
 
   @override
   void initState() {

@@ -15,9 +15,9 @@ class SegmentedControl extends StatefulWidget {
 
   ///
   SegmentedControl({
-    Key key,
-    this.options,
-    this.onChange,
+    Key? key,
+    required this.options,
+    required this.onChange,
     this.elevation = 8.0,
     this.scrollable = true,
   }) : super(key: key);
@@ -82,13 +82,15 @@ class OptionModel {
   final String title;
   final int index;
   final bool isSelected;
-  OptionModel({this.index, this.title, this.isSelected = false});
+  OptionModel(
+      {required this.index, required this.title, this.isSelected = false});
 }
 
 class SegmentedControlOption extends StatelessWidget {
   final OptionModel model;
-  final Function onTap;
-  SegmentedControlOption({Key key, this.model, this.onTap}) : super(key: key);
+  final void Function()? onTap;
+  SegmentedControlOption({Key? key, required this.model, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

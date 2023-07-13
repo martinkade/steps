@@ -5,7 +5,7 @@ import 'package:wandr/model/fit.ranking.dart';
 
 class AprilJokes {
   static String botID = BOT_ID;
-  static String botName;
+  static String? botName;
 
   bool isJokeActive(Jokes joke) {
     if (DateTime.now().day != 1 || DateTime.now().month != DateTime.april) {
@@ -18,12 +18,11 @@ class AprilJokes {
       case Jokes.botDifficulty:
         return DateTime.now().year % 2 == 1;
     }
-    return false;
   }
 
   String getBotName() {
-    if (AprilJokes.botName != null && AprilJokes.botName.isNotEmpty) {
-      return AprilJokes.botName;
+    if (AprilJokes.botName?.isNotEmpty == true) {
+      return AprilJokes.botName!;
     }
     return "Anonymer Bot";
   }
@@ -55,9 +54,9 @@ class AprilJokes {
   }
 
   int getRankingLastExtraValue(List<FitRankingEntry> list, String itemKey) {
-    final FitRankingEntry me =
+    final FitRankingEntry? me =
         list.firstWhereOrNull((element) => element.key == itemKey);
-    final int extraValue = me?.value ?? 0;
+    final int extraValue = (me?.value ?? 0).toInt();
     list.sort((a, b) {
       if (a.key == itemKey) {
         return 1;

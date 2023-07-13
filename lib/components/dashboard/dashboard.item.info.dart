@@ -13,7 +13,7 @@ class DashboardInfoItem extends StatelessWidget {
   final DashboardInfoItemDelegate delegate;
 
   ///
-  DashboardInfoItem({Key key, this.delegate}) : super(key: key);
+  DashboardInfoItem({Key? key, required this.delegate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -101,10 +101,11 @@ class DashboardAction extends StatelessWidget {
   final IconData icon;
 
   ///
-  final Function onTap;
+  final void Function()? onTap;
 
   ///
-  DashboardAction({Key key, this.title, this.icon, this.onTap})
+  DashboardAction(
+      {Key? key, required this.title, required this.icon, this.onTap})
       : super(key: key);
 
   @override

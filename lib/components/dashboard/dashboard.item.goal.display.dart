@@ -18,14 +18,14 @@ class DashboardGoalDisplay extends StatelessWidget {
 
   ///
   const DashboardGoalDisplay({
-    Key key,
-    this.displayType,
+    Key? key,
+    required this.displayType,
     this.start = 0,
-    this.end,
+    required this.end,
     this.estimated = -1,
-    this.target,
-    this.label,
-    this.text,
+    required this.target,
+    required this.label,
+    required this.text,
   }) : super(key: key);
 
   @override

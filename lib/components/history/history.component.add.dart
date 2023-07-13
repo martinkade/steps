@@ -8,10 +8,10 @@ import 'package:intl/intl.dart';
 
 class HistoryAdd extends StatefulWidget {
   ///
-  final FitRecord oldRecord;
+  final FitRecord? oldRecord;
 
   ///
-  HistoryAdd({Key key, this.oldRecord}) : super(key: key);
+  HistoryAdd({Key? key, this.oldRecord}) : super(key: key);
 
   @override
   _HistoryAddState createState() => _HistoryAddState();
@@ -22,28 +22,28 @@ class _HistoryAddState extends State<HistoryAdd> {
   final FitnessRepository _repository = FitnessRepository();
 
   ///
-  TextEditingController _valueInputController;
+  late TextEditingController _valueInputController;
 
   ///
-  FocusNode _valueFocusNode;
+  late FocusNode _valueFocusNode;
 
   ///
-  TextEditingController _nameInputController;
+  late TextEditingController _nameInputController;
 
   ///
-  FocusNode _nameFocusNode;
+  late FocusNode _nameFocusNode;
 
   ///
-  TextEditingController _dateInputController;
+  late TextEditingController _dateInputController;
 
   ///
-  FocusNode _dateFocusNode;
+  late FocusNode _dateFocusNode;
 
   ///
-  int _selectedModeIndex;
+  int _selectedModeIndex = 0;
 
   ///
-  DateTime _selectedDate;
+  DateTime? _selectedDate;
 
   @override
   void initState() {
@@ -58,17 +58,17 @@ class _HistoryAddState extends State<HistoryAdd> {
 
     if (widget.oldRecord != null) {
       _selectedModeIndex =
-          widget.oldRecord.type == FitRecord.TYPE_ACTIVE_MINUTES ? 0 : 1;
-      _selectedDate = widget.oldRecord.dateTime;
-      _nameInputController.text = widget.oldRecord.name;
-      _valueInputController.text = widget.oldRecord.value.toString();
+          widget.oldRecord?.type == FitRecord.TYPE_ACTIVE_MINUTES ? 0 : 1;
+      _selectedDate = widget.oldRecord?.dateTime;
+      _nameInputController.text = widget.oldRecord?.name ?? '';
+      _valueInputController.text = widget.oldRecord?.value.toString() ?? '';
       _dateInputController.text =
-          DateFormat('dd.MM.yyyy').format(_selectedDate);
+          DateFormat('dd.MM.yyyy').format(_selectedDate!);
     } else {
       _selectedModeIndex = 0;
       _selectedDate = DateTime.now();
       _dateInputController.text =
-          DateFormat('dd.MM.yyyy').format(_selectedDate);
+          DateFormat('dd.MM.yyyy').format(_selectedDate!);
     }
   }
 
@@ -80,7 +80,7 @@ class _HistoryAddState extends State<HistoryAdd> {
   void _save() {
     final int value = int.tryParse(_valueInputController.text) ?? 0;
     final String name = _nameInputController.text;
-    final DateTime date = _selectedDate;
+    final DateTime date = _selectedDate!;
     print('$value with name=$name and date $date');
     if (value <= 0) return;
 
@@ -103,14 +103,14 @@ class _HistoryAddState extends State<HistoryAdd> {
   void _delete() {
     if (widget.oldRecord == null) return;
 
-    _repository.deleteRecord(widget.oldRecord).then((_) {
+    _repository.deleteRecord(widget.oldRecord!).then((_) {
       if (!mounted) return;
       Navigator.of(context).pop();
     });
   }
 
   void _pickDate(BuildContext context) {
-    final DateTime date = _selectedDate;
+    final DateTime date = _selectedDate!;
     showDatePicker(
             context: context,
             initialDate: date,
@@ -120,7 +120,7 @@ class _HistoryAddState extends State<HistoryAdd> {
       if (value != null) {
         _selectedDate = value;
         _dateInputController.text =
-            DateFormat('dd.MM.yyyy').format(_selectedDate);
+            DateFormat('dd.MM.yyyy').format(_selectedDate!);
       }
       _dateFocusNode.unfocus();
       _valueFocusNode.requestFocus();

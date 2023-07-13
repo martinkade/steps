@@ -12,19 +12,19 @@ import 'package:wandr/model/repositories/repository.dart';
 
 class DashboardSyncItem extends DashboardItem {
   ///
-  final String userKey;
+  final String? userKey;
 
   ///
-  final String teamName;
+  final String? teamName;
 
   ///
   final DashboardSyncDelegate delegate;
 
   ///
   DashboardSyncItem({
-    Key key,
-    String title,
-    this.delegate,
+    Key? key,
+    required title,
+    required this.delegate,
     this.userKey,
     this.teamName,
   }) : super(key: key, title: title);
@@ -100,20 +100,20 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
     Preferences().hasRestoredData().then((restored) {
       if (restored) {
         _repository.syncPoints(
-          userKey: widget.userKey,
-          teamName: widget.teamName,
+          userKey: widget.userKey!,
+          teamName: widget.teamName!,
           challenges: widget.delegate.getChallenges(),
           client: this,
           pushData: true,
         );
       } else {
         _repository
-            .restorePoints(userKey: widget.userKey, client: this)
+            .restorePoints(userKey: widget.userKey!, client: this)
             .then((_) async {
           await Preferences().setHasRestoredData(true);
           _repository.syncPoints(
-            userKey: widget.userKey,
-            teamName: widget.teamName,
+            userKey: widget.userKey!,
+            teamName: widget.teamName!,
             challenges: widget.delegate.getChallenges(),
             client: this,
             pushData: true,
@@ -126,9 +126,9 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
   @override
   void fitnessRepositoryDidUpdate(
     FitnessRepository repository, {
-    SyncState state,
-    DateTime day,
-    FitSnapshot snapshot,
+    required SyncState state,
+    required DateTime day,
+    required FitSnapshot snapshot,
   }) {
     if (!mounted) return;
     switch (state) {
@@ -137,7 +137,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
         // loading indicator
         break;
       default:
-        widget.delegate?.onFitnessDataUpdate(snapshot);
+        widget.delegate.onFitnessDataUpdate(snapshot);
         break;
     }
 
@@ -213,7 +213,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                       ),
                     ),
                     onTap: () {
-                      widget.delegate?.onSettingsRequested();
+                      widget.delegate.onSettingsRequested();
                     }),
       ),
     );

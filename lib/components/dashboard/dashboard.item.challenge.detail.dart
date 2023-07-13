@@ -16,9 +16,9 @@ class DashboardChallengeDetail extends StatefulWidget {
 
   ///
   DashboardChallengeDetail({
-    Key key,
-    this.challenge,
-    this.index,
+    Key? key,
+    required this.challenge,
+    required this.index,
   }) : super(key: key);
 
   @override
@@ -146,7 +146,7 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
                     Localizer.translate(context, 'lblChallengeExpired')
                         .replaceFirst(
                       '%1',
-                      DateFormat.yMMMMEEEEd(LOCALE ?? 'de_DE')
+                      DateFormat.yMMMMEEEEd(LOCALE)
                           .format(widget.challenge.endDate),
                     ),
                   ),

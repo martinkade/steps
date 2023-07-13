@@ -11,10 +11,9 @@ class Preferences {
   Preferences._internal();
 
   ///
-  static Future<String> getUserKey() async {
+  static Future<String?> getUserKey() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final String value = preferences.getString('kUser');
-    return value;
+    return preferences.getString('kUser');
   }
 
   ///
@@ -74,8 +73,10 @@ class Preferences {
   ///
   Future<int> getDifficultyLevel() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.getInt('kChallengeDifficulty') ?? Difficulties.hard.index;
+    return preferences.getInt('kChallengeDifficulty') ??
+        Difficulties.hard.index;
   }
+
   ///
   Future<void> setFlag(String key, bool value) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();

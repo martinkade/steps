@@ -15,7 +15,8 @@ class FitChallenge7Team extends FitChallenge {
           startDate: kStartDate,
           endDate: kEndDate,
           title: 'WANDR "Rhein"kultur Challenge',
-          description: '1357 km am Rhein entlang – 3 Länder, etliche Flußbiegungen, hunderte Brücken und noch viel mehr Schiffe. Da gibt es immer etwas zu sehen. Schuhe zubinden, Rucksack schultern und los geht’s 😊',
+          description:
+              '1357 km am Rhein entlang – 3 Länder, etliche Flußbiegungen, hunderte Brücken und noch viel mehr Schiffe. Da gibt es immer etwas zu sehen. Schuhe zubinden, Rucksack schultern und los geht’s 😊',
           label: 'Kilometer',
           imageAsset: 'assets/images/challenge7.jpg',
           routeAsset: 'assets/routes/challenge7.gpx',
@@ -33,8 +34,8 @@ class FitChallenge7Team extends FitChallenge {
   }
 
   @override
-  void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = (ranking.challengeTotals[index]?.toDouble() ?? 0.0) / 12.0;
+  void evaluate({FitSnapshot? snapshot, FitRanking? ranking}) {
+    progress = (ranking?.challengeTotals[index].toDouble() ?? 0.0) / 12.0;
     final int totalHours = kEndDate.difference(kStartDate).inHours;
     final int hours = max(0, DateTime.now().difference(kStartDate).inHours);
     final double estimatedPercent = min(1.0, hours / totalHours.toDouble());

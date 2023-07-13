@@ -5,7 +5,8 @@ import 'package:wandr/components/shared/localizer.dart';
 
 class AboutHowtoItem extends AboutItem {
   ///
-  AboutHowtoItem({Key key, String title}) : super(key: key, title: title);
+  AboutHowtoItem({Key? key, required String title})
+      : super(key: key, title: title);
 
   @override
   _AboutHowtoItemState createState() => _AboutHowtoItemState();
@@ -46,7 +47,7 @@ Localizer.translate(context, 'lblAboutHowTo').replaceFirst(
                 padding: const EdgeInsets.fromLTRB(32.0, 0.0, 16.0, 8.0),
                 child: SizedBox(
                   child: Image.asset('assets/images/faq.png',
-                      color: Theme.of(context).textTheme.bodyText1.color),
+                      color: Theme.of(context).textTheme.bodyText1?.color),
                   width: 72.0,
                   height: 72.0,
                 ),

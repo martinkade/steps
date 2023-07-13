@@ -7,10 +7,10 @@ abstract class DashboardTitleDelegate {
 
 class DashboardTitleItem extends DashboardItem {
   ///
-  final DashboardTitleDelegate delegate;
+  final DashboardTitleDelegate? delegate;
 
   ///
-  DashboardTitleItem({Key key, String title, this.delegate})
+  DashboardTitleItem({Key? key, required title, this.delegate})
       : super(key: key, title: title);
 
   @override
@@ -31,7 +31,7 @@ class _DashboardTitleItemState extends State<DashboardTitleItem> {
         child: SizedBox(
           child: Image.asset(
             'assets/images/logo.png',
-            color: Theme.of(context).textTheme.bodyText1.color,
+            color: Theme.of(context).textTheme.bodyText1?.color,
           ),
           width: 192.0,
           height: 36.0,

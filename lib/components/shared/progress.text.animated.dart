@@ -21,12 +21,12 @@ class AnimatedProgressText extends StatefulWidget {
 
   ///
   AnimatedProgressText({
-    Key key,
-    this.start,
-    this.end,
-    this.estimated,
-    this.target,
-    this.label,
+    Key? key,
+    required this.start,
+    required this.end,
+    required this.estimated,
+    required this.target,
+    required this.label,
     this.fontSize = 32.0,
     this.animated = true,
   }) : super(key: key);
@@ -38,16 +38,16 @@ class AnimatedProgressText extends StatefulWidget {
 class _AnimatedProgressTextState extends State<AnimatedProgressText>
     with TickerProviderStateMixin {
   ///
-  Animation<double> _animation;
+  Animation<double>? _animation;
 
   ///
-  AnimationController _controller;
+  AnimationController? _controller;
 
   ///
-  double _displayValue;
+  double _displayValue = 0.0;
 
   ///
-  double _value;
+  double _value = 0.0;
 
   @override
   void initState() {
@@ -69,8 +69,8 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
   }
 
   void _startAnimation() async {
-    if (_controller != null && _controller.isAnimating) {
-      _controller.reset();
+    if (_controller?.isAnimating == true) {
+      _controller!.reset();
     }
 
     _controller = AnimationController(
@@ -82,7 +82,7 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
             end: widget.end.toDouble())
         .animate(
       CurvedAnimation(
-        parent: _controller,
+        parent: _controller!,
         curve: Interval(
           0.0,
           1.0,
@@ -90,18 +90,18 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
         ),
       ),
     );
-    _animation.addListener(() {
+    _animation?.addListener(() {
       setState(() {
-        _displayValue = _animation.value;
+        _displayValue = _animation!.value;
       });
     });
-    _animation.addStatusListener((status) {
+    _animation?.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        _value = _animation.value;
+        _value = _animation!.value;
       }
     });
     try {
-      await _controller.forward().orCancel;
+      await _controller?.forward().orCancel;
     } on TickerCanceled {}
   }
 

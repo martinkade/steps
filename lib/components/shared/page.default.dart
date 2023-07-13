@@ -8,14 +8,15 @@ class DefaultPage extends StatelessWidget {
   final String title;
 
   ///
-  DefaultPage({Key key, this.child, this.title}) : super(key: key);
+  DefaultPage({Key? key, required this.child, required this.title})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Theme.of(context).textTheme.bodyText1.color,
+          color: Theme.of(context).textTheme.bodyText1?.color,
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
@@ -23,7 +24,7 @@ class DefaultPage extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 24.0,
-            color: Theme.of(context).textTheme.bodyText1.color,
+            color: Theme.of(context).textTheme.bodyText1?.color,
           ),
         ),
       ),

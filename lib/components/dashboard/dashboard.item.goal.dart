@@ -11,19 +11,19 @@ import 'package:wandr/model/preferences.dart';
 
 class DashboardGoalItem extends DashboardItem {
   ///
-  final String userKey;
+  final String? userKey;
 
   ///
-  final String teamName;
+  final String? teamName;
 
   ///
   final DashboardSyncDelegate delegate;
 
   ///
   DashboardGoalItem({
-    Key key,
-    String title,
-    this.delegate,
+    Key? key,
+    required String title,
+    required this.delegate,
     this.userKey,
     this.teamName,
   }) : super(key: key, title: title);
@@ -38,7 +38,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
   bool _loading = true;
 
   ///
-  FitSnapshot _snapshot;
+  FitSnapshot? _snapshot;
 
   ///
   int _goalDaily = DAILY_TARGET_POINTS;
@@ -76,7 +76,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
     });
   }
 
-  int get _delta => _goalDaily - (_snapshot?.today ?? 0);
+  int get _delta => _goalDaily - ((_snapshot?.today ?? 0).toInt());
 
   bool get _showMotivation {
     final int hour = DateTime.now().hour;
@@ -173,7 +173,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                     padding: const EdgeInsets.only(right: 8.0),
                     child: DashboardGoalDisplay(
                       displayType: DashboardGoalDisplayType.DAILY,
-                      end: _snapshot?.today ?? 0,
+                      end: (_snapshot?.today ?? 0).toInt(),
                       target: _goalDaily,
                       label: Localizer.translate(
                           context, 'lblDashboardUserStatsToday'),
@@ -181,7 +181,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                               context, 'lblDashboardUserStatsKilometer')
                           .replaceAll(
                         '%1',
-                        _approxKilometers(_snapshot?.today ?? 0),
+                        _approxKilometers((_snapshot?.today ?? 0).toInt()),
                       ),
                     ),
                   ),
@@ -191,7 +191,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                     padding: const EdgeInsets.only(left: 8.0),
                     child: DashboardGoalDisplay(
                       displayType: DashboardGoalDisplayType.WEEKLY,
-                      end: _snapshot?.week ?? 0,
+                      end: (_snapshot?.week ?? 0).toInt(),
                       target: _goalDaily * 7,
                       label: Localizer.translate(
                           context, 'lblDashboardUserStatsWeek'),
@@ -199,7 +199,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                               context, 'lblDashboardUserStatsKilometer')
                           .replaceAll(
                         '%1',
-                        _approxKilometers(_snapshot?.week ?? 0),
+                        _approxKilometers((_snapshot?.week ?? 0).toInt()),
                       ),
                     ),
                   ),

@@ -10,9 +10,9 @@ class DashboardSettingsDifficultyLevelDialog extends StatelessWidget {
   final int selectedLevel;
 
   DashboardSettingsDifficultyLevelDialog({
-    this.setDifficultyLevel,
-    this.difficultyLevels,
-    this.selectedLevel,
+    required this.setDifficultyLevel,
+    required this.difficultyLevels,
+    required this.selectedLevel,
   });
 
   String _getLocalizedDifficultyLevel(BuildContext context, int index) {
@@ -27,7 +27,6 @@ class DashboardSettingsDifficultyLevelDialog extends StatelessWidget {
       case Difficulties.veryHard:
         return Localizer.translate(context, 'lblDashboardSettingsDifficulty3');
     }
-    return Localizer.translate(context, 'lblDashboardSettingsDifficulty2');
   }
 
   @override

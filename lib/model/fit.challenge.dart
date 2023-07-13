@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:wandr/model/calendar.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
@@ -12,7 +11,7 @@ abstract class FitChallenge implements Comparable {
   final String description;
   final String label;
   final String imageAsset;
-  final String routeAsset;
+  final String? routeAsset;
 
   int _points = 0;
   double target = 1.0;
@@ -21,14 +20,14 @@ abstract class FitChallenge implements Comparable {
   double get percent => progress / target;
 
   FitChallenge({
-    @required this.index,
-    @required this.startDate,
-    @required this.endDate,
-    @required this.title,
-    @required this.description,
-    @required this.label,
-    @required this.imageAsset,
-    @required this.routeAsset,
+    required this.index,
+    required this.startDate,
+    required this.endDate,
+    required this.title,
+    required this.description,
+    required this.label,
+    required this.imageAsset,
+    this.routeAsset,
   }) {
     initTargets();
   }
@@ -40,8 +39,8 @@ abstract class FitChallenge implements Comparable {
   void initTargets();
 
   void load({
-    FitSnapshot snapshot,
-    FitRanking ranking,
+    FitSnapshot? snapshot,
+    FitRanking? ranking,
   }) {
     if ((requiresRankingData && ranking == null) ||
         (requiresSnapshotData && snapshot == null)) return;
@@ -56,20 +55,15 @@ abstract class FitChallenge implements Comparable {
 
   @override
   int compareTo(other) {
-    if (this.startDate == null || other == null || !(other is FitChallenge))
-      return null;
-
-    final FitChallenge o = other as FitChallenge;
-    if (o.startDate == null) return null;
-
-    return this.startDate.compareTo(o.startDate) * -1;
+    if (other == null || !(other is FitChallenge)) return 0;
+    return this.startDate.compareTo(other.startDate) * -1;
   }
 
-  void evaluate({FitSnapshot snapshot, FitRanking ranking});
+  void evaluate({FitSnapshot? snapshot, FitRanking? ranking});
 
   bool isUpcoming({
-    @required Calendar calendar,
-    @required DateTime date,
+    required Calendar calendar,
+    required DateTime date,
   }) {
     final Duration delta =
         this.getStartDateDelta(calendar: calendar, date: date);
@@ -77,8 +71,8 @@ abstract class FitChallenge implements Comparable {
   }
 
   bool isActive({
-    @required Calendar calendar,
-    @required DateTime date,
+    required Calendar calendar,
+    required DateTime date,
   }) {
     final Duration delta =
         this.getStartDateDelta(calendar: calendar, date: date);
@@ -88,8 +82,8 @@ abstract class FitChallenge implements Comparable {
   }
 
   bool isExpired({
-    @required Calendar calendar,
-    @required DateTime date,
+    required Calendar calendar,
+    required DateTime date,
   }) {
     final Duration expired =
         this.getEndDateDelta(calendar: calendar, date: date);
@@ -97,15 +91,15 @@ abstract class FitChallenge implements Comparable {
   }
 
   Duration getStartDateDelta({
-    @required Calendar calendar,
-    @required DateTime date,
+    required Calendar calendar,
+    required DateTime date,
   }) {
     return calendar.delta(startDate, date);
   }
 
   Duration getEndDateDelta({
-    @required Calendar calendar,
-    @required DateTime date,
+    required Calendar calendar,
+    required DateTime date,
   }) {
     return calendar.delta(endDate, date);
   }

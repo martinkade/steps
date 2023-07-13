@@ -9,7 +9,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 class DashboardGoalCalendar extends StatefulWidget {
   ///
-  final FitSnapshot snapshot;
+  final FitSnapshot? snapshot;
 
   ///
   final int dailyGoal, weeklyGoal;
@@ -19,11 +19,11 @@ class DashboardGoalCalendar extends StatefulWidget {
 
   ///
   DashboardGoalCalendar({
-    Key key,
-    @required this.snapshot,
-    @required this.dailyGoal,
-    @required this.weeklyGoal,
-    @required this.timestamp,
+    Key? key,
+    this.snapshot,
+    required this.dailyGoal,
+    required this.weeklyGoal,
+    required this.timestamp,
   }) : super(key: key);
 
   @override
@@ -149,7 +149,7 @@ class _WeekModel {
   final double percent;
 
   ///
-  _WeekModel({@required this.index, this.percent = 0.0});
+  _WeekModel({required this.index, this.percent = 0.0});
 }
 
 class _CalendarWeekDisplay extends StatefulWidget {
@@ -164,9 +164,9 @@ class _CalendarWeekDisplay extends StatefulWidget {
 
   ///
   _CalendarWeekDisplay({
-    Key key,
-    @required this.label,
-    @required this.percent,
+    Key? key,
+    required this.label,
+    required this.percent,
     this.index = 0,
   }) : super(key: key);
 

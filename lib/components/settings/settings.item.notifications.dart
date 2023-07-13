@@ -5,7 +5,7 @@ import 'package:wandr/model/repositories/fitness.repository.dart';
 
 class SettingsNotificationItem extends SettingsItem {
   ///
-  SettingsNotificationItem({Key key, String title})
+  SettingsNotificationItem({Key? key, required String title})
       : super(key: key, title: title);
 
   @override
@@ -18,7 +18,7 @@ class _SettingsNotificationItemState extends State<SettingsNotificationItem> {
   final FitnessRepository _repository = FitnessRepository();
 
   ///
-  bool _notificationsEnabled;
+  bool _notificationsEnabled = false;
 
   @override
   void initState() {

@@ -5,7 +5,8 @@ import 'package:wandr/components/shared/localizer.dart';
 
 class AboutPrivacyItem extends AboutItem {
   ///
-  AboutPrivacyItem({Key key, String title}) : super(key: key, title: title);
+  AboutPrivacyItem({Key? key, required String title})
+      : super(key: key, title: title);
 
   @override
   _AboutPrivacyItemState createState() => _AboutPrivacyItemState();

@@ -15,7 +15,8 @@ class FitChallenge9Team extends FitChallenge {
           startDate: kStartDate,
           endDate: kEndDate,
           title: 'Längter Fußweg der Welt',
-          description: 'Das neue Jahr hat gerade begonnen, daher starten wir langsam mit einer einfachen Challenge. Auf mehr als 23.000 Kilometern wollen wir von L’Agulhas im Süden Südafrikas aus bis nach Magadan im Osten von Russland WANDRn. Der Routenplaner gibt eine Laufzeit von 194 Tagen an, mal gucken ob das nicht auch schneller geht 😉.',
+          description:
+              'Das neue Jahr hat gerade begonnen, daher starten wir langsam mit einer einfachen Challenge. Auf mehr als 23.000 Kilometern wollen wir von L’Agulhas im Süden Südafrikas aus bis nach Magadan im Osten von Russland WANDRn. Der Routenplaner gibt eine Laufzeit von 194 Tagen an, mal gucken ob das nicht auch schneller geht 😉.',
           label: 'Kilometer',
           imageAsset: 'assets/images/challenge9.jpg',
           routeAsset: null,
@@ -33,8 +34,8 @@ class FitChallenge9Team extends FitChallenge {
   }
 
   @override
-  void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = (ranking.challengeTotals[index]?.toDouble() ?? 0.0) / 12.0;
+  void evaluate({FitSnapshot? snapshot, FitRanking? ranking}) {
+    progress = (ranking?.challengeTotals[index].toDouble() ?? 0.0) / 12.0;
     final int totalHours = kEndDate.difference(kStartDate).inHours;
     final int hours = max(0, DateTime.now().difference(kStartDate).inHours);
     final double estimatedPercent = min(1.0, hours / totalHours.toDouble());

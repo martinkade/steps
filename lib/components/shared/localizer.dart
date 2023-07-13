@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
@@ -35,19 +34,16 @@ class Localizer {
 
   final Locale locale;
 
-  static Localizer _of(BuildContext context) {
+  static Localizer? _of(BuildContext context) {
     return Localizations.of<Localizer>(context, Localizer);
   }
 
   static String translate(BuildContext context, String key) {
-    final translator = Localizer._of(context);
-    if (translator != null) {
-      return translator._translate(key) ?? '{resource \'$key\' not found}';
-    }
-    return key;
+    return Localizer._of(context)?._translate(key) ??
+        '{resource \'$key\' not found}';
   }
 
-  Map<String, String> _sentences;
+  Map<String, String> _sentences = Map();
 
   Future<bool> load() async {
     final String data = await rootBundle
@@ -63,7 +59,7 @@ class Localizer {
   }
 
   String _translate(String key) {
-    return this._sentences[key];
+    return this._sentences[key] ?? '{resource \'$key\' not found}';
   }
 }
 
@@ -141,7 +137,8 @@ class GermanCupertinoLocalizations implements CupertinoLocalizations {
   String datePickerMonth(int monthIndex) => _months[monthIndex - 1];
 
   @override
-  String datePickerDayOfMonth(int dayIndex) => dayIndex.toString();
+  String datePickerDayOfMonth(int dayIndex, [int? weekDay]) =>
+      dayIndex.toString();
 
   @override
   String datePickerHour(int hour) => hour.toString();
@@ -234,7 +231,7 @@ class GermanCupertinoLocalizations implements CupertinoLocalizations {
   String get modalBarrierDismissLabel => 'Schließen';
 
   @override
-  String tabSemanticsLabel({int tabIndex, int tabCount}) {
+  String tabSemanticsLabel({required int tabIndex, required int tabCount}) {
     return 'tabSemanticsLabel';
   }
 
@@ -249,4 +246,8 @@ class GermanCupertinoLocalizations implements CupertinoLocalizations {
 
   @override
   List<String> get timerPickerSecondLabels => <String>[];
+
+  @override
+  // TODO: implement noSpellCheckReplacementsLabel
+  String get noSpellCheckReplacementsLabel => throw UnimplementedError();
 }

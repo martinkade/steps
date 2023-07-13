@@ -46,9 +46,9 @@ class App extends StatelessWidget {
           GermanCupertinoLocalizations.delegate
         ],
         localeResolutionCallback:
-            (Locale locale, Iterable<Locale> supportedLocales) {
+            (Locale? locale, Iterable<Locale> supportedLocales) {
           if (locale == null) {
-            LOCALE = supportedLocales.first?.scriptCode;
+            LOCALE = supportedLocales.first.scriptCode ?? 'de_DE';
             print('Cound not detect language, using \'$LOCALE\'');
             return supportedLocales.first;
           }
@@ -56,13 +56,13 @@ class App extends StatelessWidget {
           for (Locale supportedLocale in supportedLocales) {
             if (supportedLocale.languageCode == locale.languageCode ||
                 supportedLocale.countryCode == locale.countryCode) {
-              LOCALE = supportedLocale.scriptCode;
+              LOCALE = supportedLocale.scriptCode ?? 'de_DE';
               print('Detected language code \'$LOCALE\'');
               return supportedLocale;
             }
           }
 
-          LOCALE = supportedLocales.first?.scriptCode;
+          LOCALE = supportedLocales.first.scriptCode ?? 'de_DE';
           print('Use language fallback \'$LOCALE\'');
           return supportedLocales.first;
         });

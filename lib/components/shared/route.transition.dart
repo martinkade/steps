@@ -5,10 +5,10 @@ class RouteTransition extends PageRouteBuilder {
   final Widget page;
 
   ///
-  final Widget Function(BuildContext) builder;
+  final Widget Function(BuildContext)? builder;
 
   ///
-  RouteTransition({@required this.page, this.builder})
+  RouteTransition({required this.page, this.builder})
       : super(
           pageBuilder: (
             BuildContext context,

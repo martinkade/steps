@@ -8,9 +8,9 @@ class DashboardSettingsActivityLevelDialog extends StatelessWidget {
   final int selectedLevel;
 
   DashboardSettingsActivityLevelDialog({
-    this.setDailyTargetPoints,
-    this.activityLevels,
-    this.selectedLevel,
+    required this.setDailyTargetPoints,
+    required this.activityLevels,
+    required this.selectedLevel,
   });
 
   @override

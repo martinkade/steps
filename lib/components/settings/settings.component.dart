@@ -10,10 +10,10 @@ import 'package:wandr/util/AprilJokes.dart';
 
 class SettingsComponent extends StatefulWidget {
   ///
-  final String userKey;
+  final String? userKey;
 
   ///
-  const SettingsComponent({Key key, this.userKey}) : super(key: key);
+  const SettingsComponent({Key? key, this.userKey}) : super(key: key);
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -21,12 +21,12 @@ class SettingsComponent extends StatefulWidget {
 
 class _SettingsState extends State<SettingsComponent> {
   ///
-  AprilJokes _aprilJokes;
+  late AprilJokes _aprilJokes;
 
   @override
   void initState() {
-    super.initState();
     _aprilJokes = AprilJokes();
+    super.initState();
   }
 
   @override
@@ -37,7 +37,9 @@ class _SettingsState extends State<SettingsComponent> {
       child: ListView.builder(
         itemCount: itemCount,
         itemBuilder: (context, index) {
-          int newIndex = _aprilJokes.isJokeActive(Jokes.botDifficulty) ? index : (index + 1);
+          int newIndex = _aprilJokes.isJokeActive(Jokes.botDifficulty)
+              ? index
+              : (index + 1);
           switch (newIndex) {
             case 0:
               return SettingsDifficultyItem(
@@ -57,7 +59,7 @@ class _SettingsState extends State<SettingsComponent> {
               );
             case 4:
               return SettingsSyncItem(
-                userKey: widget.userKey,
+                userKey: widget.userKey!,
                 title: Localizer.translate(context, 'lblSettingsDataSource'),
               );
             default:

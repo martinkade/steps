@@ -14,29 +14,29 @@ abstract class DashboardChallengeDelegate {
 
 class DashboardChallengeItem extends DashboardItem {
   ///
-  final String userKey;
+  final String? userKey;
 
   ///
-  final String teamName;
+  final String? teamName;
 
   ///
-  final FitRanking ranking;
+  final FitRanking? ranking;
 
   ///
-  final FitSnapshot snapshot;
+  final FitSnapshot? snapshot;
 
   ///
   final DashboardChallengeDelegate delegate;
 
   ///
   DashboardChallengeItem({
-    Key key,
-    String title,
+    Key? key,
+    required String title,
     this.ranking,
     this.snapshot,
     this.userKey,
     this.teamName,
-    this.delegate,
+    required this.delegate,
   }) : super(key: key, title: title);
 
   @override
@@ -46,10 +46,10 @@ class DashboardChallengeItem extends DashboardItem {
 class _DashboardChallengeItemState extends State<DashboardChallengeItem>
     with AutomaticKeepAliveClientMixin<DashboardChallengeItem> {
   ///
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
 
   ///
-  List<FitChallenge> _challenges;
+  List<FitChallenge>? _challenges;
 
   ///
   int _cardIndex = 0, _cardCount = 0;
@@ -63,7 +63,7 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem>
     super.initState();
 
     _scrollController = new ScrollController();
-    _challenges.forEach((challenge) {
+    _challenges?.forEach((challenge) {
       challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
       print(
           ' - challenge #${challenge.index}: ${challenge.progress} (${challenge.title})');
@@ -75,7 +75,7 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem>
     _prepareChallengeList();
     super.didUpdateWidget(oldWidget);
 
-    _challenges.forEach((challenge) {
+    _challenges?.forEach((challenge) {
       challenge.load(snapshot: widget.snapshot, ranking: widget.ranking);
       print(
           ' - challenge #${challenge.index}: ${challenge.progress} (${challenge.title})');
@@ -90,8 +90,8 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem>
 
   void _prepareChallengeList() {
     _challenges = widget.delegate.getChallenges();
-    _challenges.sort((a, b) => a.compareTo(b));
-    _cardCount = _challenges.length;
+    _challenges?.sort((a, b) => a.compareTo(b));
+    _cardCount = _challenges?.length ?? 0;
   }
 
   @override
@@ -128,11 +128,11 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem>
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.all(0.0),
         itemBuilder: (context, index) {
-          final FitChallenge challenge = _challenges[index];
+          final FitChallenge challenge = _challenges![index];
           return GestureDetector(
             child: Padding(
               padding: EdgeInsets.fromLTRB(
-                  8.0, 0.0, index < _challenges.length - 1 ? 0.0 : 8.0, 8.0),
+                  8.0, 0.0, index < _challenges!.length - 1 ? 0.0 : 8.0, 8.0),
               child: Hero(
                 child: Card(
                   elevation: 8.0,
@@ -168,7 +168,7 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem>
               });
             },
             onTap: () {
-              widget.delegate?.onChallengeRequested(challenge, index);
+              widget.delegate.onChallengeRequested(challenge, index);
             },
           );
         },

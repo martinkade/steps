@@ -14,13 +14,13 @@ class StructuredCache extends IStructuredCache {
 
   StructuredCache._internal();
 
-  Database _db;
+  Database? _db;
   bool _didInit = false;
 
   /// Usage: var db = await LocalDatabase().getDb();
   Future<Database> getDb() async {
     if (!_didInit) await _init();
-    return _db;
+    return _db!;
   }
 
   @override

@@ -5,7 +5,8 @@ import 'package:wandr/components/shared/localizer.dart';
 
 class LandingIdentityItem extends LandingItem {
   ///
-  LandingIdentityItem({Key key, int index, LandingDelegate delegate})
+  LandingIdentityItem(
+      {Key? key, required int index, required LandingDelegate delegate})
       : super(key: key, index: index, delegate: delegate);
 
   @override
@@ -14,13 +15,13 @@ class LandingIdentityItem extends LandingItem {
 
 class _LandingIdentityItemState extends State<LandingIdentityItem> {
   ///
-  TextEditingController _inputController;
+  late TextEditingController _inputController;
 
   ///
-  FocusNode _focusNode;
+  late FocusNode _focusNode;
 
   ///
-  String _email;
+  String? _email;
 
   @override
   void initState() {
@@ -30,10 +31,10 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
     _focusNode = FocusNode();
 
     SharedPreferences.getInstance().then((preferences) {
-      final String userValue = preferences.getString('kUser');
+      final String? userValue = preferences.getString('kUser');
       if (!mounted) return;
       setState(() {
-        _inputController.text = userValue;
+        _inputController.text = userValue ?? '';
         _email = userValue;
       });
     });

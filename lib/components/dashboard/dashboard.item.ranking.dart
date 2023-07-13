@@ -9,18 +9,18 @@ import 'package:wandr/util/AprilJokes.dart';
 
 class DashboardRankingItem extends DashboardItem {
   ///
-  final String userKey;
+  final String? userKey;
 
   ///
-  final String teamName;
+  final String? teamName;
 
   ///
-  final FitRanking ranking;
+  final FitRanking? ranking;
 
   ///
   DashboardRankingItem({
-    Key key,
-    String title,
+    Key? key,
+    required String title,
     this.ranking,
     this.userKey,
     this.teamName,
@@ -33,19 +33,19 @@ class DashboardRankingItem extends DashboardItem {
 class DashboardRankingItemState extends State<DashboardRankingItem>
     with AutomaticKeepAliveClientMixin<DashboardRankingItem> {
   ///
-  Map<String, List<FitRankingEntry>> _boards;
+  Map<String, List<FitRankingEntry>> _boards = Map();
 
   ///
-  int _selectedTimeModeIndex;
+  int _selectedTimeModeIndex = 0;
 
   ///
-  int _selectedGroupModeIndex;
+  int _selectedGroupModeIndex = 0;
 
   ///
-  bool _unitKilometersEnabled;
+  bool _unitKilometersEnabled = false;
 
   ///
-  int _difficultyLevel;
+  int _difficultyLevel = Difficulties.hard.index;
 
   @override
   bool get wantKeepAlive => true;
@@ -226,7 +226,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
     );
   }
 
-  Widget getList({List<OptionModel> displayOptions}) {
+  Widget getList({required List<OptionModel> displayOptions}) {
     if (widget.ranking == null) {
       return Container(
         child: Center(
@@ -245,12 +245,12 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
       );
     } else {
       final List<FitRankingEntry> list =
-          _boards[_boards.keys.toList()[_selectedTimeModeIndex]];
+          _boards[_boards.keys.toList()[_selectedTimeModeIndex]] ?? [];
       return DashboardRankingList(
           list: list
               .where((element) => element.type == _selectedGroupModeIndex)
               .toList(),
-          itemKey: widget.userKey,
+          itemKey: widget.userKey!,
           unitKilometersEnabled: _unitKilometersEnabled,
           difficultyLevel: _difficultyLevel,
           groupType: _selectedGroupModeIndex);
@@ -276,12 +276,12 @@ class DashboardRankingList extends StatelessWidget {
 
   ///
   DashboardRankingList(
-      {Key key,
-      this.list,
-      this.itemKey,
-      this.unitKilometersEnabled,
-      this.difficultyLevel,
-      this.groupType})
+      {Key? key,
+      required this.list,
+      required this.itemKey,
+      required this.unitKilometersEnabled,
+      required this.difficultyLevel,
+      required this.groupType})
       : super(key: key);
 
   @override
@@ -317,7 +317,8 @@ class DashboardRankingList extends StatelessWidget {
           itemBuilder: (context, index) {
             final FitRankingEntry item = list[index];
             final int value =
-                item.key == itemKey ? item.value : item.value + extraValue;
+                (item.key == itemKey ? item.value : item.value + extraValue)
+                    .toInt();
             return Container(
               color: item.key == itemKey
                   ? Theme.of(context).colorScheme.primary.withAlpha(50)
@@ -349,8 +350,11 @@ class DashboardRankingList extends StatelessWidget {
                         ),
                         border: value > 0
                             ? Border.all(
-                                color:
-                                    Theme.of(context).textTheme.bodyText1.color,
+                                color: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        ?.color ??
+                                    Color.fromARGB(50, 50, 50, 50),
                               )
                             : null,
                       ),

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:wandr/model/cache/fit.record.dao.dart';
 import 'package:wandr/model/fit.challenge.dart';
@@ -16,9 +15,9 @@ abstract class FitnessRepositoryClient {
   /// Notify client with updated local data from Google Fit or Apple Health (or manually recordet data).
   void fitnessRepositoryDidUpdate(
     FitnessRepository repository, {
-    SyncState state,
-    DateTime day,
-    FitSnapshot snapshot,
+    required SyncState state,
+    required DateTime day,
+    required FitSnapshot snapshot,
   });
 }
 
@@ -82,7 +81,7 @@ class FitnessRepository extends Repository {
   }
 
   ///
-  Future<List<FitRecord>> fetchHistory({String day}) async {
+  Future<List<FitRecord>> fetchHistory({String? day}) async {
     final FitRecordDao dao = FitRecordDao();
     if (day != null) {
       return await dao.fetchAllOfDay(day: day);
@@ -101,7 +100,7 @@ class FitnessRepository extends Repository {
   }
 
   ///
-  Future<void> addRecord(FitRecord record, {FitRecord oldRecord}) async {
+  Future<void> addRecord(FitRecord record, {FitRecord? oldRecord}) async {
     final FitRecordDao dao = FitRecordDao();
     if (oldRecord != null) {
       await deleteRecord(oldRecord);
@@ -117,8 +116,8 @@ class FitnessRepository extends Repository {
 
   ///
   Future<void> restorePoints({
-    String userKey,
-    FitnessRepositoryClient client,
+    required String userKey,
+    FitnessRepositoryClient? client,
   }) async {
     // restrict data to start on september, 1
     final DateTime anchor = FitnessRepository.firstPossibleDate();
@@ -133,10 +132,10 @@ class FitnessRepository extends Repository {
 
   ///
   Future<void> syncPoints({
-    @required String userKey,
-    @required String teamName,
-    @required FitnessRepositoryClient client,
-    @required List<FitChallenge> challenges,
+    required String userKey,
+    required String teamName,
+    required FitnessRepositoryClient client,
+    required List<FitChallenge> challenges,
     bool pushData = false,
   }) async {
     FitSnapshot snapshot = FitSnapshot();
@@ -203,15 +202,17 @@ class FitnessRepository extends Repository {
 
   ///
   Future<List<FitRecord>> _readSnapshot(String userKey) async {
-    final FirebaseApp instance = await Storage().access();
+    final FirebaseApp? instance = await Storage().access();
     final FirebaseDatabase db = FirebaseDatabase(app: instance);
     db.setPersistenceEnabled(true);
     db.setPersistenceCacheSizeBytes(1024 * 1024);
-    final DataSnapshot data =
+    final DataSnapshot? data =
         await db.reference().child('users').child(userKey).get();
     Map<dynamic, dynamic> history;
+    Map dict;
     if (data?.value != null) {
-      history = data.value['history'] == null ? Map() : data.value['history'] ?? Map();
+      dict = data!.value! as Map;
+      history = dict['history'] == null ? Map() : dict['history'] ?? Map();
     } else {
       history = Map();
     }
@@ -227,7 +228,7 @@ class FitnessRepository extends Repository {
         source: value['source']?.toInt() ?? 0,
         value: value['value']?.toInt() ?? 0,
         type: value['type']?.toInt() ?? 0,
-        name: value['name']?.toString(),
+        name: value['name']?.toString() ?? '',
       );
       print('FitRepository#_readSnapshot: \t${record.dateTimeString}');
       records.add(record);
@@ -238,8 +239,8 @@ class FitnessRepository extends Repository {
   ///
   Future<void> _writeSnapshot(
     FitSnapshot snapshot, {
-    String userKey,
-    String teamName,
+    required String userKey,
+    required String teamName,
   }) async {
     Storage().access().then((instance) async {
       final FirebaseDatabase db = FirebaseDatabase(app: instance);

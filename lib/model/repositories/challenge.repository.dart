@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.challenge.team1.dart';
 import 'package:wandr/model/fit.challenge.team2.dart';
@@ -16,15 +15,15 @@ import 'package:wandr/model/repositories/repository.dart';
 abstract class ChallengeRepositoryClient {
   void challengeRepositoryDidUpdate(
     ChallengeRepository repository, {
-    SyncState state,
-    List<FitChallenge> challengeList,
+    required SyncState state,
+    required List<FitChallenge> challengeList,
   });
 }
 
 class ChallengeRepository extends Repository {
   ///
   Future<List<FitChallenge>> fetchChallenges({
-    @required ChallengeRepositoryClient client,
+    required ChallengeRepositoryClient client,
   }) async {
     final List<FitChallenge> challengeList = <FitChallenge>[
       FitChallenge1Team(),

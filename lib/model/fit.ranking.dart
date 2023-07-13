@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/calendar.dart';
 import 'package:intl/intl.dart';
@@ -23,18 +23,18 @@ class FitRanking {
     final FitRanking ranking = FitRanking._internal();
 
     final Map<String, Map<String, Map<String, dynamic>>> summary = Map();
-    final Map<String, Map<String,num>> participation = Map();
+    final Map<String, Map<String, num>> participation = Map();
     final Calendar calendar = Calendar();
     final DateTime now = DateTime.now();
 
-    DateTime timestamp;
+    DateTime? timestamp;
     String itemKey, itemName, teamKey;
     int timestampKey;
     dynamic data;
-    Map<String, Map<String, dynamic>> categoryValue;
+    Map<String, Map<String, dynamic>> categoryValue = Map();
 
     // iterate through user documents
-    snapshot.value.forEach((userId, value) {
+    snapshot?.snapshot.value?.forEach((userId, value) {
       itemKey = userId;
 
       teamKey = value['team'];
@@ -58,43 +58,78 @@ class FitRanking {
       // collect points
       // - sum user's weekly points if sync timestamp is within current week
       // - sum user's last weeks points if sync timestamp is within current week
-      if (timestampKey != 0 && calendar.isThisWeek(timestamp, now)) {
+      if (timestampKey != 0 &&
+          timestamp != null &&
+          calendar.isThisWeek(timestamp!, now)) {
         // this week, last week
-        readCategoriesData(['week', 'lastWeek'], ['week', 'lastWeek'], itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
-      } else if (timestampKey != 0 && calendar.isLastWeek(timestamp, now)) {
+        readCategoriesData(
+            ['week', 'lastWeek'],
+            ['week', 'lastWeek'],
+            itemKey,
+            itemName,
+            teamKey,
+            timestamp!,
+            data,
+            categoryValue,
+            summary,
+            participation);
+      } else if (timestampKey != 0 &&
+          timestamp != null &&
+          calendar.isLastWeek(timestamp!, now)) {
         // last week
-        readCategoryData('week', 'lastWeek', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+        readCategoryData('week', 'lastWeek', itemKey, itemName, teamKey,
+            timestamp!, data, categoryValue, summary, participation);
       }
 
       // collect points
       // - sum user's today points if sync timestamp is today
       // - sum user's yesterday points if sync timestamp is today
-      if (timestampKey > 0 && calendar.isToday(timestamp, now)) {
+      if (timestampKey > 0 &&
+          timestamp != null &&
+          calendar.isToday(timestamp!, now)) {
         // today, yesterday
-        readCategoriesData(['today', 'yesterday'], ['today', 'yesterday'], itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
-      } else if (timestampKey > 0 && calendar.isYesterday(timestamp, now)) {
+        readCategoriesData(
+            ['today', 'yesterday'],
+            ['today', 'yesterday'],
+            itemKey,
+            itemName,
+            teamKey,
+            timestamp!,
+            data,
+            categoryValue,
+            summary,
+            participation);
+      } else if (timestampKey > 0 &&
+          timestamp != null &&
+          calendar.isYesterday(timestamp!, now)) {
         // yesterday
-        readCategoryData('today', 'yesterday', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+        readCategoryData('today', 'yesterday', itemKey, itemName, teamKey,
+            timestamp!, data, categoryValue, summary, participation);
       }
 
-      if (timestampKey > 0 && calendar.isThisYear(timestamp, now)) {
+      if (timestampKey > 0 &&
+          timestamp != null &&
+          calendar.isThisYear(timestamp!, now)) {
         // year
-        readCategoryData('year', 'year', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+        readCategoryData('year', 'year', itemKey, itemName, teamKey, timestamp!,
+            data, categoryValue, summary, participation);
       }
 
       // collect total points if user synced within last 14 days
       if (timestampKey > 0 &&
-          !timestamp.isBefore(now.subtract(Duration(days: 14)))) {
+          timestamp != null &&
+          !timestamp!.isBefore(now.subtract(Duration(days: 14)))) {
         // print('[INFO] sync user $userId ($timestamp)\n\t - with app version ${value['client']}\n\t - on ${value['device']}');
 
         // total
-        readCategoryData('total', 'total', itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+        readCategoryData('total', 'total', itemKey, itemName, teamKey,
+            timestamp!, data, categoryValue, summary, participation);
         ranking.totalUsers += 1;
       } else {
         // print('[INFO] ignore user $userId, has not synced within last 14 days');
       }
 
-      ranking.totalPoints += data['total'] ?? 0;
+      ranking.totalPoints += data['total'] as int;
       if (value['challenges']?.isNotEmpty == true) {
         final int challengeCount = value['challenges'].length;
         final List<int> newTotals = List.castFrom<dynamic, int>(
@@ -108,7 +143,7 @@ class FitRanking {
         }
         newTotals
             .asMap()
-            .forEach((i, value) => {ranking.challengeTotals[i] += value});
+            .forEach((i, value) => ranking.challengeTotals[i] += value);
       }
     });
 
@@ -116,38 +151,52 @@ class FitRanking {
     summary.forEach((categoryKey, categoryValue) {
       itemKeys = categoryValue.keys.toList(growable: false);
       // print('$itemKeys \n\t$categoryValue');
-      itemKeys.sort((k1, k2) => (categoryValue[k2]['value']?.toInt() ?? 0)
-          .compareTo((categoryValue[k1]['value']?.toInt() ?? 0)));
+      itemKeys.sort((k1, k2) => (categoryValue[k2]!['value']?.toInt() ?? 0)
+          .compareTo((categoryValue[k1]!['value']?.toInt() ?? 0)));
       itemKeys.forEach((itemKey) {
         ranking.addEntry(categoryKey,
             userKey: itemKey,
-            name: categoryValue[itemKey]['name'],
-            value: categoryValue[itemKey]['value'],
-            sync: categoryValue[itemKey]['sync'],
-            type: categoryValue[itemKey]['type'],
-            userCount: participation[categoryKey][itemKey] ?? 0);
+            name: categoryValue[itemKey]!['name'],
+            value: categoryValue[itemKey]!['value'],
+            sync: categoryValue[itemKey]!['sync'],
+            type: categoryValue[itemKey]!['type'],
+            userCount: (participation[categoryKey]![itemKey] ?? 0).toInt());
       });
     });
 
     return ranking;
   }
 
-  static void readCategoriesData(List<String> categories, List<String> destinations, String itemKey, String itemName, String teamKey,
-      DateTime timestamp, dynamic data, Map<String, Map<String, dynamic>> categoryValue,
+  static void readCategoriesData(
+      List<String> categories,
+      List<String> destinations,
+      String itemKey,
+      String itemName,
+      String teamKey,
+      DateTime timestamp,
+      dynamic data,
+      Map<String, Map<String, dynamic>> categoryValue,
       Map<String, Map<String, Map<String, dynamic>>> summary,
-      Map<String, Map<String,num>> participation) {
-
+      Map<String, Map<String, num>> participation) {
     for (var i = 0; i < categories.length; i++) {
-      readCategoryData(categories[i], destinations[i], itemKey, itemName, teamKey, timestamp, data, categoryValue, summary, participation);
+      readCategoryData(categories[i], destinations[i], itemKey, itemName,
+          teamKey, timestamp, data, categoryValue, summary, participation);
     }
   }
 
-  static void readCategoryData(String categoryKey, String destinationKey, String itemKey, String itemName, String teamKey,
-      DateTime timestamp, dynamic data, Map<String, Map<String, dynamic>> categoryValue,
+  static void readCategoryData(
+      String categoryKey,
+      String destinationKey,
+      String itemKey,
+      String itemName,
+      String teamKey,
+      DateTime timestamp,
+      dynamic data,
+      Map<String, Map<String, dynamic>> categoryValue,
       Map<String, Map<String, Map<String, dynamic>>> summary,
-      Map<String, Map<String,num>> participation) {
+      Map<String, Map<String, num>> participation) {
     if (summary.containsKey(destinationKey)) {
-      categoryValue = summary[destinationKey];
+      categoryValue = summary[destinationKey]!;
     } else {
       categoryValue = Map();
     }
@@ -155,7 +204,7 @@ class FitRanking {
     if (!categoryValue.containsKey(itemKey)) {
       categoryValue.putIfAbsent(
         itemKey,
-            () => Map.fromEntries([
+        () => Map.fromEntries([
           MapEntry('name', itemName),
           MapEntry('value', data[categoryKey]),
           MapEntry('sync', timestamp),
@@ -165,11 +214,11 @@ class FitRanking {
     }
 
     if (categoryValue.containsKey(teamKey)) {
-      categoryValue[teamKey]["value"] += data[categoryKey];
+      categoryValue[teamKey]!['value'] += data[categoryKey];
     } else {
       categoryValue.putIfAbsent(
         teamKey,
-            () => Map.fromEntries([
+        () => Map.fromEntries([
           MapEntry('name', teamKey),
           MapEntry('value', data[categoryKey]),
           MapEntry('sync', timestamp),
@@ -185,28 +234,25 @@ class FitRanking {
     }
 
     if (participation.containsKey(destinationKey)) {
-      if (participation[destinationKey].containsKey(teamKey)) {
-        participation[destinationKey][teamKey] += 1;
+      if (participation[destinationKey]?.containsKey(teamKey) == true) {
+        final int value = participation[destinationKey]![teamKey]!.toInt();
+        participation[destinationKey]![teamKey] = value + 1;
       } else {
-        participation[destinationKey].putIfAbsent(teamKey, () => 1);
+        participation[destinationKey]!.putIfAbsent(teamKey, () => 1);
       }
     } else {
       participation.putIfAbsent(
-          destinationKey,
-              () => Map.fromEntries([
-            MapEntry(teamKey, 1)
-          ])
-      );
+          destinationKey, () => Map.fromEntries([MapEntry(teamKey, 1)]));
     }
   }
 
   void addEntry(
     String key, {
-    @required String userKey,
-    @required String name,
-    @required num value,
-    @required DateTime sync,
-    @required int type,
+    required String userKey,
+    required String name,
+    required num value,
+    required DateTime sync,
+    required int type,
     int userCount = 0,
   }) {
     entries[key]?.add(FitRankingEntry(
@@ -227,11 +273,11 @@ class FitRankingEntry {
   final int type;
   final DateTime sync;
   FitRankingEntry({
-    @required this.key,
-    @required this.name,
-    @required this.value,
-    @required this.sync,
-    @required this.type,
+    required this.key,
+    required this.name,
+    required this.value,
+    required this.sync,
+    required this.type,
     this.userCount = 0,
   });
 
@@ -239,7 +285,7 @@ class FitRankingEntry {
     final DateTime now = DateTime.now();
     final Calendar calendar = Calendar();
     if (calendar.isToday(sync, now))
-      return DateFormat('HH:mm', LOCALE ?? 'de_DE').format(sync);
-    return DateFormat('dd.MM.yyyy, HH:mm', LOCALE ?? 'de_DE').format(sync);
+      return DateFormat('HH:mm', LOCALE).format(sync);
+    return DateFormat('dd.MM.yyyy, HH:mm', LOCALE).format(sync);
   }
 }

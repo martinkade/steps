@@ -12,7 +12,7 @@ import 'package:wandr/model/repositories/fitness.repository.dart';
 
 class HistoryComponent extends StatefulWidget {
   ///
-  HistoryComponent({Key key}) : super(key: key);
+  HistoryComponent({Key? key}) : super(key: key);
 
   @override
   _HistoryState createState() => _HistoryState();
@@ -29,13 +29,13 @@ class _HistoryState extends State<HistoryComponent> {
   final FitnessRepository _repository = FitnessRepository();
 
   ///
-  int _points;
+  int _points = 0;
 
   ///
-  int _goalDaily;
+  int _goalDaily = 0;
 
   ///
-  bool _unitKilometersEnabled;
+  bool _unitKilometersEnabled = false;
 
   @override
   void initState() {
@@ -150,8 +150,8 @@ class _HistoryState extends State<HistoryComponent> {
                         color: Theme.of(context)
                             .textTheme
                             .bodyText1
-                            .color
-                            .withAlpha(50),
+                            ?.color
+                            ?.withAlpha(50),
                         child: Padding(
                           child: HistoryChart.withData(
                             _records,
@@ -167,16 +167,15 @@ class _HistoryState extends State<HistoryComponent> {
                   );
                 }
                 final FitRecord record = _records[index - 2];
-                final AverageRecord averageRecord = _averageList.firstWhere((e) => e.isSameDay(record.dateTime), orElse: () => AverageRecord());
+                final AverageRecord averageRecord = _averageList.firstWhere(
+                    (e) => e.isSameDay(record.dateTime),
+                    orElse: () => AverageRecord());
                 return GestureDetector(
                   child: HistoryRecordSummaryItem(
                     record: record,
                     isLastItem: index + 1 == _records.length,
                     goal: _goalDaily,
-                    trend:
-                    averageRecord.value <= record.value
-                            ? 1
-                            : -1,
+                    trend: averageRecord.value <= record.value ? 1 : -1,
                     unitKilometersEnabled: _unitKilometersEnabled,
                   ),
                   onTap: () {

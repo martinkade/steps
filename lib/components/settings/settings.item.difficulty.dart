@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:wandr/components/settings/settings.item.dart';
 import 'package:wandr/components/settings/settings.item.difficulty.dialog.dart';
-import 'package:wandr/components/settings/settings.item.display.dialog.dart';
 import 'package:wandr/components/shared/localizer.dart';
-import 'package:wandr/components/shared/segmented.control.dart';
 import 'package:wandr/model/preferences.dart';
 import 'package:wandr/util/AprilJokes.dart';
 
 class SettingsDifficultyItem extends SettingsItem {
   ///
-  SettingsDifficultyItem({Key key, String title})
+  SettingsDifficultyItem({Key? key, required String title})
       : super(key: key, title: title);
 
   @override
@@ -26,10 +24,10 @@ class _SettingsDifficultyItemState extends State<SettingsDifficultyItem> {
   ];
 
   ///
-  int _difficultyLevel;
+  int _difficultyLevel = Difficulties.hard.index;
 
   ///
-  AprilJokes _aprilJokes;
+  late AprilJokes _aprilJokes;
 
   @override
   void initState() {
@@ -61,7 +59,6 @@ class _SettingsDifficultyItemState extends State<SettingsDifficultyItem> {
       case Difficulties.veryHard:
         return Localizer.translate(context, 'lblDashboardSettingsDifficulty3');
     }
-    return Localizer.translate(context, 'lblDashboardSettingsDifficulty2');
   }
 
   void _pickDifficultyLevel(BuildContext context) {

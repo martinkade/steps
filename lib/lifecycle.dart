@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 
 class LifecycleEventHandler extends WidgetsBindingObserver {
   ///
-  final AsyncCallback resumeCallBack;
+  final AsyncCallback? resumeCallBack;
 
   ///
-  final AsyncCallback suspendingCallBack;
+  final AsyncCallback? suspendingCallBack;
 
   ///
   LifecycleEventHandler({
@@ -19,14 +19,14 @@ class LifecycleEventHandler extends WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         if (resumeCallBack != null) {
-          await resumeCallBack();
+          await resumeCallBack!();
         }
         break;
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
         if (suspendingCallBack != null) {
-          await suspendingCallBack();
+          await suspendingCallBack!();
         }
         break;
     }

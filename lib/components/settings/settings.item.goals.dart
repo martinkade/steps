@@ -8,7 +8,8 @@ import 'package:wandr/model/preferences.dart';
 
 class SettingsGoalItem extends SettingsItem {
   ///
-  SettingsGoalItem({Key key, String title}) : super(key: key, title: title);
+  SettingsGoalItem({Key? key, required String title})
+      : super(key: key, title: title);
 
   @override
   _SettingsGoalItemState createState() => _SettingsGoalItemState();
@@ -24,7 +25,7 @@ class _SettingsGoalItemState extends State<SettingsGoalItem> {
   ];
 
   ///
-  int _activityLevel;
+  int _activityLevel = DAILY_TARGET_POINTS;
 
   @override
   void initState() {

@@ -22,12 +22,12 @@ class HistoryRecordSummaryItem extends HistoryItem {
 
   ///
   HistoryRecordSummaryItem({
-    Key key,
-    this.record,
-    this.isLastItem,
-    this.goal,
-    this.trend,
-    this.unitKilometersEnabled,
+    Key? key,
+    required this.record,
+    required this.isLastItem,
+    required this.goal,
+    required this.trend,
+    required this.unitKilometersEnabled,
   }) : super(key: key);
 
   @override
@@ -65,8 +65,8 @@ class _HistoryRecordSummaryItemState extends State<HistoryRecordSummaryItem> {
                     color: Theme.of(context)
                         .textTheme
                         .bodyText1
-                        .color
-                        .withAlpha(32),
+                        ?.color
+                        ?.withAlpha(32),
                   ),
           ),
           Expanded(

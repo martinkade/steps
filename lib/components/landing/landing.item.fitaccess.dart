@@ -8,7 +8,8 @@ import 'package:wandr/model/repositories/fitness.repository.dart';
 
 class LandingFitAccessItem extends LandingItem {
   ///
-  LandingFitAccessItem({Key key, int index, LandingDelegate delegate})
+  LandingFitAccessItem(
+      {Key? key, required index, required LandingDelegate delegate})
       : super(key: key, index: index, delegate: delegate);
 
   @override

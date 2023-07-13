@@ -13,25 +13,25 @@ class FitRecord {
   static const int TYPE_STEPS = 1;
 
   ///
-  int timestamp;
+  int timestamp = 0;
 
   ///
-  int source;
+  int source = SOURCE_MANUAL;
 
   ///
-  int type;
+  int type = TYPE_ACTIVE_MINUTES;
 
   ///
-  int value;
+  int value = 0;
 
   ///
-  String name;
+  String? name;
 
   ///
-  int count;
+  int count = 0;
 
   ///
-  FitRecord({DateTime dateTime}) {
+  FitRecord({DateTime? dateTime}) {
     final DateTime mDateTime = dateTime ?? DateTime.now();
     timestamp = mDateTime
         .subtract(Duration(milliseconds: mDateTime.millisecond))
@@ -52,7 +52,11 @@ class FitRecord {
   }
 
   ///
-  void fill({int source, int value, int type, String name}) {
+  void fill(
+      {required int source,
+      required int value,
+      required int type,
+      String? name}) {
     this.source = source;
     this.value = value;
     this.type = type;
@@ -77,21 +81,22 @@ class FitRecord {
       DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
 
   ///
-  String relativeDate(BuildContext context, {Calendar calendar, DateTime now}) {
+  String relativeDate(BuildContext context,
+      {required Calendar calendar, required DateTime now}) {
     final DateTime date = dateTime;
     if (calendar.isToday(date, now)) {
       return Localizer.translate(context, 'lblToday');
     } else if (calendar.isYesterday(date, now)) {
       return Localizer.translate(context, 'lblYesterday');
     }
-    return DateFormat.yMMMEd(LOCALE ?? 'de_DE').format(date);
+    return DateFormat.yMMMEd(LOCALE).format(date);
   }
 
   ///
   String relativeDateTime(BuildContext context,
-      {Calendar calendar, DateTime now}) {
+      {required Calendar calendar, required DateTime now}) {
     final DateTime date = dateTime;
-    return DateFormat.Hm(LOCALE ?? 'de_DE').format(date);
+    return DateFormat.Hm(LOCALE).format(date);
   }
 
   ///

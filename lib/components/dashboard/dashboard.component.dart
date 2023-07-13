@@ -41,8 +41,8 @@ class DashboardComponent extends StatefulWidget {
 
   ///
   DashboardComponent({
-    Key key,
-    this.title,
+    Key? key,
+    required this.title,
   }) : super(key: key);
 
   @override
@@ -57,22 +57,22 @@ class _DashboardState extends State<DashboardComponent>
         DashboardChallengeDelegate,
         ChallengeRepositoryClient {
   ///
-  String _userName;
+  String? _userName;
 
   ///
-  String _teamName;
+  String? _teamName;
 
   ///
-  FitSnapshot _fitSnapshot;
+  FitSnapshot? _fitSnapshot;
 
   ///
-  bool _unitKilometersEnabled;
+  bool _unitKilometersEnabled = false;
 
   ///
-  FitRanking _ranking;
+  FitRanking? _ranking;
 
   ///
-  StreamSubscription<Event> _rankingSubscription;
+  StreamSubscription? _rankingSubscription;
 
   ///
   List<FitChallenge> _challenges = [];
@@ -100,11 +100,11 @@ class _DashboardState extends State<DashboardComponent>
     Preferences.getUserKey().then((userValue) {
       if (!mounted) return;
 
-      if (userValue != null) {
+      if (userValue?.isNotEmpty == true) {
         setState(() {
-          _userName = userValue.split('@').first?.replaceAll('.', '_');
+          _userName = userValue!.split('@').first.replaceAll('.', '_');
           print('Init data for kUser=$_userName');
-          _userName = _md5(_userName);
+          _userName = _md5(_userName!);
           _teamName = 'Team mediaBEAM';
         });
 
@@ -151,7 +151,7 @@ class _DashboardState extends State<DashboardComponent>
     });
   }
 
-  void _onSnapshotChanged(DataSnapshot snapshot) {
+  void _onSnapshotChanged(DatabaseEvent snapshot) {
     if (!mounted) return;
     setState(() {
       // create ranking from Firebase realtime database
@@ -239,8 +239,8 @@ class _DashboardState extends State<DashboardComponent>
   @override
   void challengeRepositoryDidUpdate(
     ChallengeRepository repository, {
-    SyncState state,
-    List<FitChallenge> challengeList,
+    required SyncState state,
+    required List<FitChallenge> challengeList,
   }) {
     if (!mounted || challengeList.isEmpty) return;
     _challenges.clear();

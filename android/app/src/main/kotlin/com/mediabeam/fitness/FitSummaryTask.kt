@@ -11,13 +11,20 @@ import com.google.android.gms.fitness.data.Field
 import com.google.android.gms.fitness.request.DataReadRequest
 import com.google.android.gms.tasks.Tasks
 import io.flutter.plugin.common.MethodChannel
+import java.lang.UnsupportedOperationException
+import java.lang.ref.WeakReference
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
-import kotlin.collections.HashMap
 
-class FitSummaryTask(private val context: Context, private val options: FitnessOptions, private val result: MethodChannel.Result?) : AsyncTask<Void, Void, Map<String, Any?>>() {
+class FitSummaryTask(
+    private val context: WeakReference<Context>,
+    private val options: FitnessOptions,
+    private val result: MethodChannel.Result?
+) : AsyncTask<Void, Void, Map<String, Any?>>() {
     override fun doInBackground(vararg p0: Void?): Map<String, Any?> {
         val now = Calendar.getInstance(Locale.GERMANY)
         now.time = Date()
@@ -25,7 +32,7 @@ class FitSummaryTask(private val context: Context, private val options: FitnessO
         val dateFormat: DateFormat = DateFormat.getDateTimeInstance()
 
         val nowMillis = now.timeInMillis
-        Log.i("-", "\tnow: " + dateFormat.format(now.time))
+        // Log.i("-", "\tnow: " + dateFormat.format(now.time))
         now.set(Calendar.HOUR_OF_DAY, 0)
         now.set(Calendar.MINUTE, 0)
         now.set(Calendar.SECOND, 0)
@@ -33,11 +40,12 @@ class FitSummaryTask(private val context: Context, private val options: FitnessO
         now.add(Calendar.DATE, -7)
 
         val lastWeekStartMillis: Long = now.timeInMillis
-        Log.i("-", "\tlastWeekStart: " + dateFormat.format(now.time))
+        // Log.i("-", "\tlastWeekStart: " + dateFormat.format(now.time))
 
         val data = HashMap<String, Any>()
         data["steps"] = readSteps(lastWeekStartMillis, nowMillis)
         data["activeMinutes"] = readActiveMinutes(lastWeekStartMillis, nowMillis)
+
         return data
     }
 
@@ -49,14 +57,16 @@ class FitSummaryTask(private val context: Context, private val options: FitnessO
     private fun readSteps(from: Long, to: Long): Map<String, Int> {
         try {
             val readRequest = DataReadRequest.Builder()
-                    .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                    .bucketByTime(1, TimeUnit.DAYS)
-                    .setTimeRange(from, to, TimeUnit.MILLISECONDS)
-                    .enableServerQueries()
-                    .setLimit(9999)
-                    .build()
+                .enableServerQueries()
+                // .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .aggregate(DataType.TYPE_STEP_COUNT_DELTA)
+                .bucketByTime(1, TimeUnit.DAYS)
+                .setTimeRange(from, to, TimeUnit.MILLISECONDS)
+                .setLimit(9999)
+                .build()
 
-            return read(readRequest, DataType.TYPE_STEP_COUNT_DELTA, Field.FIELD_STEPS)
+            val contextRef = context.get() ?: throw UnsupportedOperationException()
+            return read(contextRef, readRequest, DataType.TYPE_STEP_COUNT_DELTA, Field.FIELD_STEPS)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -66,31 +76,49 @@ class FitSummaryTask(private val context: Context, private val options: FitnessO
     private fun readActiveMinutes(from: Long, to: Long): Map<String, Int> {
         try {
             val readRequest = DataReadRequest.Builder()
-                    .aggregate(DataType.TYPE_MOVE_MINUTES, DataType.AGGREGATE_MOVE_MINUTES)
-                    .bucketByTime(1, TimeUnit.DAYS)
-                    .setTimeRange(from, to, TimeUnit.MILLISECONDS)
-                    .enableServerQueries()
-                    .setLimit(9999)
-                    .build()
+                .enableServerQueries()
+                // .aggregate(DataType.TYPE_MOVE_MINUTES, DataType.AGGREGATE_MOVE_MINUTES)
+                .aggregate(DataType.TYPE_MOVE_MINUTES)
+                .bucketByTime(1, TimeUnit.DAYS)
+                .setTimeRange(from, to, TimeUnit.MILLISECONDS)
+                .setLimit(9999)
+                .build()
 
-            return read(readRequest, DataType.TYPE_MOVE_MINUTES, Field.FIELD_DURATION)
+            val contextRef = context.get() ?: throw UnsupportedOperationException()
+            return read(contextRef, readRequest, DataType.TYPE_MOVE_MINUTES, Field.FIELD_DURATION)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
         return HashMap()
     }
 
-    private fun read(request: DataReadRequest, dataType: DataType, field: Field): Map<String, Int> {
+    private fun read(
+        context: Context,
+        request: DataReadRequest,
+        dataType: DataType,
+        field: Field
+    ): Map<String, Int> {
         val account = GoogleSignIn
-                .getAccountForExtension(context, options)
+            .getAccountForExtension(context, options)
+
+        val fitnessOptions = FitnessOptions.builder()
+            .addDataType(dataType, FitnessOptions.ACCESS_READ)
+            .build()
+
+        if (!GoogleSignIn.hasPermissions(
+                account,
+                fitnessOptions
+            )
+        ) throw IllegalAccessException("Missing Google Fit read permission for $dataType")
 
         Fitness.getHistoryClient(context, account).apply {
             readData(request).apply {
                 Tasks.await(this, 5, TimeUnit.SECONDS).apply {
                     result?.apply {
-                        var map = HashMap<String, Int>()
+                        val map = HashMap<String, Int>()
                         if (status.isSuccess) {
-                            val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                            val dateFormat: DateFormat =
+                                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
                             buckets.forEach { bucket ->
                                 bucket.getDataSet(dataType)?.apply {
@@ -98,7 +126,8 @@ class FitSummaryTask(private val context: Context, private val options: FitnessO
                                     var key: String
                                     var value: Int
                                     dataPoints.forEach {
-                                        key = dateFormat.format(it.getStartTime(TimeUnit.MILLISECONDS))
+                                        key =
+                                            dateFormat.format(it.getStartTime(TimeUnit.MILLISECONDS))
                                         // Log.i("-", "\tkey:\t$key")
                                         value = it.getValue(field).asInt()
                                         // Log.i("-", "\tvalue:\t$value")

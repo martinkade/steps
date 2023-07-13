@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/preferences.dart';
@@ -7,7 +6,7 @@ class DashboardSettingsDisplayNameDialog extends StatefulWidget {
   final Function setDisplayName;
 
   const DashboardSettingsDisplayNameDialog({
-    this.setDisplayName,
+    required this.setDisplayName,
   });
 
   @override
@@ -18,13 +17,13 @@ class DashboardSettingsDisplayNameDialog extends StatefulWidget {
 class _DashboardSettingsDisplayNameDialog
     extends State<DashboardSettingsDisplayNameDialog> {
   ///
-  TextEditingController _inputController;
+  late TextEditingController _inputController;
 
   ///
-  FocusNode _focusNode;
+  late FocusNode _focusNode;
 
   ///
-  String _displayName;
+  String? _displayName;
 
   @override
   void initState() {
@@ -51,10 +50,6 @@ class _DashboardSettingsDisplayNameDialog
         setState(() {
           _displayName = text;
         });
-      });
-    } else {
-      setState(() {
-        _displayName = text;
       });
     }
     return valid;
@@ -100,7 +95,8 @@ class _DashboardSettingsDisplayNameDialog
                 obscureText: false,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: Localizer.translate(context, 'lblSettingsDisplayNameMainTitle'),
+                  labelText: Localizer.translate(
+                      context, 'lblSettingsDisplayNameMainTitle'),
                 ),
               ),
             ),

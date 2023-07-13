@@ -15,7 +15,8 @@ class FitChallenge6Team extends FitChallenge {
           startDate: kStartDate,
           endDate: kEndDate,
           title: 'Finale wir kommen',
-          description: 'Der Ball ist rund und das Spiel dauert 90 Minuten. Bis November ist es noch ein bisschen länger, somit Zeit genug für uns uns auf den Weg nach Katar zu machen und den Weltmeistertitel abzuholen.',
+          description:
+              'Der Ball ist rund und das Spiel dauert 90 Minuten. Bis November ist es noch ein bisschen länger, somit Zeit genug für uns uns auf den Weg nach Katar zu machen und den Weltmeistertitel abzuholen.',
           label: 'Kilometer',
           imageAsset: 'assets/images/challenge6.jpg',
           routeAsset: 'assets/routes/challenge6.gpx',
@@ -33,8 +34,8 @@ class FitChallenge6Team extends FitChallenge {
   }
 
   @override
-  void evaluate({FitSnapshot snapshot, FitRanking ranking}) {
-    progress = (ranking.challengeTotals[index]?.toDouble() ?? 0.0) / 12.0;
+  void evaluate({FitSnapshot? snapshot, FitRanking? ranking}) {
+    progress = (ranking?.challengeTotals[index].toDouble() ?? 0.0) / 12.0;
     final int totalHours = kEndDate.difference(kStartDate).inHours;
     final int hours = max(0, DateTime.now().difference(kStartDate).inHours);
     final double estimatedPercent = min(1.0, hours / totalHours.toDouble());
