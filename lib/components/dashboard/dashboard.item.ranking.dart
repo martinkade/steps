@@ -129,6 +129,11 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
       isSelected: _selectedGroupModeIndex == FitRanking.fitRankingTypeTeam,
       title: Localizer.translate(context, 'lblTeam'),
     ));
+    options.add(OptionModel(
+      index: 2,
+      isSelected: _selectedGroupModeIndex == FitRanking.fitRankingTypeOrganisation,
+      title: Localizer.translate(context, 'lblOrganisation'),
+    ));
     return options;
   }
 
