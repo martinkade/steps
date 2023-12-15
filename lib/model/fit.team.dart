@@ -1,11 +1,32 @@
-import 'package:flutter/services.dart';
+import 'package:wandr/model/cache/fit.record.dao.dart';
+import 'package:wandr/model/cache/fit.team.dao.dart';
+import 'package:uuid/uuid.dart';
 
 class FitTeam {
-  late String name;
+  ///
+  String uuid = '';
 
-  late int id;
+  ///
+  String? name;
 
-  final List<String> users = <String>[];
+  ///
+  FitTeam({String uuid = '', String? name}) {
+    this.uuid = uuid.isEmpty ? Uuid().v4() : uuid;
+    this.name = name;
+  }
 
-  FitTeam(this.name, this.id);
+  ///
+  void initWithCursor(Map<String, dynamic> cursor) {
+    uuid = cursor[FitTeamDao.COL_UUID];
+    name = cursor[FitRecordDao.COL_NAME];
+  }
+
+  ///
+  void fill({required String uuid, String? name}) {
+    this.uuid = uuid;
+    this.name = name;
+  }
+
+  ///
+  String get idString => uuid;
 }

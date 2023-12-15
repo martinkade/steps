@@ -97,30 +97,32 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
       }
     });
 
-    Preferences().hasRestoredData().then((restored) {
-      if (restored) {
-        _repository.syncPoints(
-          userKey: widget.userKey!,
-          teamName: widget.teamName!,
-          challenges: widget.delegate.getChallenges(),
-          client: this,
-          pushData: true,
-        );
-      } else {
-        _repository
-            .restorePoints(userKey: widget.userKey!, client: this)
-            .then((_) async {
-          await Preferences().setHasRestoredData(true);
-          _repository.syncPoints(
-            userKey: widget.userKey!,
-            teamName: widget.teamName!,
-            challenges: widget.delegate.getChallenges(),
-            client: this,
-            pushData: true,
-          );
+    _repository.syncTeams().then((_) => {
+          Preferences().hasRestoredData().then((restored) {
+            if (restored) {
+              _repository.syncPoints(
+                userKey: widget.userKey!,
+                teamName: widget.teamName!,
+                challenges: widget.delegate.getChallenges(),
+                client: this,
+                pushData: true,
+              );
+            } else {
+              _repository
+                  .restorePoints(userKey: widget.userKey!, client: this)
+                  .then((_) async {
+                await Preferences().setHasRestoredData(true);
+                _repository.syncPoints(
+                  userKey: widget.userKey!,
+                  teamName: widget.teamName!,
+                  challenges: widget.delegate.getChallenges(),
+                  client: this,
+                  pushData: true,
+                );
+              });
+            }
+          })
         });
-      }
-    });
   }
 
   @override

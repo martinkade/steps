@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:wandr/model/cache/fit.team.dao.dart';
 import 'package:wandr/model/cache/structured.cache.spec.dart';
 import 'package:wandr/model/cache/fit.record.dao.dart';
 
@@ -25,7 +26,7 @@ class StructuredCache extends IStructuredCache {
 
   @override
   getVersion() {
-    return 1;
+    return 2;
   }
 
   @override
@@ -36,6 +37,7 @@ class StructuredCache extends IStructuredCache {
     print('Creating database with version $version ...');
     await db.transaction((txn) async {
       await FitRecordDao.create(txn: txn);
+      await FitTeamDao.create(txn: txn);
     });
   }
 
@@ -45,6 +47,7 @@ class StructuredCache extends IStructuredCache {
         'Upgrading database from version $oldVersion to version $newVersion ...');
     await db.transaction((txn) async {
       await FitRecordDao.upgrade(oldVersion, newVersion, txn: txn);
+      await FitTeamDao.upgrade(oldVersion, newVersion, txn: txn);
     });
   }
 
@@ -53,6 +56,7 @@ class StructuredCache extends IStructuredCache {
     print(
         'Downgrading database from version $oldVersion to version $newVersion ...');
     await db.transaction((txn) async {
+      await FitTeamDao.downgrade(oldVersion, newVersion, txn: txn);
       await FitRecordDao.downgrade(oldVersion, newVersion, txn: txn);
     });
   }
