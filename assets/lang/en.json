@@ -26,6 +26,7 @@
     "lblDashboardActionHistory": "My history",
     "lblDashboardActionNewRecord": "New record",
     "lblDashboardActionSettings": "Settings",
+    "lblDashboardActionTeams": "Teams",
 
     "lblChallengeStartDate": "starts on %1",
     "lblChallengeDeltaDaysMany": "starts in %1 days",
@@ -65,6 +66,8 @@
     "lblSettingsDisplayUnitMainInfo": "If you want, you can have the points in your history and in the statistics converted directly into kilometers.",
     "lblSettingsDisplayNameMainTitle": "Display name",
     "lblSettingsDisplayNameMainInfo": "You will be listed under this name in all ranking lists: %1",
+
+    "lblTeams": "Teams",
 
     "lblDashboardSettingsTitle": "Adjust your daily goal ",
     "lblDashboardSettingsText": "Choose your level of activity!",

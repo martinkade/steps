@@ -26,6 +26,7 @@
     "lblDashboardActionHistory": "Mein Verlauf",
     "lblDashboardActionNewRecord": "Neuer Eintrag",
     "lblDashboardActionSettings": "Einstellungen",
+    "lblDashboardActionTeams": "Teams",
 
     "lblChallengeStartDate": "beginnt am %1",
     "lblChallengeDeltaDaysMany": "beginnt in %1 Tagen",
@@ -65,6 +66,8 @@
     "lblSettingsDisplayUnitMainInfo": "Wenn du möchtest, kannst du dir die Punkte in deinem Verlauf und in der Statistik direkt in Kilometer umrechnen lassen.",
     "lblSettingsDisplayNameMainTitle": "Anzeigename",
     "lblSettingsDisplayNameMainInfo": "Unter diesem Namen wirst du in sämtlichen Ranglisten geführt: %1",
+
+    "lblTeams": "Teams",
 
     "lblDashboardSettingsTitle": "Tagesziel anpassen",
     "lblDashboardSettingsText": "Wähle dein Aktivitätsniveau!",

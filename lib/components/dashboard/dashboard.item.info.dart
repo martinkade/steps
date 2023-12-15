@@ -3,8 +3,13 @@ import 'package:wandr/components/shared/localizer.dart';
 
 abstract class DashboardInfoItemDelegate {
   void onSettingsRequested();
+
   void onHistoryRequested();
+
   void onNewRecordRequested();
+
+  void onTeamsRequested();
+
   void onInfoRequested();
 }
 
@@ -41,7 +46,7 @@ class DashboardInfoItem extends StatelessWidget {
                           context, 'lblDashboardActionHistory'),
                       icon: Icons.analytics_rounded,
                       onTap: () {
-                        delegate?.onHistoryRequested();
+                        delegate.onHistoryRequested();
                       },
                     ),
                     DashboardAction(
@@ -49,15 +54,29 @@ class DashboardInfoItem extends StatelessWidget {
                           context, 'lblDashboardActionNewRecord'),
                       icon: Icons.add_circle,
                       onTap: () {
-                        delegate?.onNewRecordRequested();
+                        delegate.onNewRecordRequested();
                       },
                     ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
                     DashboardAction(
                       title: Localizer.translate(
                           context, 'lblDashboardActionSettings'),
                       icon: Icons.settings,
                       onTap: () {
-                        delegate?.onSettingsRequested();
+                        delegate.onSettingsRequested();
+                      },
+                    ),
+                    DashboardAction(
+                      title: Localizer.translate(
+                          context, 'lblDashboardActionTeams'),
+                      icon: Icons.groups,
+                      onTap: () {
+                        delegate.onTeamsRequested();
                       },
                     ),
                   ],
