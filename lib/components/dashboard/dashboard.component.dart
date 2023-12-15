@@ -22,6 +22,7 @@ import 'package:wandr/components/shared/route.transition.dart';
 import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
+import 'package:wandr/model/fit.team.dart';
 import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/challenge.repository.dart';
 import 'package:wandr/model/repositories/repository.dart';
@@ -63,6 +64,9 @@ class _DashboardState extends State<DashboardComponent>
   String? _teamName;
 
   ///
+  String? _organizationName;
+
+  ///
   FitSnapshot? _fitSnapshot;
 
   ///
@@ -97,15 +101,18 @@ class _DashboardState extends State<DashboardComponent>
     _unitKilometersEnabled = false;
     ChallengeRepository().fetchChallenges(client: this);
 
-    Preferences.getUserKey().then((userValue) {
+    Preferences.getUserKey().then((userValue) async {
       if (!mounted) return;
+
+      final FitTeam? team = await Preferences.getTeam();
 
       if (userValue?.isNotEmpty == true) {
         setState(() {
           _userName = userValue!.split('@').first.replaceAll('.', '_');
-          print('Init data for kUser=$_userName');
           _userName = _md5(_userName!);
-          _teamName = 'Team mediaBEAM';
+          print('Init data for kUser=$_userName');
+          _organizationName = 'Team mediaBEAM';
+          _teamName = team == null ? _organizationName : team.name;
         });
 
         _load();
@@ -132,17 +139,18 @@ class _DashboardState extends State<DashboardComponent>
       _unitKilometersEnabled = enabled;
       print('Kilometer unit enabled: $_unitKilometersEnabled');
       Storage().access().then((instance) {
-        final FirebaseDatabase db = FirebaseDatabase(app: instance);
-        db.reference().child('users').once().then((snapshot) {
+        final FirebaseDatabase db =
+            FirebaseDatabase.instanceFor(app: instance!);
+        db.ref().child('users').once().then((snapshot) {
           if (!mounted) return;
           _onSnapshotChanged(snapshot);
         });
 
         if (_rankingSubscription == null) {
           _rankingSubscription =
-              db.reference().child('users').onChildChanged.listen((_) {
+              db.ref().child('users').onChildChanged.listen((_) {
             if (!mounted) return;
-            db.reference().child('users').once().then((snapshot) {
+            db.ref().child('users').once().then((snapshot) {
               _onSnapshotChanged(snapshot);
             });
           });
@@ -278,6 +286,7 @@ class _DashboardState extends State<DashboardComponent>
                 delegate: this,
                 userKey: _userName,
                 teamName: _teamName,
+                organizationName: _organizationName,
               ),
             );
           case 2:
@@ -291,6 +300,7 @@ class _DashboardState extends State<DashboardComponent>
               delegate: this,
               userKey: _userName,
               teamName: _teamName,
+              organizationName: _organizationName,
             );
           case 4:
             return DashboardChallengeItem(
@@ -300,6 +310,7 @@ class _DashboardState extends State<DashboardComponent>
               snapshot: _fitSnapshot,
               userKey: _userName,
               teamName: _teamName,
+              organizationName: _organizationName,
               delegate: this,
             );
           case 5:
@@ -309,6 +320,7 @@ class _DashboardState extends State<DashboardComponent>
               ranking: _ranking,
               userKey: _userName,
               teamName: _teamName,
+              organizationName: _organizationName,
             );
           default:
             return DashboardFooterItem(

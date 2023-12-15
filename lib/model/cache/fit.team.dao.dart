@@ -100,14 +100,6 @@ class FitTeamDao extends FitDao {
       team.initWithCursor(cursor);
       teams.add(team);
     }
-    // return teams;
-    return [
-      FitTeam(
-          uuid: '0fde11d5-4d51-4a45-8274-6be1f737ae60', name: 'Frontend Devs'),
-      FitTeam(
-          uuid: '1d127d5b-c2e8-4adf-98fb-1cceb8ed18aa', name: 'Backend Devs'),
-      FitTeam(uuid: '0e99d0e3-e218-4f05-a146-a81a7e1e9053', name: 'Ops'),
-      FitTeam(uuid: 'ccb105a4-8dc4-4e04-ae8e-edc3565c8bb5', name: 'Support')
-    ];
+    return teams;
   }
 }

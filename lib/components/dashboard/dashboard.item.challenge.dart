@@ -20,6 +20,9 @@ class DashboardChallengeItem extends DashboardItem {
   final String? teamName;
 
   ///
+  final String? organizationName;
+
+  ///
   final FitRanking? ranking;
 
   ///
@@ -36,6 +39,7 @@ class DashboardChallengeItem extends DashboardItem {
     this.snapshot,
     this.userKey,
     this.teamName,
+    this.organizationName,
     required this.delegate,
   }) : super(key: key, title: title);
 

@@ -6,6 +6,7 @@ import 'package:wandr/util/AprilJokes.dart';
 class FitRanking {
   static int fitRankingTypeSingle = 0;
   static int fitRankingTypeTeam = 1;
+  static int fitRankingTypeOrganization = 2;
 
   final Map<String, List<FitRankingEntry>> entries = Map.fromEntries([
     MapEntry('today', <FitRankingEntry>[]),
@@ -293,7 +294,7 @@ class FitRanking {
           MapEntry('name', organizationKey),
           MapEntry('value', data[categoryKey]),
           MapEntry('sync', timestamp),
-          MapEntry('type', fitRankingTypeTeam)
+          MapEntry('type', fitRankingTypeOrganization)
         ]),
       );
     }

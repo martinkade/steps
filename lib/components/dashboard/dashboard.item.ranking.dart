@@ -15,6 +15,9 @@ class DashboardRankingItem extends DashboardItem {
   final String? teamName;
 
   ///
+  final String? organizationName;
+
+  ///
   final FitRanking? ranking;
 
   ///
@@ -24,6 +27,7 @@ class DashboardRankingItem extends DashboardItem {
     this.ranking,
     this.userKey,
     this.teamName,
+    this.organizationName,
   }) : super(key: key, title: title);
 
   @override
@@ -128,6 +132,12 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
       index: 1,
       isSelected: _selectedGroupModeIndex == FitRanking.fitRankingTypeTeam,
       title: Localizer.translate(context, 'lblTeam'),
+    ));
+    options.add(OptionModel(
+      index: 2,
+      isSelected:
+          _selectedGroupModeIndex == FitRanking.fitRankingTypeOrganization,
+      title: Localizer.translate(context, 'lblOrganization'),
     ));
     return options;
   }
