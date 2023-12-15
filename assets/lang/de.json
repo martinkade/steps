@@ -71,6 +71,8 @@
     "lblTeamsEnterDialogTitle": "Team beitreten",
     "lblTeamsEnterDialogDescription": "Möchtest du dem Team '%1' beitreten?",
     "lblTeamsTeamNameTitle": "Gib einen Teamnamen an",
+    "lblTeamsLeaveDialogTitle": "Team verlassen",
+    "lblTeamsLeaveDialogDescription": "Möchtest du das Team '%1' wirklich verlassen?",
 
     "lblDashboardSettingsTitle": "Tagesziel anpassen",
     "lblDashboardSettingsText": "Wähle dein Aktivitätsniveau!",
@@ -107,6 +109,7 @@
     "lblActionAdjust": "Anpassen",
     "lblActionEnterTeam": "Beitreten",
     "lblActionCreateTeam": "Team erstellen",
+    "lblActionLeaveTeam": "Team verlassen",
     "lblActionRestore": "Wiederherstellen",
     "lblNotAvailable": "nicht verfügbar 🤕",
     "lblNoRecords": "keine Einträge gefunden",

@@ -71,6 +71,8 @@
     "lblTeamsEnterDialogTitle": "Enter team",
     "lblTeamsEnterDialogDescription": "Would you like to join team '%1'?",
     "lblTeamsTeamNameTitle": "Enter a new team name",
+    "lblTeamsLeaveDialogTitle": "Leave team",
+    "lblTeamsLeaveDialogDescription": "Would you like to leave team '%1'?",
 
     "lblDashboardSettingsTitle": "Adjust your daily goal ",
     "lblDashboardSettingsText": "Choose your level of activity!",
@@ -107,6 +109,7 @@
     "lblActionAdjust": "Adjust",
     "lblActionEnterTeam": "Enter",
     "lblActionCreateTeam": "Create team",
+    "lblActionLeaveTeam": "Leave team",
     "lblActionRestore": "Restore",
     "lblNotAvailable": "not available 🤕",
     "lblNoRecords": "no records found",
