@@ -3,9 +3,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:wandr/model/cache/fit.record.dao.dart';
+import 'package:wandr/model/cache/fit.team.dao.dart';
 import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.record.dart';
 import 'package:wandr/model/fit.snapshot.dart';
+import 'package:wandr/model/fit.team.dart';
 import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/repository.dart';
 import 'package:wandr/model/storage.dart';
@@ -81,6 +83,30 @@ class FitnessRepository extends Repository {
   }
 
   ///
+  Future<List<FitTeam>> fetchAvailableTeamList() async {
+    final FitTeamDao dao = FitTeamDao();
+    return await dao.fetchAll();
+  }
+
+  ///
+  Future<void> addTeam(FitTeam team) async {
+    final FitTeamDao dao = FitTeamDao();
+    return await dao.insertOrReplace(teams: [team]);
+  }
+
+  ///
+  Future<void> updateTeam(FitTeam team) async {
+    final FitTeamDao dao = FitTeamDao();
+    return await dao.insertOrReplace(teams: [team]);
+  }
+
+  ///
+  Future<void> deleteTeam(FitTeam team) async {
+    final FitTeamDao dao = FitTeamDao();
+    return await dao.delete(teams: [team]);
+  }
+
+  ///
   Future<List<FitRecord>> fetchHistory({String? day}) async {
     final FitRecordDao dao = FitRecordDao();
     if (day != null) {
@@ -128,6 +154,29 @@ class FitnessRepository extends Repository {
       onlyManualRecords: false,
     );
     await dao.restore(oldRecords: historicalData, records: localData);
+  }
+
+  ///
+  Future<void> syncTeams() async {
+    final FitTeamDao dao = FitTeamDao();
+    final List<FitTeam> teams = await dao.fetchAll();
+    await _writeTeams(teams);
+  }
+
+  ///
+  Future<void> _writeTeams(List<FitTeam> teams) async {
+    Storage().access().then((instance) async {
+      final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
+      db.setPersistenceEnabled(true);
+      db.setPersistenceCacheSizeBytes(1024 * 1024);
+
+      Map<String, dynamic> teamData;
+      teams.forEach((team) async {
+        teamData = Map.fromEntries([MapEntry('name', team.name)]);
+        print('FitRepository#_writeTeams:\n\t$teamData');
+        await db.ref().child('teams').child(team.uuid).set(teamData);
+      });
+    });
   }
 
   ///
@@ -196,18 +245,23 @@ class FitnessRepository extends Repository {
       anchor: anchor,
     );
     if (pushData) {
-      _writeSnapshot(snapshot, userKey: userKey, teamName: teamName);
+      _writeSnapshot(
+        snapshot,
+        userKey: userKey,
+        teamName: teamName,
+        organizationName: teamName,
+      );
     }
   }
 
   ///
   Future<List<FitRecord>> _readSnapshot(String userKey) async {
     final FirebaseApp? instance = await Storage().access();
-    final FirebaseDatabase db = FirebaseDatabase(app: instance);
+    final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
     db.setPersistenceEnabled(true);
     db.setPersistenceCacheSizeBytes(1024 * 1024);
     final DataSnapshot? data =
-        await db.reference().child('users').child(userKey).get();
+        await db.ref().child('users').child(userKey).get();
     Map<dynamic, dynamic> history;
     Map dict;
     if (data?.value != null) {
@@ -237,22 +291,22 @@ class FitnessRepository extends Repository {
   }
 
   ///
-  Future<void> _writeSnapshot(
-    FitSnapshot snapshot, {
-    required String userKey,
-    required String teamName,
-  }) async {
+  Future<void> _writeSnapshot(FitSnapshot snapshot,
+      {required String userKey,
+      required String teamName,
+      required String organizationName}) async {
     Storage().access().then((instance) async {
-      final FirebaseDatabase db = FirebaseDatabase(app: instance);
+      final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
       db.setPersistenceEnabled(true);
       db.setPersistenceCacheSizeBytes(1024 * 1024);
 
       final Map<String, dynamic> snapshotData = Map();
       snapshotData.putIfAbsent('team', () => teamName);
+      snapshotData.putIfAbsent('organization', () => organizationName);
       snapshotData.addAll(await snapshot.persist());
       print('FitRepository#_writeSnapshot:\n\t$userKey\n\t$snapshotData');
 
-      await db.reference().child('users').child(userKey).set(snapshotData);
+      await db.ref().child('users').child(userKey).set(snapshotData);
     });
   }
 }

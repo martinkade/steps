@@ -1,8 +1,8 @@
 package com.mediabeam.fitness
 
 import android.content.Context
-import android.os.AsyncTask
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
@@ -11,21 +11,24 @@ import com.google.android.gms.fitness.data.Field
 import com.google.android.gms.fitness.request.DataReadRequest
 import com.google.android.gms.tasks.Tasks
 import io.flutter.plugin.common.MethodChannel
-import java.lang.UnsupportedOperationException
 import java.lang.ref.WeakReference
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 
 class FitSummaryTask(
     private val context: WeakReference<Context>,
     private val options: FitnessOptions,
     private val result: MethodChannel.Result?
-) : AsyncTask<Void, Void, Map<String, Any?>>() {
-    override fun doInBackground(vararg p0: Void?): Map<String, Any?> {
+) : Callable<Map<String, Any?>> {
+
+    private val uiHandler = Handler(Looper.getMainLooper())
+
+    override fun call(): Map<String, Any?> {
         val now = Calendar.getInstance(Locale.GERMANY)
         now.time = Date()
 
@@ -46,12 +49,8 @@ class FitSummaryTask(
         data["steps"] = readSteps(lastWeekStartMillis, nowMillis)
         data["activeMinutes"] = readActiveMinutes(lastWeekStartMillis, nowMillis)
 
+        uiHandler.post { result?.success(data) }
         return data
-    }
-
-    override fun onPostExecute(data: Map<String, Any?>?) {
-        super.onPostExecute(data)
-        result?.success(data)
     }
 
     private fun readSteps(from: Long, to: Long): Map<String, Int> {

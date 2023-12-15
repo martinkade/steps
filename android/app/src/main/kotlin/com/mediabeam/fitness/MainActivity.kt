@@ -7,7 +7,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -20,6 +19,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.lang.ref.WeakReference
 import java.util.Calendar
+import java.util.concurrent.Executors
 
 // https://developers.google.com/fit/datatypes/activity
 class MainActivity : FlutterActivity() {
@@ -84,9 +84,9 @@ class MainActivity : FlutterActivity() {
                     result.success(true)
                 }
             } else if (call.method == "getDeviceInfo") {
-                result.success(getDeviceInfo() ?: "unknown")
+                result.success(deviceInfo)
             } else if (call.method == "getAppInfo") {
-                result.success(getAppInfo() ?: "unknown")
+                result.success(appInfo)
             } else {
                 result.notImplemented()
             }
@@ -100,9 +100,12 @@ class MainActivity : FlutterActivity() {
                 "isNotificationsEnabled" -> {
                     result.success(isNotificationsEnabled())
                 }
+
                 "enableNotifications" -> {
-                    result.success(call.argument<Boolean>("enable")?.let { enableNotifications(it) })
+                    result.success(
+                        call.argument<Boolean>("enable")?.let { enableNotifications(it) })
                 }
+
                 else -> {
                     result.notImplemented()
                 }
@@ -124,7 +127,14 @@ class MainActivity : FlutterActivity() {
         this.pendingResult = null
 
         val task = FitSummaryTask(WeakReference(applicationContext), fitnessOptions, result)
-        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR)
+
+        val executor = Executors.newSingleThreadExecutor()
+        val future = executor.submit(task)
+        try {
+            future.get()
+        } finally {
+            executor.shutdown()
+        }
     }
 
     private fun handleAuthCall(
@@ -158,24 +168,26 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    private fun getAppInfo(): String? {
-        val versionName: String = BuildConfig.VERSION_NAME
-        val versionCode: Int = BuildConfig.VERSION_CODE
-        return "$versionName ($versionCode)"
-    }
-
-    private fun getDeviceInfo(): String? {
-        val manufacturer: String = Build.MANUFACTURER
-        val model: String = Build.MODEL
-        return if (model.startsWith(manufacturer)) {
-            "${capitalize(model)} Android ${Build.VERSION.RELEASE}"
-        } else {
-            "${capitalize(manufacturer)} $model, Android ${Build.VERSION.RELEASE}"
+    private val appInfo: String
+        get() {
+            val versionName: String = BuildConfig.VERSION_NAME
+            val versionCode: Int = BuildConfig.VERSION_CODE
+            return "$versionName ($versionCode)"
         }
-    }
+
+    private val deviceInfo: String
+        get() {
+            val manufacturer: String = Build.MANUFACTURER
+            val model: String = Build.MODEL
+            return if (model.startsWith(manufacturer)) {
+                "${capitalize(model)} Android ${Build.VERSION.RELEASE}"
+            } else {
+                "${capitalize(manufacturer)} $model, Android ${Build.VERSION.RELEASE}"
+            }
+        }
 
     private fun capitalize(s: String?): String {
-        if (s == null || s.isEmpty()) {
+        if (s.isNullOrEmpty()) {
             return ""
         }
         val first = s[0]
