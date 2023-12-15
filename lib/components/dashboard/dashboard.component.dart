@@ -112,7 +112,7 @@ class _DashboardState extends State<DashboardComponent>
           _userName = _md5(_userName!);
           print('Init data for kUser=$_userName');
           _organizationName = 'Team mediaBEAM';
-          _teamName = team == null ? _organizationName : team.name;
+          _teamName = team == null ? 'Ohne Team' : team.name;
         });
 
         _load();
