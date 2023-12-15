@@ -16,6 +16,7 @@ import 'package:wandr/components/history/history.component.add.dart';
 import 'package:wandr/components/history/history.component.dart';
 import 'package:wandr/components/landing/landing.component.dart';
 import 'package:wandr/components/settings/settings.component.dart';
+import 'package:wandr/components/teams/teams.component.dart';
 import 'package:wandr/components/shared/bezier.clipper.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/components/shared/route.transition.dart';
@@ -213,6 +214,18 @@ class _DashboardState extends State<DashboardComponent>
       (_rankingKey.currentState)?.reload(
           await Preferences().isFlagSet(kFlagUnitKilometers),
           await Preferences().getDifficultyLevel());
+    });
+  }
+
+  @override
+  void onTeamsRequested() {
+    Navigator.push(
+      context,
+      RouteTransition(
+        page: TeamsComponent(userKey: _userName),
+      ),
+    ).then((_) async {
+      (_syncKey.currentState)?.reload();
     });
   }
 
