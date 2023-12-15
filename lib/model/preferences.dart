@@ -25,6 +25,13 @@ class Preferences {
   }
 
   ///
+  static Future<void> removeTeam() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove('kTeamUuid');
+    preferences.remove('kTeamName');
+  }
+
+  ///
   static Future<FitTeam?> getTeam() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     if (!preferences.containsKey('kTeamUuid')) return null;
