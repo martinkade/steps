@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wandr/components/settings/settings.item.difficulty.dart';
 import 'package:wandr/model/fit.challenge.dart';
+import 'package:wandr/model/fit.team.dart';
 
 const kFlagInitialNotifications = 'kFlagInitialNotifications';
 const kFlagUnitKilometers = 'kFlagUnitKilometers';
@@ -14,6 +15,22 @@ class Preferences {
   static Future<String?> getUserKey() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString('kUser');
+  }
+
+  ///
+  static Future<void> setTeam(FitTeam team) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('kTeamUuid', team.uuid);
+    preferences.setString('kTeamName', team.name ?? '');
+  }
+
+  ///
+  static Future<FitTeam?> getTeam() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (!preferences.containsKey('kTeamUuid')) return null;
+    final String? uuid = preferences.getString('kTeamUuid');
+    if (uuid == null) return null;
+    return FitTeam(uuid: uuid, name: preferences.getString('kTeamName'));
   }
 
   ///

@@ -18,6 +18,9 @@ class DashboardSyncItem extends DashboardItem {
   final String? teamName;
 
   ///
+  final String? organizationName;
+
+  ///
   final DashboardSyncDelegate delegate;
 
   ///
@@ -27,6 +30,7 @@ class DashboardSyncItem extends DashboardItem {
     required this.delegate,
     this.userKey,
     this.teamName,
+    this.organizationName,
   }) : super(key: key, title: title);
 
   @override
@@ -103,6 +107,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
               _repository.syncPoints(
                 userKey: widget.userKey!,
                 teamName: widget.teamName!,
+                organizationName: widget.organizationName!,
                 challenges: widget.delegate.getChallenges(),
                 client: this,
                 pushData: true,
@@ -115,6 +120,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                 _repository.syncPoints(
                   userKey: widget.userKey!,
                   teamName: widget.teamName!,
+                  organizationName: widget.organizationName!,
                   challenges: widget.delegate.getChallenges(),
                   client: this,
                   pushData: true,

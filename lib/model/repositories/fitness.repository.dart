@@ -158,9 +158,39 @@ class FitnessRepository extends Repository {
 
   ///
   Future<void> syncTeams() async {
+    List<FitTeam> teams = await _readTeams();
     final FitTeamDao dao = FitTeamDao();
-    final List<FitTeam> teams = await dao.fetchAll();
+    await dao.insertOrReplace(teams: teams);
+
+    teams = await dao.fetchAll();
     await _writeTeams(teams);
+  }
+
+  ///
+  Future<List<FitTeam>> _readTeams() async {
+    final FirebaseApp? instance = await Storage().access();
+    final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
+    db.setPersistenceEnabled(true);
+    db.setPersistenceCacheSizeBytes(1024 * 1024);
+    final DataSnapshot? data = await db.ref().child('teams').get();
+    Map dict;
+    if (data?.value != null) {
+      dict = data!.value! as Map;
+    } else {
+      dict = Map();
+    }
+
+    FitTeam team;
+    final List<FitTeam> teams = <FitTeam>[];
+    dict.forEach((key, value) {
+      team = FitTeam();
+      team.fill(
+        uuid: key,
+        name: value['name']?.toString() ?? '',
+      );
+      teams.add(team);
+    });
+    return teams;
   }
 
   ///
@@ -183,6 +213,7 @@ class FitnessRepository extends Repository {
   Future<void> syncPoints({
     required String userKey,
     required String teamName,
+    required String organizationName,
     required FitnessRepositoryClient client,
     required List<FitChallenge> challenges,
     bool pushData = false,
@@ -249,7 +280,7 @@ class FitnessRepository extends Repository {
         snapshot,
         userKey: userKey,
         teamName: teamName,
-        organizationName: teamName,
+        organizationName: organizationName,
       );
     }
   }

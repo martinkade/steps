@@ -17,6 +17,9 @@ class DashboardGoalItem extends DashboardItem {
   final String? teamName;
 
   ///
+  final String? organizationName;
+
+  ///
   final DashboardSyncDelegate delegate;
 
   ///
@@ -26,6 +29,7 @@ class DashboardGoalItem extends DashboardItem {
     required this.delegate,
     this.userKey,
     this.teamName,
+    this.organizationName,
   }) : super(key: key, title: title);
 
   @override

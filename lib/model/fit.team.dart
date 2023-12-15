@@ -22,8 +22,8 @@ class FitTeam {
   }
 
   ///
-  void fill({required String uuid, String? name}) {
-    this.uuid = uuid;
+  void fill({String uuid = '', String? name}) {
+    this.uuid = uuid.isEmpty ? Uuid().v4() : uuid;
     this.name = name;
   }
 

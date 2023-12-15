@@ -88,7 +88,7 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
     int weekPoints;
     List<FitRecord> records;
     for (int i = week; i > 0; i--) {
-      print('Fetch Week stats $i: $weekStart to $weekEnd');
+      // print('Fetch Week stats $i: $weekStart to $weekEnd');
       records = await dao.fetchAllByDayAndPoints(
         from: weekStart,
         to: weekEnd,

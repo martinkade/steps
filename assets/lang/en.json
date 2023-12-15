@@ -26,7 +26,6 @@
     "lblDashboardActionHistory": "My history",
     "lblDashboardActionNewRecord": "New record",
     "lblDashboardActionSettings": "Settings",
-    "lblDashboardActionTeams": "Teams",
 
     "lblChallengeStartDate": "starts on %1",
     "lblChallengeDeltaDaysMany": "starts in %1 days",
@@ -67,11 +66,6 @@
     "lblSettingsDisplayNameMainTitle": "Display name",
     "lblSettingsDisplayNameMainInfo": "You will be listed under this name in all ranking lists: %1",
 
-    "lblTeams": "Teams",
-    "lblTeamsEnterDialogTitle": "Enter team",
-    "lblTeamsEnterDialogDescription": "Would you like to join team '%1'?",
-    "lblTeamsTeamNameTitle": "Enter a new team name",
-
     "lblDashboardSettingsTitle": "Adjust your daily goal ",
     "lblDashboardSettingsText": "Choose your level of activity!",
     "lblDashboardSettingsOption0": "Not very active",
@@ -99,14 +93,11 @@
     "lblLoading": "Loading...",
     "lblActionBack": "Back",
     "lblActionForward": "Next",
-    "lblActionCancel": "Cancel",
     "lblActionDone": "Done",
     "lblActionDelete": "Delete",
     "lblActionGrant": "Grant access",
     "lblActionRetry": "Retry",
     "lblActionAdjust": "Adjust",
-    "lblActionEnterTeam": "Enter",
-    "lblActionCreateTeam": "Create team",
     "lblActionRestore": "Restore",
     "lblNotAvailable": "not available 🤕",
     "lblNoRecords": "no records found",
@@ -122,7 +113,7 @@
     "lblOverall": "all in all",
     "lblActiveUsers": "active WANDRers",
     "lblTeam": "team ranking",
-    "lblOrganisation": "company ranking",
+    "lblOrganization": "organization ranking",
     "lblSingle": "individual ranking",
     "lblSingleSync": "Sync",
     "lblTeamUserCount": "Users"
