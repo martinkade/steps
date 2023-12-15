@@ -6,6 +6,7 @@ import 'package:wandr/components/shared/loading.indicator.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/lifecycle.dart';
 import 'package:wandr/model/fit.snapshot.dart';
+import 'package:wandr/model/fit.team.dart';
 import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/fitness.repository.dart';
 import 'package:wandr/model/repositories/repository.dart';
@@ -101,34 +102,36 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
       }
     });
 
-    _repository.syncTeams().then((_) => {
-          Preferences().hasRestoredData().then((restored) {
-            if (restored) {
-              _repository.syncPoints(
-                userKey: widget.userKey!,
-                teamName: widget.teamName!,
-                organizationName: widget.organizationName!,
-                challenges: widget.delegate.getChallenges(),
-                client: this,
-                pushData: true,
-              );
-            } else {
-              _repository
-                  .restorePoints(userKey: widget.userKey!, client: this)
-                  .then((_) async {
-                await Preferences().setHasRestoredData(true);
-                _repository.syncPoints(
-                  userKey: widget.userKey!,
-                  teamName: widget.teamName!,
-                  organizationName: widget.organizationName!,
-                  challenges: widget.delegate.getChallenges(),
-                  client: this,
-                  pushData: true,
-                );
-              });
-            }
-          })
-        });
+    _repository.syncTeams().then((_) {
+      Preferences().hasRestoredData().then((restored) async {
+        final FitTeam? team = await Preferences.getTeam();
+        final String? teamName = team == null ? 'Ohne Team' : team.name;
+        if (restored) {
+          _repository.syncPoints(
+            userKey: widget.userKey!,
+            teamName: teamName!,
+            organizationName: widget.organizationName!,
+            challenges: widget.delegate.getChallenges(),
+            client: this,
+            pushData: true,
+          );
+        } else {
+          _repository
+              .restorePoints(userKey: widget.userKey!, client: this)
+              .then((_) async {
+            await Preferences().setHasRestoredData(true);
+            _repository.syncPoints(
+              userKey: widget.userKey!,
+              teamName: teamName!,
+              organizationName: widget.organizationName!,
+              challenges: widget.delegate.getChallenges(),
+              client: this,
+              pushData: true,
+            );
+          });
+        }
+      });
+    });
   }
 
   @override
