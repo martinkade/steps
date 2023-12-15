@@ -28,8 +28,7 @@ class _TeamsState extends State<TeamsComponent> {
   void initState() {
     super.initState();
 
-    /*
-    _repository.fetchTeams().then((teams) {
+    _repository.fetchAvailableTeamList().then((teams) {
       if (!mounted) {
         return;
       }
@@ -38,9 +37,6 @@ class _TeamsState extends State<TeamsComponent> {
         _teams.addAll(teams);
       });
     });
-    */
-
-    _teams = [FitTeam("Testteam", 3), FitTeam("Testteam2", 5), FitTeam("Azubis", 1), FitTeam("Frontend", 12)];
   }
 
   void _showCreateTeamDialog() {
@@ -80,7 +76,7 @@ class _TeamsState extends State<TeamsComponent> {
       content: Text(Localizer.translate(context, 'lblTeamsEnterDialogDescription')
           .replaceFirst(
         '%1',
-        team.name,
+        team.name ?? "",
       ),),
       actions: [
         cancelButton,
@@ -97,11 +93,13 @@ class _TeamsState extends State<TeamsComponent> {
   }
 
   void _enterTeam(FitTeam team) {
+    /*
     if (widget.userKey == null || team.users.any((element) => team.name == widget.userKey)) {
       return;
     }
     team.users.add(widget.userKey ?? "");
-    //_repository.updateTeam(team);
+    _repository.updateTeam(team);
+     */
   }
 
   @override

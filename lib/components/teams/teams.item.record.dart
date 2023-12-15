@@ -31,7 +31,7 @@ class _TeamRecordItemState extends State<TeamRecordItem> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Text(widget.team.name),
+              child: Text(widget.team.name ?? ""),
             ),
           Text(
             Localizer.translate(context, 'lblActionEnterTeam'),
