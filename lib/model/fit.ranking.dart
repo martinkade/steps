@@ -270,7 +270,9 @@ class FitRanking {
       );
     }
 
-    if (teamKey?.isNotEmpty == true && categoryValue.containsKey(teamKey)) {
+    if (teamKey?.isNotEmpty == true &&
+        categoryValue.containsKey(teamKey) &&
+        categoryValue[teamKey]!['type'] == fitRankingTypeTeam) {
       categoryValue[teamKey]!['value'] += data[categoryKey];
     } else if (teamKey?.isNotEmpty == true) {
       categoryValue.putIfAbsent(
@@ -285,7 +287,8 @@ class FitRanking {
     }
 
     if (organizationKey?.isNotEmpty == true &&
-        categoryValue.containsKey(organizationKey)) {
+        categoryValue.containsKey(organizationKey) &&
+        categoryValue[organizationKey]!['type'] == fitRankingTypeOrganization) {
       categoryValue[organizationKey]!['value'] += data[categoryKey];
     } else if (organizationKey?.isNotEmpty == true) {
       categoryValue.putIfAbsent(

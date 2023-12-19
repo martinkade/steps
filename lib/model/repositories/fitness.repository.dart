@@ -8,6 +8,7 @@ import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.record.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 import 'package:wandr/model/fit.team.dart';
+import 'package:wandr/model/fit.user.dart';
 import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/repository.dart';
 import 'package:wandr/model/storage.dart';
@@ -154,6 +155,35 @@ class FitnessRepository extends Repository {
       onlyManualRecords: false,
     );
     await dao.restore(oldRecords: historicalData, records: localData);
+  }
+
+  ///
+  Future<List<FitUser>> readUsers() async {
+    final FirebaseApp? instance = await Storage().access();
+    final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
+    db.setPersistenceEnabled(true);
+    db.setPersistenceCacheSizeBytes(1024 * 1024);
+    final DataSnapshot? data = await db.ref().child('users').get();
+    Map dict;
+    if (data?.value != null) {
+      dict = data!.value! as Map;
+    } else {
+      dict = Map();
+    }
+
+    FitUser team;
+    final List<FitUser> teams = <FitUser>[];
+    dict.forEach((key, value) {
+      team = FitUser();
+      team.fill(
+        id: key,
+        name: value['meta']?['displayName']?.toString() ?? '',
+        team: value['team']?.toString(),
+        organization: value['organization']?.toString(),
+      );
+      teams.add(team);
+    });
+    return teams;
   }
 
   ///

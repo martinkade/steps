@@ -88,7 +88,13 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
 
     setState(() {
       _boards = widget.ranking?.entries ?? Map();
-      print('Update team ranking with ${_boards.length} boards: $_boards');
+      print('Update ranking with ${_boards.length} boards:');
+      _boards.forEach((key, value) {
+        print(' - $key:');
+        value.forEach((entry) {
+          print('\t * ${entry.name} (type=${entry.type})');
+        });
+      });
     });
   }
 
