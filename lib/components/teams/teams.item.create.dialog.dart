@@ -92,7 +92,7 @@ class _TeamsCreateDialog
             ),
             TextButton(
               child: Text(
-                Localizer.translate(context, 'lblActionDone'),
+                Localizer.translate(context, 'lblActionCreateTeam'),
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,

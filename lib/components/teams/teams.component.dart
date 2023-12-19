@@ -66,12 +66,11 @@ class _TeamsState extends State<TeamsComponent> {
             child: TeamsCreateDialog(
               teams: _teams,
               createTeam: (newTeamName) {
+                _createTeam(newTeamName);
               },
             ),
           );
-        }).then((_) {
-      setState(() {});
-    });
+        });
   }
 
   void _showEnterTeamDialog(FitTeam team) {
@@ -108,17 +107,6 @@ class _TeamsState extends State<TeamsComponent> {
     );
   }
 
-  void _enterTeam(FitTeam team) {
-    Preferences.setTeam(team).then((value) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _myTeam = team;
-      });
-    });
-  }
-
   void _showLeaveTeamDialog() {
     Widget cancelButton = TextButton(
         child: Text(Localizer.translate(context, 'lblActionCancel')),
@@ -151,6 +139,21 @@ class _TeamsState extends State<TeamsComponent> {
         return alert;
       },
     );
+  }
+
+  void _createTeam(String teamName) {
+    _repository.addTeam(FitTeam(name: teamName));
+  }
+
+  void _enterTeam(FitTeam team) {
+    Preferences.setTeam(team).then((value) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _myTeam = team;
+      });
+    });
   }
 
   void _leaveTeam() {
