@@ -4,6 +4,7 @@ import 'package:wandr/components/shared/page.default.dart';
 import 'package:wandr/components/teams/teams.item.create.dialog.dart';
 import 'package:wandr/components/teams/teams.item.record.dart';
 import 'package:wandr/model/fit.team.dart';
+import 'package:wandr/model/fit.user.dart';
 import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/fitness.repository.dart';
 
@@ -23,7 +24,7 @@ class _TeamsState extends State<TeamsComponent> {
   late List<FitTeam> _teams = <FitTeam>[];
 
   ///
-  late List<String> _users = <String>[];
+  late List<FitUser> _users = <FitUser>[];
 
   ///
   FitTeam? _myTeam;
@@ -51,6 +52,16 @@ class _TeamsState extends State<TeamsComponent> {
       _teams.clear();
       setState(() {
         _teams.addAll(teams);
+      });
+    });
+
+    _repository.readUsers().then((users) {
+      if (!mounted) {
+        return;
+      }
+      _users.clear();
+      setState(() {
+        _users.addAll(users);
       });
     });
   }
@@ -170,6 +181,7 @@ class _TeamsState extends State<TeamsComponent> {
   @override
   Widget build(BuildContext context) {
     if (_myTeam != null) {
+      final List<FitUser> users = _users.where((element) => _myTeam?.name == element.team).toList();
       return DefaultPage(
         child: Card(
           elevation: 8.0,
@@ -178,7 +190,7 @@ class _TeamsState extends State<TeamsComponent> {
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: ListView.builder(
-            itemCount: _users.length + 2,
+            itemCount: users.length + 2,
             itemBuilder: (context, index) {
               if (index == 0) {
                 return Padding(
@@ -193,7 +205,7 @@ class _TeamsState extends State<TeamsComponent> {
                     ),
                   ),
                 );
-              } else if (index == (_users.length + 1)) {
+              } else if (index == (users.length + 1)) {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
                   child: Card(
@@ -231,7 +243,7 @@ class _TeamsState extends State<TeamsComponent> {
                   ),
                 );
               } else {
-                return Text(_users[index - 1]);
+                return Text(users[index - 1].name ?? "");
               }
             },
           ),

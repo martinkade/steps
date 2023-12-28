@@ -171,19 +171,20 @@ class FitnessRepository extends Repository {
       dict = Map();
     }
 
-    FitUser team;
-    final List<FitUser> teams = <FitUser>[];
+    FitUser user;
+    final List<FitUser> users = <FitUser>[];
     dict.forEach((key, value) {
-      team = FitUser();
-      team.fill(
+      user = FitUser();
+      user.fill(
         id: key,
         name: value['meta']?['displayName']?.toString() ?? '',
         team: value['team']?.toString(),
         organization: value['organization']?.toString(),
+        today: value['today']?.toInt()
       );
-      teams.add(team);
+      users.add(user);
     });
-    return teams;
+    return users;
   }
 
   ///

@@ -248,6 +248,22 @@ class GermanCupertinoLocalizations implements CupertinoLocalizations {
   List<String> get timerPickerSecondLabels => <String>[];
 
   @override
-  // TODO: implement noSpellCheckReplacementsLabel
-  String get noSpellCheckReplacementsLabel => throw UnimplementedError();
+  String get noSpellCheckReplacementsLabel => 'Keine Ersetzungen gefunden';
+
+  @override
+  String datePickerStandaloneMonth(int monthIndex) {
+    return _months[monthIndex];
+  }
+
+  @override
+  String get lookUpButtonLabel => 'Look Up';
+
+  @override
+  String get menuDismissLabel => 'Menü schließen';
+
+  @override
+  String get searchWebButtonLabel => 'Search Web';
+
+  @override
+  String get shareButtonLabel => 'Share...';
 }
