@@ -74,6 +74,7 @@
     "lblTeamsLeaveDialogTitle": "Leave team",
     "lblTeamsLeaveDialogDescription": "Would you like to leave team '%1'?",
     "lblTeamsMotivation": "Join a team and compete against other teams or create a new team.",
+    "lblTeamsMembersInfo": "Here you can see all members of your team and the points they achieved today. Your team will only appear in the table if there are at least two of you.",
 
     "lblDashboardSettingsTitle": "Adjust your daily goal ",
     "lblDashboardSettingsText": "Choose your level of activity!",

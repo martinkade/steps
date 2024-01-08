@@ -69,7 +69,7 @@ class FitTeamDao extends FitDao {
     final Database db = await StructuredCache().getDb();
     await db.transaction((txn) async {
       txn.rawDelete('DELETE FROM ${FitTeamDao.TBL_NAME} ' +
-          'WHERE ${FitTeamDao.COL_UUID} ${exclude ? 'NOT IN' : 'IN'} ($idList)');
+          'WHERE ${FitTeamDao.COL_UUID} ${exclude ? 'NOT IN' : 'IN'} ($idList)').then((value) => print("Deleted $value teams"));
     });
   }
 

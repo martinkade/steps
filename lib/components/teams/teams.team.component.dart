@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/components/shared/page.default.dart';
+import 'package:wandr/components/teams/teams.member.record.dart';
 import 'package:wandr/model/fit.team.dart';
 import 'package:wandr/model/fit.user.dart';
 import 'package:wandr/model/preferences.dart';
@@ -32,9 +33,18 @@ class _TeamsTeamState extends State<TeamsTeamComponent> {
   ///
   final FitnessRepository _repository = FitnessRepository();
 
+  ///
+  bool _unitKilometersEnabled = false;
+
   @override
   void initState() {
     super.initState();
+
+    Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
+      setState(() {
+        _unitKilometersEnabled = enabled;
+      });
+    });
 
     _repository.readUsers().then((users) {
       if (!mounted) {
@@ -86,7 +96,7 @@ class _TeamsTeamState extends State<TeamsTeamComponent> {
     FitTeam? myTeam = widget.myTeam;
 
     final List<FitUser> users =
-    _users.where((element) => myTeam?.name == element.team).toList();
+        _users.where((element) => myTeam?.name == element.team).toList();
     if (users.length <= 1 && myTeam != null) {
       print('Delete team "${myTeam.name}"');
       _repository.deleteTeam(myTeam);
@@ -99,93 +109,13 @@ class _TeamsTeamState extends State<TeamsTeamComponent> {
   Widget build(BuildContext context) {
     final List<FitUser> users =
         _users.where((element) => widget.myTeam?.name == element.team).toList();
-
     return DefaultPage(
-      title: Localizer.translate(context, 'lblTeams'),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 20.0),
-            child: Center(
-              child: Text(
-                widget.myTeam?.name ?? "",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-            child: Card(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: users.length,
-                itemBuilder: (context, index) {
-                  return Text("${users[index].name ?? ""} ${users[index].today ?? ""}");
-                },
-              ),
-            ),
-          ),
-          Spacer(
-
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-            child: Card(
-              elevation: 8.0,
-              shadowColor: Colors.grey.withAlpha(50),
-              clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Container(
-                color: Theme.of(context).colorScheme.primary.withAlpha(50),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-                          child: Center(
-                            child: Text(
-                              Localizer.translate(
-                                  context, 'lblActionLeaveTeam'),
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        onTap: () => _showLeaveTeamDialog(),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-
-    /*
-      return DefaultPage(
-        child: Card(
-          elevation: 8.0,
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: ListView.builder(
-            itemCount: users.length + 2,
-            itemBuilder: (context, index) {
-              if (index == 0) {
+        title: Localizer.translate(context, 'lblTeams'),
+        child: ListView.builder(
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            switch (index) {
+              case 0:
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 20.0),
                   child: Center(
@@ -198,7 +128,38 @@ class _TeamsTeamState extends State<TeamsTeamComponent> {
                     ),
                   ),
                 );
-              } else if (index == (users.length + 1)) {
+              case 1:
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 20.0),
+                  child: Center(
+                    child: Text(
+                      Localizer.translate(
+                          context, 'lblTeamsMembersInfo'),
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                );
+              case 2:
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                  child: Card(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        return TeamMemberItem(
+                              name: users[index].name ?? "",
+                          points: users[index].today ?? 0,
+                            unitKilometersEnabled: _unitKilometersEnabled
+                        );
+                      },
+                    ),
+                  ),
+                );
+              default:
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
                   child: Card(
@@ -209,17 +170,21 @@ class _TeamsTeamState extends State<TeamsTeamComponent> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Container(
-                      color: Theme.of(context).colorScheme.primary.withAlpha(50),
+                      color:
+                          Theme.of(context).colorScheme.primary.withAlpha(50),
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                        padding:
+                            const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                         child: Column(
                           children: [
                             GestureDetector(
                               child: Padding(
-                                padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+                                padding: const EdgeInsets.fromLTRB(
+                                    16.0, 8.0, 16.0, 16.0),
                                 child: Center(
                                   child: Text(
-                                    Localizer.translate(context, 'lblActionLeaveTeam'),
+                                    Localizer.translate(
+                                        context, 'lblActionLeaveTeam'),
                                     style: TextStyle(
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.bold,
@@ -235,14 +200,9 @@ class _TeamsTeamState extends State<TeamsTeamComponent> {
                     ),
                   ),
                 );
-              } else {
-                return Text(users[index - 1].name ?? "");
-              }
-            },
-          ),
-        ),
-
+            }
+          },
+        )
       );
-      */
   }
 }

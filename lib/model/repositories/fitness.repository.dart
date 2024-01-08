@@ -92,7 +92,7 @@ class FitnessRepository extends Repository {
   ///
   Future<void> addTeam(FitTeam team) async {
     final FitTeamDao dao = FitTeamDao();
-    return await dao.insertOrReplace(teams: [team]);
+    return await dao.insertOrReplace(teams: [team]).then((value) => syncRemoteTeams());
   }
 
   ///
@@ -104,7 +104,7 @@ class FitnessRepository extends Repository {
   ///
   Future<void> deleteTeam(FitTeam team) async {
     final FitTeamDao dao = FitTeamDao();
-    return await dao.delete(teams: [team]);
+    return await dao.delete(teams: [team]).then((value) => syncRemoteTeams());
   }
 
   ///
@@ -188,12 +188,35 @@ class FitnessRepository extends Repository {
   }
 
   ///
+  Future<void> updateUserTeam(
+      {required String userKey,
+        required String teamName}) async {
+    Storage().access().then((instance) async {
+      final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
+      db.setPersistenceEnabled(true);
+      db.setPersistenceCacheSizeBytes(1024 * 1024);
+
+      final Map<String, dynamic> snapshotData = Map();
+      snapshotData.putIfAbsent('team', () => teamName);
+      print('FitRepository#_updateTeam:\n\t$userKey\n\t$snapshotData');
+      await db.ref().child('users').child(userKey).update(snapshotData);
+    });
+  }
+
+  ///
   Future<void> syncTeams() async {
     List<FitTeam> teams = await _readTeams();
     final FitTeamDao dao = FitTeamDao();
     await dao.insertOrReplace(teams: teams);
 
     teams = await dao.fetchAll();
+    await _writeTeams(teams);
+  }
+
+  ///
+  Future<void> syncRemoteTeams() async {
+    final FitTeamDao dao = FitTeamDao();
+    List<FitTeam> teams = await dao.fetchAll();
     await _writeTeams(teams);
   }
 
@@ -232,10 +255,12 @@ class FitnessRepository extends Repository {
       db.setPersistenceCacheSizeBytes(1024 * 1024);
 
       Map<String, dynamic> teamData;
+      await db.ref().child('teams').remove();
       teams.forEach((team) async {
         teamData = Map.fromEntries([MapEntry('name', team.name)]);
         print('FitRepository#_writeTeams:\n\t$teamData');
         await db.ref().child('teams').child(team.uuid).set(teamData);
+
       });
     });
   }

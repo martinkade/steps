@@ -56,6 +56,7 @@ class _TeamsListState extends State<TeamsListComponent> {
               teams: _teams,
               createTeam: (newTeamName) {
                 _createTeam(newTeamName);
+                Navigator.of(context).pop();
               },
             ),
           );
@@ -98,91 +99,96 @@ class _TeamsListState extends State<TeamsListComponent> {
   }
 
   void _createTeam(String teamName) {
-    _repository.addTeam(FitTeam(name: teamName));
+    final team = FitTeam(name: teamName);
+    _repository.addTeam(team).then((value) => _enterTeam(team));
   }
 
   void _enterTeam(FitTeam team) {
-    Preferences.setTeam(team).then((value) => widget.enterTeam(team));
+    _repository.updateUserTeam(userKey: widget.userKey!, teamName: team.name!)
+        .then((value) => Preferences.setTeam(team)
+        .then((value) => widget.enterTeam(team)));
+
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultPage(
       title: Localizer.translate(context, 'lblTeams'),
-      child:  SingleChildScrollView(
-    child:SizedBox(
-    height: MediaQuery.of(context).size.height,
-    child:Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 16.0),
-            child: Text(
-              Localizer.translate(
-                  context, 'lblTeamsMotivation'),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-            child: Card(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _teams.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    child: TeamRecordItem(
-                      team: _teams[index],
-                    ),
-                    onTap: () {
-                      _showEnterTeamDialog(_teams[index]);
-                    },
-                  );
-                },
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-            child: Card(
-              elevation: 8.0,
-              shadowColor: Colors.grey.withAlpha(50),
-              clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Container(
-                color: Theme.of(context).colorScheme.primary.withAlpha(50),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-                          child: Center(
-                            child: Text(
-                              Localizer.translate(
-                                  context, 'lblActionCreateTeam'),
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+      child: ListView.builder(
+        itemCount: 3,
+        itemBuilder: (context, index) {
+          switch(index) {
+            case 0:
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 16.0),
+                child: Text(
+                  Localizer.translate(
+                      context, 'lblTeamsMotivation'),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            case 1:
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                child: Card(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _teams.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        child: TeamRecordItem(
+                          team: _teams[index],
                         ),
-                        onTap: () => _showCreateTeamDialog(),
-                      ),
-                    ],
+                        onTap: () {
+                          _showEnterTeamDialog(_teams[index]);
+                        },
+                      );
+                    },
                   ),
                 ),
-              ),
-            ),
-          )
-        ],
-      ),
-      ),
+              );
+            default:
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                child: Card(
+                  elevation: 8.0,
+                  shadowColor: Colors.grey.withAlpha(50),
+                  clipBehavior: Clip.antiAlias,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Container(
+                    color: Theme.of(context).colorScheme.primary.withAlpha(50),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            child: Padding(
+                              padding:
+                              const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+                              child: Center(
+                                child: Text(
+                                  Localizer.translate(
+                                      context, 'lblActionCreateTeam'),
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onTap: () => _showCreateTeamDialog(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+          }
+        },
       ),
     );
   }
