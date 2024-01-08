@@ -150,6 +150,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final Widget titleWidget = Padding(
       padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),
       child: Text(

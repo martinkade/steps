@@ -160,6 +160,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
       child: Card(
