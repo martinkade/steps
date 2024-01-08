@@ -26,12 +26,17 @@ class _TeamRecordItemState extends State<TeamRecordItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Text(widget.team.name ?? ""),
+              child: Text(
+                  widget.team.name ?? "",
+                style: TextStyle(
+                  fontSize: 16.0
+                ),
+              ),
             ),
           Text(
             Localizer.translate(context, 'lblActionEnterTeam'),

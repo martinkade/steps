@@ -65,7 +65,7 @@ class FitTeamDao extends FitDao {
     required List<FitTeam> teams,
     bool exclude = false,
   }) async {
-    final String idList = teams.map((it) => '${it.idString}').join(',');
+    final String idList = teams.map((it) => '\'${it.idString}\'').join(',');
     final Database db = await StructuredCache().getDb();
     await db.transaction((txn) async {
       txn.rawDelete('DELETE FROM ${FitTeamDao.TBL_NAME} ' +
