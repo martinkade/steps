@@ -34,6 +34,9 @@ class FitRecordDao extends FitDao {
   ///
   static Future<void> upgrade(int fromVersion, int toVersion,
       {required Transaction txn}) async {
+    if (toVersion == 2) {
+      return;
+    }
     await txn.execute(FitRecordDao.CMD_DROP_TABLE);
     await txn.execute(FitRecordDao.CMD_CREATE_TABLE);
   }
