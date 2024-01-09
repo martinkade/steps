@@ -3,22 +3,22 @@ import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 
-class FitChallenge9Team extends FitChallenge {
+class FitChallenge10Team extends FitChallenge {
   ///
-  static DateTime kStartDate = DateTime(2023, 01, 13);
-  static DateTime kEndDate = DateTime(2023, 12, 31);
+  static DateTime kStartDate = DateTime(2024, 01, 09);
+  static DateTime kEndDate = DateTime(2024, 2, 29);
 
   ///
-  FitChallenge9Team()
+  FitChallenge10Team()
       : super(
-    index: 8,
+    index: 9,
     startDate: kStartDate,
     endDate: kEndDate,
-    title: 'Längter Fußweg der Welt',
+    title: 'Der Ostseeküsten-Radweg',
     description:
-    'Das neue Jahr hat gerade begonnen, daher starten wir langsam mit einer einfachen Challenge. Auf mehr als 23.000 Kilometern wollen wir von L’Agulhas im Süden Südafrikas aus bis nach Magadan im Osten von Russland WANDRn. Der Routenplaner gibt eine Laufzeit von 194 Tagen an, mal gucken ob das nicht auch schneller geht 😉.',
+    'In diesem Jahr starte wir mit einer einfachen Challenge. Auf dem Ostseeküsten-Radweg geht es von Kupfermühle an der dänischen Grenze entlang der Ostseeküste bis nach Ahlbeck an der polnischen Grenze.',
     label: 'Kilometer',
-    imageAsset: 'assets/images/challenge9.jpg',
+    imageAsset: 'assets/images/challenge10.jpg',
     routeAsset: null,
   );
 
@@ -30,7 +30,7 @@ class FitChallenge9Team extends FitChallenge {
 
   @override
   void initTargets() {
-    target = 23068.0; // km
+    target = 1140.0; // km
   }
 
   @override

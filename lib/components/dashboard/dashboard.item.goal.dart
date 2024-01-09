@@ -161,6 +161,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final Widget contentWidget = Container(
       child: Padding(
         padding: const EdgeInsets.all(16.0),

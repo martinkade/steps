@@ -73,6 +73,8 @@
     "lblTeamsTeamNameTitle": "Gib einen Teamnamen an",
     "lblTeamsLeaveDialogTitle": "Team verlassen",
     "lblTeamsLeaveDialogDescription": "Möchtest du das Team '%1' wirklich verlassen?",
+    "lblTeamsMotivation": "Trete einem Team bei und trete gegen andere Teams an oder gründe ein  neues Team.",
+    "lblTeamsMembersInfo": "Hier siehst du alle Mitglieder deines Teams und ihre heute erreichten Punkte. Euer Team wird erst in der Tabelle auftauchen wenn ihr mindestens zu zweit seid.",
 
     "lblDashboardSettingsTitle": "Tagesziel anpassen",
     "lblDashboardSettingsText": "Wähle dein Aktivitätsniveau!",
@@ -124,9 +126,9 @@
     "lblLastWeek": "letzte Woche",
     "lblOverall": "insgesamt",
     "lblActiveUsers": "aktive WANDRer",
-    "lblTeam": "Teamwertung",
-    "lblOrganization": "Firmenwertung",
-    "lblSingle": "Einzelwertung",
+    "lblTeam": "Team",
+    "lblOrganization": "Firma",
+    "lblSingle": "Einzel",
     "lblSingleSync": "Sync",
     "lblTeamUserCount": "Mitglieder"
 }

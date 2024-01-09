@@ -92,7 +92,7 @@ class FitnessRepository extends Repository {
   ///
   Future<void> addTeam(FitTeam team) async {
     final FitTeamDao dao = FitTeamDao();
-    return await dao.insertOrReplace(teams: [team]);
+    return await dao.insertOrReplace(teams: [team]).then((value) => syncRemoteTeams());
   }
 
   ///
@@ -104,7 +104,7 @@ class FitnessRepository extends Repository {
   ///
   Future<void> deleteTeam(FitTeam team) async {
     final FitTeamDao dao = FitTeamDao();
-    return await dao.delete(teams: [team]);
+    return await dao.delete(teams: [team]).then((value) => syncRemoteTeams());
   }
 
   ///
@@ -171,19 +171,36 @@ class FitnessRepository extends Repository {
       dict = Map();
     }
 
-    FitUser team;
-    final List<FitUser> teams = <FitUser>[];
+    FitUser user;
+    final List<FitUser> users = <FitUser>[];
     dict.forEach((key, value) {
-      team = FitUser();
-      team.fill(
+      user = FitUser();
+      user.fill(
         id: key,
         name: value['meta']?['displayName']?.toString() ?? '',
         team: value['team']?.toString(),
         organization: value['organization']?.toString(),
+        today: value['today']?.toInt()
       );
-      teams.add(team);
+      users.add(user);
     });
-    return teams;
+    return users;
+  }
+
+  ///
+  Future<void> updateUserTeam(
+      {required String userKey,
+        required String teamName}) async {
+    Storage().access().then((instance) async {
+      final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
+      db.setPersistenceEnabled(true);
+      db.setPersistenceCacheSizeBytes(1024 * 1024);
+
+      final Map<String, dynamic> snapshotData = Map();
+      snapshotData.putIfAbsent('team', () => teamName);
+      print('FitRepository#_updateTeam:\n\t$userKey\n\t$snapshotData');
+      await db.ref().child('users').child(userKey).update(snapshotData);
+    });
   }
 
   ///
@@ -193,6 +210,13 @@ class FitnessRepository extends Repository {
     await dao.insertOrReplace(teams: teams);
 
     teams = await dao.fetchAll();
+    await _writeTeams(teams);
+  }
+
+  ///
+  Future<void> syncRemoteTeams() async {
+    final FitTeamDao dao = FitTeamDao();
+    List<FitTeam> teams = await dao.fetchAll();
     await _writeTeams(teams);
   }
 
@@ -231,10 +255,12 @@ class FitnessRepository extends Repository {
       db.setPersistenceCacheSizeBytes(1024 * 1024);
 
       Map<String, dynamic> teamData;
+      await db.ref().child('teams').remove();
       teams.forEach((team) async {
         teamData = Map.fromEntries([MapEntry('name', team.name)]);
         print('FitRepository#_writeTeams:\n\t$teamData');
         await db.ref().child('teams').child(team.uuid).set(teamData);
+
       });
     });
   }

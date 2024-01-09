@@ -38,9 +38,15 @@ class FitRanking {
     snapshot?.snapshot.value?.forEach((userId, value) {
       itemKey = userId;
 
-      teamKey = value['team'] == null ? null : value['team'];
-      organizationKey =
-          value['organization'] == null ? null : value['organization'];
+      //TODO dirty hack, maybe data migration?
+      if (value['organization'] == null) {
+        organizationKey = value['team'];
+        teamKey = null;
+      } else {
+        teamKey = value['team'] == null ? null : value['team'];
+        organizationKey =
+        value['organization'] == null ? null : value['organization'];
+      }
       itemName = value['meta'] == null
           ? 'Anonym'
           : value['meta']['displayName'] ?? 'Anonym';

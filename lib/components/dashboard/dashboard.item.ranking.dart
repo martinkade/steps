@@ -150,6 +150,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final Widget titleWidget = Padding(
       padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),
       child: Text(
@@ -260,12 +261,16 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
         height: 196.0,
       );
     } else {
-      final List<FitRankingEntry> list =
+      List<FitRankingEntry> list =
           _boards[_boards.keys.toList()[_selectedTimeModeIndex]] ?? [];
+      list = list
+          .where((element) => element.type == _selectedGroupModeIndex)
+          .toList();
+      if (_selectedGroupModeIndex == FitRanking.fitRankingTypeTeam) {
+        list = list.where((element) => element.userCount > 1).toList();
+      }
       return DashboardRankingList(
-          list: list
-              .where((element) => element.type == _selectedGroupModeIndex)
-              .toList(),
+          list: list,
           itemKey: widget.userKey!,
           unitKilometersEnabled: _unitKilometersEnabled,
           difficultyLevel: _difficultyLevel,
@@ -299,6 +304,16 @@ class DashboardRankingList extends StatelessWidget {
       required this.difficultyLevel,
       required this.groupType})
       : super(key: key);
+
+  String getPoints(int value, int userCount) {
+    double points = value.toDouble();
+    if (groupType == FitRanking.fitRankingTypeTeam) {
+      points = value / userCount;
+    }
+    return unitKilometersEnabled
+        ? (points / 12.0).toStringAsFixed(1)
+        : points.toStringAsFixed(0);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -411,9 +426,7 @@ class DashboardRankingList extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          unitKilometersEnabled
-                              ? (value / 12.0).toStringAsFixed(1)
-                              : value.toStringAsFixed(0),
+                          getPoints(value, item.userCount),
                           style: TextStyle(
                             fontWeight: item.key == itemKey
                                 ? FontWeight.bold
