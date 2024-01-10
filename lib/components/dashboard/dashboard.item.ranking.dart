@@ -278,8 +278,11 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
           .toList();
       if (_selectedGroupModeIndex == FitRanking.fitRankingTypeTeam) {
         list = list.where((element) => element.userCount > 1).toList();
-        list.forEach((element) {
-          element.value /= element.userCount;
+        list.sort((a, b) {
+          if ((a.value / a.userCount) >= (b.value / b.userCount)) {
+            return -1;
+          }
+          return 1;
         });
         itemKey = _myTeam?.name ?? "";
       }
@@ -322,6 +325,9 @@ class DashboardRankingList extends StatelessWidget {
 
   String getPoints(int value, int userCount) {
     double points = value.toDouble();
+    if (groupType == FitRanking.fitRankingTypeTeam) {
+      points = value / userCount;
+    }
     return unitKilometersEnabled
         ? (points / 12.0).toStringAsFixed(1)
         : points.toStringAsFixed(0);
