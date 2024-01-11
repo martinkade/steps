@@ -112,7 +112,7 @@ class FitSummaryTask(
 
         Fitness.getHistoryClient(context, account).apply {
             readData(request).apply {
-                Tasks.await(this, 5, TimeUnit.SECONDS).apply {
+                Tasks.await(this, 15, TimeUnit.SECONDS).apply {
                     result?.apply {
                         val map = HashMap<String, Int>()
                         if (status.isSuccess) {

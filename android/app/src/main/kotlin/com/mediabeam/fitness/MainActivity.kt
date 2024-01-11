@@ -19,6 +19,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.lang.ref.WeakReference
 import java.util.Calendar
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 // https://developers.google.com/fit/datatypes/activity
@@ -41,6 +42,8 @@ class MainActivity : FlutterActivity() {
             .addDataType(DataType.TYPE_MOVE_MINUTES, FitnessOptions.ACCESS_READ)
             .addDataType(DataType.AGGREGATE_MOVE_MINUTES, FitnessOptions.ACCESS_READ)
             .build()
+
+    private lateinit var executor: ExecutorService
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -119,6 +122,21 @@ class MainActivity : FlutterActivity() {
         createNotificationChannel()
     }
 
+    override fun onResume() {
+        if (!this::executor.isInitialized || executor.isShutdown) executor =
+            Executors.newFixedThreadPool(4)
+        super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        executor.shutdown()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
     private fun handleDataCall(pendingCall: MethodCall?, pendingResult: MethodChannel.Result?) {
         val call = pendingCall
         this.pendingCall = null
@@ -128,13 +146,15 @@ class MainActivity : FlutterActivity() {
 
         val task = FitSummaryTask(WeakReference(applicationContext), fitnessOptions, result)
 
-        val executor = Executors.newSingleThreadExecutor()
         val future = executor.submit(task)
-        try {
-            future.get()
-        } finally {
-            executor.shutdown()
+        val worker = Thread {
+            try {
+                future.get()
+            } catch (_: Exception) {
+
+            }
         }
+        worker.start()
     }
 
     private fun handleAuthCall(
