@@ -5,6 +5,7 @@ import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/components/shared/segmented.control.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/preferences.dart';
+import 'package:wandr/model/fit.team.dart';
 import 'package:wandr/util/AprilJokes.dart';
 
 class DashboardRankingItem extends DashboardItem {
@@ -51,6 +52,9 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
   ///
   int _difficultyLevel = Difficulties.hard.index;
 
+  ///
+  FitTeam? _myTeam;
+
   @override
   bool get wantKeepAlive => true;
 
@@ -71,6 +75,11 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
     Preferences().getDifficultyLevel().then((value) {
       setState(() {
         _difficultyLevel = value;
+      });
+    });
+    Preferences.getTeam().then((value) {
+      setState(() {
+        _myTeam = value;
       });
     });
   }
@@ -261,6 +270,7 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
         height: 196.0,
       );
     } else {
+      String itemKey = widget.userKey ?? "";
       List<FitRankingEntry> list =
           _boards[_boards.keys.toList()[_selectedTimeModeIndex]] ?? [];
       list = list
@@ -268,10 +278,18 @@ class DashboardRankingItemState extends State<DashboardRankingItem>
           .toList();
       if (_selectedGroupModeIndex == FitRanking.fitRankingTypeTeam) {
         list = list.where((element) => element.userCount > 1).toList();
+        list.sort((a, b) {
+          if ((a.value / a.userCount) >= (b.value / b.userCount)) {
+            return -1;
+          }
+          return 1;
+        });
+        itemKey = _myTeam?.name ?? "";
       }
+
       return DashboardRankingList(
           list: list,
-          itemKey: widget.userKey!,
+          itemKey: itemKey,
           unitKilometersEnabled: _unitKilometersEnabled,
           difficultyLevel: _difficultyLevel,
           groupType: _selectedGroupModeIndex);
