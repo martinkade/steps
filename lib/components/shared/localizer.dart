@@ -266,4 +266,7 @@ class GermanCupertinoLocalizations implements CupertinoLocalizations {
 
   @override
   String get shareButtonLabel => 'Share...';
+
+  @override
+  String get clearButtonLabel => 'Clear';
 }

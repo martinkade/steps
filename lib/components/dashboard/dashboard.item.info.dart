@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/util/AprilJokes.dart';
 
 abstract class DashboardInfoItemDelegate {
   void onSettingsRequested();
@@ -9,6 +10,8 @@ abstract class DashboardInfoItemDelegate {
   void onNewRecordRequested();
 
   void onTeamsRequested();
+
+  void onPurchasesRequested();
 
   void onInfoRequested();
 }
@@ -81,6 +84,20 @@ class DashboardInfoItem extends StatelessWidget {
                     ),
                   ],
                 ),
+                if (AprilJokes().isJokeActive(Jokes.purchases))
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      DashboardAction(
+                        title: Localizer.translate(context, 'lblDashboardActionPurchases'),
+                        icon: Icons.euro,
+                        onTap: () {
+                          delegate.onPurchasesRequested();
+                        },
+                      ),
+                    ],
+                  ),
                 Divider(),
                 GestureDetector(
                   child: Padding(

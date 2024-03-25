@@ -20,6 +20,7 @@ import 'package:wandr/components/teams/teams.component.dart';
 import 'package:wandr/components/shared/bezier.clipper.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/components/shared/route.transition.dart';
+import 'package:wandr/components/purchases/purchases.component.dart';
 import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.ranking.dart';
 import 'package:wandr/model/fit.snapshot.dart';
@@ -28,6 +29,8 @@ import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/challenge.repository.dart';
 import 'package:wandr/model/repositories/repository.dart';
 import 'package:wandr/model/storage.dart';
+
+
 
 abstract class DashboardSyncDelegate {
   void onFitnessDataUpdate(FitSnapshot snapshot);
@@ -227,6 +230,16 @@ class _DashboardState extends State<DashboardComponent>
     ).then((_) async {
       (_syncKey.currentState)?.reload();
     });
+  }
+
+  @override
+  void onPurchasesRequested() {
+    Navigator.push(
+      context,
+      RouteTransition(
+        page: PurchasesComponent(userKey: _userName),
+      ),
+    );
   }
 
   @override
