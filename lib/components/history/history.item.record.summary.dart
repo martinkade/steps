@@ -64,7 +64,7 @@ class _HistoryRecordSummaryItemState extends State<HistoryRecordSummaryItem> {
                     Icons.check_circle_outline,
                     color: Theme.of(context)
                         .textTheme
-                        .bodyText1
+                        .bodyLarge
                         ?.color
                         ?.withAlpha(32),
                   ),

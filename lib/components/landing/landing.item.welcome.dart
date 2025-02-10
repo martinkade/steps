@@ -29,7 +29,7 @@ class _LandingWelcomeItemState extends State<LandingWelcomeItem> {
             child: Center(
               child: SizedBox(
                 child: Image.asset('assets/images/landing.png',
-                    color: Theme.of(context).textTheme.bodyText1?.color),
+                    color: Theme.of(context).textTheme.bodyLarge?.color),
                 width: 192.0,
                 height: 128.0,
               ),

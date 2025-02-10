@@ -2,12 +2,14 @@ import 'package:collection/collection.dart';
 import 'package:wandr/__secrets.dart';
 import 'package:wandr/components/settings/settings.item.difficulty.dart';
 import 'package:wandr/model/fit.ranking.dart';
+import 'package:wandr/model/preferences.dart';
 import 'package:wandr/util/ChatGPTRequestMessage.dart';
 import 'package:wandr/util/Purchase.dart';
 
 class AprilJokes {
   static String botID = BOT_ID;
   static String? botName;
+  static Jokes activeJoke = Jokes.none;
 
   static List<Purchase> purchases = [
     Purchase("Tagesfüllung 100%", "Heute stehen viele Termine an? Das Bett ist gerade so bequem? Kein Problem! Für einen günstigen Preis kannst du dein Tagesziel erfüllen ohne vor die Tür zu müssen!", "1,99€", [
@@ -33,9 +35,9 @@ class AprilJokes {
     ])
   ];
 
-  bool isJokeActive(Jokes joke) {
+  bool isJokeActive(Jokes joke)  {
     if (DateTime.now().day != 1 || DateTime.now().month != DateTime.april) {
-      return false;
+      return joke == AprilJokes.activeJoke;
     }
 
     switch (joke) {
@@ -45,6 +47,8 @@ class AprilJokes {
         return DateTime.now().year % 3 == 1;
       case Jokes.purchases:
         return DateTime.now().year % 3 == 2;
+      case Jokes.none:
+        return false;
     }
   }
 
@@ -95,4 +99,4 @@ class AprilJokes {
   }
 }
 
-enum Jokes { rankingLast, botDifficulty, purchases }
+enum Jokes { none, rankingLast, botDifficulty, purchases }

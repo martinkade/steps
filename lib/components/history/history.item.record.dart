@@ -46,8 +46,8 @@ class _HistoryRecordItemState extends State<HistoryRecordItem> {
             child: Icon(
               Icons.edit,
               color: widget.record.source == FitRecord.SOURCE_MANUAL
-                  ? Theme.of(context).textTheme.bodyText1?.color
-                  : Theme.of(context).textTheme.bodyText1?.color?.withAlpha(32),
+                  ? Theme.of(context).textTheme.bodyLarge?.color
+                  : Theme.of(context).textTheme.bodyLarge?.color?.withAlpha(32),
             ),
           ),
           Expanded(

@@ -31,7 +31,7 @@ class _DashboardTitleItemState extends State<DashboardTitleItem> {
         child: SizedBox(
           child: Image.asset(
             'assets/images/logo.png',
-            color: Theme.of(context).textTheme.bodyText1?.color,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
           ),
           width: 192.0,
           height: 36.0,

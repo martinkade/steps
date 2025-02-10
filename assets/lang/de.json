@@ -93,6 +93,13 @@
     "lblDashboardSettingsDifficulty2": "Schwierig",
     "lblDashboardSettingsDifficulty3": "Sehr schwierig",
 
+    "lblDashboardDebugTitle": "Aprilscherze",
+    "lblDashboardDebugInfo": "Aktiviere hier einen Aprilscherz der vergangenen Jahre",
+    "lblDashboardDebugJokeNone": "Alle deaktiviert",
+    "lblDashboardDebugJokeRanking": "Spezielles Ranking",
+    "lblDashboardDebugJokeBot": "Bot aktivieren",
+    "lblDashboardDebugJokePurchases": "Einkäufe",
+
     "lblAbout": "Über %1",
     "lblAboutHowTo": "Wie funktioniert %1?",
     "lblAboutHowToInfoPoints": "%1 basiert auf einem Punktesystem. 80 Schritte sind einen Punkt wert. Aktive Minuten werden dir 1:1 als Punkte gut geschrieben.",

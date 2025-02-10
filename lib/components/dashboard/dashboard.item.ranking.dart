@@ -401,7 +401,7 @@ class DashboardRankingList extends StatelessWidget {
                             ? Border.all(
                                 color: Theme.of(context)
                                         .textTheme
-                                        .bodyText1
+                                        .bodyLarge
                                         ?.color ??
                                     Color.fromARGB(50, 50, 50, 50),
                               )

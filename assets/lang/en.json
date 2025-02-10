@@ -93,6 +93,13 @@
     "lblDashboardSettingsDifficulty2": "Hard",
     "lblDashboardSettingsDifficulty3": "Very hard",
 
+    "lblDashboardDebugTitle": "Jokes",
+    "lblDashboardDebugInfo": "Activate a april fools joke from previous years",
+    "lblDashboardDebugJokeNone": "None active",
+    "lblDashboardDebugJokeRanking": "Modified ranking",
+    "lblDashboardDebugJokeBot": "Bot difficulty",
+    "lblDashboardDebugJokePurchases": "Purchases",
+
     "lblAbout": "About %1",
     "lblAboutHowTo": "How does %1 work?",
     "lblAboutHowToInfoPoints": "%1 is based on a point system. 80 steps is worth one point. Active minutes will be credited to you 1: 1 as points.",

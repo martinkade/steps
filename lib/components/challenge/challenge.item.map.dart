@@ -23,7 +23,7 @@ class _ChallengeMapState extends State<ChallengeMap> {
 
   Polyline? _polyline;
   Marker? _marker;
-  LatLngBounds? _bounds;
+  CameraFit? _bounds;
   List<LatLngDistance> _polylinePoints = [];
 
   MapController? mapController;
@@ -69,11 +69,11 @@ class _ChallengeMapState extends State<ChallengeMap> {
     }
 
     if (gpx.metadata?.bounds != null) {
-      _bounds = LatLngBounds(
+      _bounds = CameraFit.bounds(bounds:LatLngBounds(
           LatLng(gpx.metadata!.bounds!.maxlat, gpx.metadata!.bounds!.maxlon),
-          LatLng(gpx.metadata!.bounds!.minlat, gpx.metadata!.bounds!.minlon));
+          LatLng(gpx.metadata!.bounds!.minlat, gpx.metadata!.bounds!.minlon)));
     } else {
-      _bounds = LatLngBounds.fromPoints(_polylinePoints);
+      _bounds = _bounds = CameraFit.bounds(bounds:LatLngBounds.fromPoints(_polylinePoints));
     }
 
     return Polyline(
@@ -124,10 +124,7 @@ class _ChallengeMapState extends State<ChallengeMap> {
       width: 48.0,
       height: 48.0,
       point: currentProgressPoint,
-      anchorPos: AnchorPos.align(AnchorAlign.top),
-      builder: (ctx) => new Container(
-        child: Image.asset('assets/images/map_marker.png', color: Colors.blue),
-      ),
+      child: Image.asset('assets/images/map_marker.png', color: Colors.blue),
     );
   }
 
@@ -139,9 +136,8 @@ class _ChallengeMapState extends State<ChallengeMap> {
             FlutterMap(
               mapController: mapController,
               options: MapOptions(
-                  bounds: _bounds,
-                  boundsOptions:
-                      FitBoundsOptions(padding: EdgeInsets.all(14.0))),
+                  initialCameraFit: _bounds,
+              ),
               /*
               layers: [
                 PolylineLayerOptions(
@@ -180,7 +176,7 @@ class _ChallengeMapState extends State<ChallengeMap> {
                     onPressed: () {
                       if (currentPositionZoomed && _bounds != null) {
                         mapController?.rotate(0);
-                        mapController?.fitBounds(_bounds!);
+                        mapController?.fitCamera(_bounds!);
                         setState(() {
                           currentPositionZoomed = false;
                         });

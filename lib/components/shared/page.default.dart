@@ -16,7 +16,7 @@ class DefaultPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Theme.of(context).textTheme.bodyText1?.color,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
@@ -24,7 +24,7 @@ class DefaultPage extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 24.0,
-            color: Theme.of(context).textTheme.bodyText1?.color,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
           ),
         ),
       ),

@@ -48,7 +48,7 @@ android {
 
     defaultConfig {
         applicationId "com.mediabeam.fitness"
-        minSdkVersion 19
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

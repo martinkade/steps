@@ -149,7 +149,7 @@ class _HistoryState extends State<HistoryComponent> {
                       child: Container(
                         color: Theme.of(context)
                             .textTheme
-                            .bodyText1
+                            .bodyLarge
                             ?.color
                             ?.withAlpha(50),
                         child: Padding(
