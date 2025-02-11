@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:wandr/__secrets.dart';
 import 'package:wandr/components/settings/settings.item.difficulty.dart';
 import 'package:wandr/model/fit.ranking.dart';
-import 'package:wandr/model/preferences.dart';
 import 'package:wandr/util/ChatGPTRequestMessage.dart';
 import 'package:wandr/util/Purchase.dart';
 

@@ -1,3 +1,9 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -34,22 +40,18 @@ if (keystoreReleasePropertiesFile.exists()) {
     keystoreReleaseProperties.load(new FileInputStream(keystoreReleasePropertiesFile))
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-
 android {
-    compileSdkVersion 33
+    namespace 'com.mediabeam.fitness'
+    compileSdkVersion 35
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-
     defaultConfig {
         applicationId "com.mediabeam.fitness"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion 33
+        targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -78,10 +80,19 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
     lint {
         disable 'InvalidPackage'
     }
-    namespace 'com.mediabeam.fitness'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
 }
 
 flutter {
@@ -89,8 +100,7 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'com.google.android.gms:play-services-fitness:21.1.0'
-    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    implementation 'com.google.android.gms:play-services-fitness:21.2.0'
+    implementation 'com.google.android.gms:play-services-auth:21.3.0'
     implementation 'com.android.support:multidex:1.0.3'
 }

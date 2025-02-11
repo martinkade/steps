@@ -74,18 +74,14 @@ class MainActivity : FlutterActivity() {
             } else if (call.method == "authenticate") {
                 val account: GoogleSignInAccount =
                     GoogleSignIn.getAccountForExtension(this, fitnessOptions)
-                if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
-                    MainActivity@ this.pendingResult = result
-                    MainActivity@ this.pendingCall = call
-                    GoogleSignIn.requestPermissions(
-                        this,
-                        REQUEST_CODE_AUTH,
-                        account,
-                        fitnessOptions
-                    )
-                } else {
-                    result.success(true)
-                }
+                MainActivity@ this.pendingResult = result
+                MainActivity@ this.pendingCall = call
+                GoogleSignIn.requestPermissions(
+                    this,
+                    REQUEST_CODE_AUTH,
+                    account,
+                    fitnessOptions
+                )
             } else if (call.method == "getDeviceInfo") {
                 result.success(deviceInfo)
             } else if (call.method == "getAppInfo") {
@@ -160,7 +156,7 @@ class MainActivity : FlutterActivity() {
     private fun handleAuthCall(
         pendingCall: MethodCall?,
         pendingResult: MethodChannel.Result?,
-        granted: Boolean
+        granted: Boolean,
     ) {
         val call = pendingCall
         this.pendingCall = null
