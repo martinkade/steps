@@ -4,6 +4,10 @@ Bleibe fit und gesund, indem du (mehr) Bewegung in deinen Alltag bringst. WANDR 
 
 Du kannst WANDR ganz bequem mit Google Fit oder Apple Health verbinden. Wenn du das nicht möchtest, kannst du Schritte oder Aktivitätsminuten auch einfach manuell erfassen.
 
+60 Aktive Minuten -> 60 Punkte (=)
+5000 Schritte -> 62 Punkte (~/80)
+62 Punkte -> ~4960 Schritte (*80)
+
 ## Getting Started
 
 Ein paar grundlegende Dinge, die dir den Einstieg in Flutter erleichtern werden:

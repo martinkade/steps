@@ -11,6 +11,7 @@ import 'package:wandr/model/fit.challenge.team8.dart';
 import 'package:wandr/model/fit.challenge.team9.dart';
 import 'package:wandr/model/fit.challenge.team10.dart';
 import 'package:wandr/model/fit.challenge.team11.dart';
+import 'package:wandr/model/fit.challenge.team12.dart';
 import 'package:wandr/model/repositories/repository.dart';
 
 ///
@@ -38,7 +39,8 @@ class ChallengeRepository extends Repository {
       FitChallenge8Team(),
       FitChallenge9Team(),
       FitChallenge10Team(),
-      FitChallenge11Team()
+      FitChallenge11Team(),
+      FitChallenge12Team()
     ];
     client.challengeRepositoryDidUpdate(
       this,
