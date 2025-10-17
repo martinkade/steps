@@ -70,8 +70,9 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 Padding(
@@ -102,8 +103,9 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 Padding(
@@ -136,8 +138,9 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 Padding(
@@ -209,7 +212,7 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   widget.challenge.title,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
