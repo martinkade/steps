@@ -262,11 +262,17 @@ class GermanCupertinoLocalizations implements CupertinoLocalizations {
   String get menuDismissLabel => 'Menü schließen';
 
   @override
-  String get searchWebButtonLabel => 'Search Web';
+  String get searchWebButtonLabel => 'Websuche';
 
   @override
-  String get shareButtonLabel => 'Share...';
+  String get shareButtonLabel => 'Teilen...';
 
   @override
-  String get clearButtonLabel => 'Clear';
+  String get clearButtonLabel => 'Löschen';
+  
+  @override
+  String get backButtonLabel => 'Zurück';
+  
+  @override
+  String get cancelButtonLabel => 'Abbrechen';
 }

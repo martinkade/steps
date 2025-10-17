@@ -42,7 +42,7 @@ if (keystoreReleasePropertiesFile.exists()) {
 
 android {
     namespace 'com.mediabeam.fitness'
-    compileSdkVersion 35
+    compileSdkVersion 36
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -51,7 +51,7 @@ android {
     defaultConfig {
         applicationId "com.mediabeam.fitness"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -100,7 +100,7 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.google.android.gms:play-services-fitness:21.2.0'
-    implementation 'com.google.android.gms:play-services-auth:21.3.0'
+    implementation 'com.google.android.gms:play-services-fitness:21.3.0'
+    implementation 'com.google.android.gms:play-services-auth:21.4.0'
     implementation 'com.android.support:multidex:1.0.3'
 }
