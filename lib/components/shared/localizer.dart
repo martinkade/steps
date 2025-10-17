@@ -269,4 +269,11 @@ class GermanCupertinoLocalizations implements CupertinoLocalizations {
 
   @override
   String get clearButtonLabel => 'Clear';
+
+  @override
+  String get backButtonLabel => 'Zurück';
+
+  @override
+  // TODO: implement cancelButtonLabel
+  String get cancelButtonLabel => 'Abbrechen';
 }
