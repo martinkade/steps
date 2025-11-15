@@ -30,8 +30,6 @@ import 'package:wandr/model/repositories/challenge.repository.dart';
 import 'package:wandr/model/repositories/repository.dart';
 import 'package:wandr/model/storage.dart';
 
-
-
 abstract class DashboardSyncDelegate {
   void onFitnessDataUpdate(FitSnapshot snapshot);
 
@@ -62,7 +60,7 @@ class _DashboardState extends State<DashboardComponent>
         DashboardChallengeDelegate,
         ChallengeRepositoryClient {
   ///
-  String? _userName;
+  String? _username;
 
   ///
   String? _teamName;
@@ -109,12 +107,13 @@ class _DashboardState extends State<DashboardComponent>
       if (!mounted) return;
 
       final FitTeam? team = await Preferences.getTeam();
-
-      if (userValue?.isNotEmpty == true) {
+      final String? username = userValue['username'];
+      final String? xworksToken = userValue['xworksToken'];
+      if (username?.isNotEmpty == true && xworksToken?.isNotEmpty == true) {
         setState(() {
-          _userName = userValue!.split('@').first.replaceAll('.', '_');
-          _userName = _md5(_userName!);
-          print('Init data for kUser=$_userName');
+          _username = username?.split('@').first.replaceAll('.', '_');
+          _username = _md5(_username!);
+          print('Init data for kUser=$_username');
           _organizationName = 'Team mediaBEAM';
           _teamName = team == null ? 'Ohne Team' : team.name;
         });
@@ -210,7 +209,7 @@ class _DashboardState extends State<DashboardComponent>
     Navigator.push(
       context,
       RouteTransition(
-        page: SettingsComponent(userKey: _userName),
+        page: SettingsComponent(userKey: _username),
       ),
     ).then((_) async {
       (_syncKey.currentState)?.reload();
@@ -225,7 +224,7 @@ class _DashboardState extends State<DashboardComponent>
     Navigator.push(
       context,
       RouteTransition(
-        page: TeamsComponent(userKey: _userName),
+        page: TeamsComponent(userKey: _username),
       ),
     ).then((_) async {
       (_syncKey.currentState)?.reload();
@@ -237,7 +236,7 @@ class _DashboardState extends State<DashboardComponent>
     Navigator.push(
       context,
       RouteTransition(
-        page: PurchasesComponent(userKey: _userName),
+        page: PurchasesComponent(userKey: _username),
       ),
     );
   }
@@ -310,23 +309,23 @@ class _DashboardState extends State<DashboardComponent>
                 key: _goalKey,
                 title: Localizer.translate(context, 'lblDashboardUserStats'),
                 delegate: this,
-                userKey: _userName,
+                userKey: _username,
                 teamName: _teamName,
                 organizationName: _organizationName,
               ),
             );
           case 2:
-            return DashboardInfoItem(
-              delegate: this,
-            );
-          case 3:
             return DashboardSyncItem(
               key: _syncKey,
               title: Localizer.translate(context, 'lblDashboardUserStats'),
               delegate: this,
-              userKey: _userName,
+              userKey: _username,
               teamName: _teamName,
               organizationName: _organizationName,
+            );
+          case 3:
+            return DashboardInfoItem(
+              delegate: this,
             );
           case 4:
             return DashboardChallengeItem(
@@ -334,7 +333,7 @@ class _DashboardState extends State<DashboardComponent>
                   Localizer.translate(context, 'lblDashboardActiveChallenges'),
               ranking: _ranking,
               snapshot: _fitSnapshot,
-              userKey: _userName,
+              userKey: _username,
               teamName: _teamName,
               organizationName: _organizationName,
               delegate: this,
@@ -344,7 +343,7 @@ class _DashboardState extends State<DashboardComponent>
               key: _rankingKey,
               title: Localizer.translate(context, 'lblDashboardTeamStandings'),
               ranking: _ranking,
-              userKey: _userName,
+              userKey: _username,
               teamName: _teamName,
               organizationName: _organizationName,
             );
@@ -361,7 +360,7 @@ class _DashboardState extends State<DashboardComponent>
           ? Colors.yellow
           : Colors.black,
       body: SafeArea(
-        child: _userName == null || _teamName == null
+        child: _username == null || _teamName == null
             ? Container(
                 child: Center(
                   child: CircularProgressIndicator(),

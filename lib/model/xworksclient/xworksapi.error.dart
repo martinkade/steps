@@ -14,8 +14,10 @@ class XworksApiError {
     switch (errorCode) {
       case 'E_NETWORK_ERROR':
         return 'lblUnknownError';
-      // lblSigningError
-      // lblSigningErrorCredentials
+      case 'E_LOGIN_DENIED':
+        return 'lblSigningErrorCredentials';
+      case 'E_ACCOUNT_IN_QUARANTINE':
+        return 'lblSigningError';
       default:
         return 'lblUnknownError';
     }

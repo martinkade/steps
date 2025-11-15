@@ -19,7 +19,10 @@ class LoadingIndicator extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: CircularProgressIndicator(),
+            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
@@ -29,7 +32,7 @@ class LoadingIndicator extends StatelessWidget {
           ],
         ),
       ),
-      height: min(this.height, 96.0),
+      height: min(this.height, 128.0),
     );
   }
 }

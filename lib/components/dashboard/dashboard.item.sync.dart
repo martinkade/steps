@@ -168,10 +168,10 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
         shadowColor: Colors.grey.withAlpha(50),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(16.0),
         ),
         child: _loading
-            ? LoadingIndicator(height: 96.0)
+            ? LoadingIndicator()
             : _autoSyncEnabled
                 ? Container(
                     color: Colors.green.withAlpha(50),
@@ -182,7 +182,13 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 16.0),
-                            child: Icon(Icons.sync_rounded),
+                            child: SizedBox(
+                              child: Image.asset(Platform.isIOS
+                                  ? 'assets/images/fit_apple.png'
+                                  : 'assets/images/fit_google.png'),
+                              width: 44.0,
+                              height: 44.0,
+                            ),
                           ),
                           Expanded(
                             child: Text(

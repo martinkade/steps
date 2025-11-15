@@ -12,9 +12,11 @@ class Preferences {
   Preferences._internal();
 
   ///
-  static Future<String?> getUserKey() async {
+  static Future<Map<String, String?>> getUserKey() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.getString('kUser');
+    final String? username = preferences.getString('kUser');
+    final String? xworksToken = preferences.getString('kXworksToken');
+    return {'username': username, 'xworksToken': xworksToken};
   }
 
   ///

@@ -32,7 +32,7 @@ class DashboardInfoItem extends StatelessWidget {
         shadowColor: Colors.grey.withAlpha(50),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(16.0),
         ),
         child: Container(
           color: Theme.of(context).colorScheme.primary.withAlpha(50),

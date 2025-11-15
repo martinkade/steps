@@ -225,7 +225,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
         shadowColor: Colors.grey.withAlpha(50),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(16.0),
         ),
         child: _loading ? LoadingIndicator() : contentWidget,
       ),

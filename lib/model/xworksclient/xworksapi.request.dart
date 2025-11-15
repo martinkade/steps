@@ -57,10 +57,23 @@ class _XworksApiRequest {
       final statusCode = response.statusCode;
       dynamic responseBody;
       XworksApiResponseContentType responseType;
-      if (response.headers['Content-Type'] == 'application/json') {
+      if (response.headers['content-type']?.startsWith('application/json') ==
+          true) {
         try {
           responseBody = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
           responseType = XworksApiResponseContentType.json;
+          if (responseBody['state'] == 'ERROR') {
+            throw XworksApiException(
+              error: XworksApiError(
+                uri: requestUrl,
+                statusCode: statusCode,
+                errorCode: responseBody['error']?['status'],
+                errorMessage: responseBody['error']?['message'],
+              ),
+            );
+          }
+        } on XworksApiException catch (ex) {
+          throw ex;
         } on Exception catch (ex) {
           throw XworksApiException(
             error: XworksApiError(
@@ -71,7 +84,8 @@ class _XworksApiRequest {
             cause: ex,
           );
         }
-      } else if (response.headers['Content-Type'] == 'text/html') {
+      } else if (response.headers['content-type']?.startsWith('text/html') ==
+          true) {
         responseBody = utf8.decode(response.bodyBytes);
         responseType = XworksApiResponseContentType.text;
       } else {
@@ -86,7 +100,7 @@ class _XworksApiRequest {
               error: XworksApiError(
                 uri: requestUrl,
                 statusCode: statusCode,
-                errorCode: responseBody['status'],
+                errorCode: responseBody['state'],
                 errorMessage: responseBody['error']?['message'],
               ),
             );
@@ -124,29 +138,25 @@ class _XworksApiRequest {
         return await client.post(
           requestUrl,
           headers: headerParams?.data,
-          body: body?.data,
-          encoding: Encoding.getByName('utf-8'),
+          body: body?.payload,
         );
       case XworksApiRequestMethod.put:
         return await client.put(
           requestUrl,
           headers: headerParams?.data,
-          body: body?.data,
-          encoding: Encoding.getByName('utf-8'),
+          body: body?.payload,
         );
       case XworksApiRequestMethod.patch:
         return await client.patch(
           requestUrl,
           headers: headerParams?.data,
-          body: body?.data,
-          encoding: Encoding.getByName('utf-8'),
+          body: body?.payload,
         );
       case XworksApiRequestMethod.delete:
         return await client.delete(
           requestUrl,
           headers: headerParams?.data,
-          body: body?.data,
-          encoding: Encoding.getByName('utf-8'),
+          body: body?.payload,
         );
       default:
         return await client.get(requestUrl, headers: headerParams?.data);
@@ -167,13 +177,17 @@ class XworksApiRequestParams {
   }
 }
 
-abstract class XworksApiRequestBody<T> {
+abstract class XworksApiRequestBody<T, R> {
   final T data;
   const XworksApiRequestBody({required this.data});
+
+  R get payload;
 }
 
-class XworksApiJsonRequestBody extends XworksApiRequestBody<dynamic> {
+class XworksApiJsonRequestBody extends XworksApiRequestBody<dynamic, String> {
   XworksApiJsonRequestBody({
     required dynamic data,
   }) : super(data: data);
+
+  String get payload => jsonEncode(data);
 }

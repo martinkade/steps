@@ -37,7 +37,9 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
     super.initState();
 
     _emailController = TextEditingController();
+    _emailController.text = 'martin.kade@xworks.net';
     _passwordController = TextEditingController();
+    _passwordController.text = '#321ieziloP';
     _emailFocusNode = FocusNode();
     _passwordFocusNode = FocusNode();
     _apiAuthModule = XworksApiAuthModule(XworksApiModule.defaultApiClient);
@@ -111,12 +113,16 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
     )
         .then(
       (response) {
-        widget.delegate.nextItem(widget);
+        SharedPreferences.getInstance().then((preferences) {
+          if (!mounted) return;
+          preferences.setString('kXworksToken', response['token']);
+          widget.delegate.nextItem(widget);
+        });
       },
     ).catchError(
       (ex) {
         setState(() {
-          _authenticationError = ex;
+          _authenticationError = ex.error;
         });
       },
     ).whenComplete(() {
@@ -128,60 +134,80 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-          child: Text(
-            Localizer.translate(context, 'lblLandingText2'),
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.normal,
+    return _isAuthenticating || _authenticationError != null
+        ? Padding(
+            padding: const EdgeInsets.symmetric(vertical: 96.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: 16.0,
+              children: [
+                _authenticationError == null
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 0.0),
+                        child: CircularProgressIndicator(),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: Icon(Icons.error),
+                      ),
+                _authenticationError == null
+                    ? Text(
+                        Localizer.translate(context, 'lblSigningIn'),
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      )
+                    : Text(
+                        Localizer.translate(
+                            context, _authenticationError!.messageKey),
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                _authenticationError == null
+                    ? Container()
+                    : TextButton(
+                        child: Text(
+                          Localizer.translate(context, 'lblActionRetry'),
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _authenticationError = null;
+                          });
+                        },
+                      ),
+              ],
             ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 0.0),
-            child: _isAuthenticating || _authenticationError != null
-                ? Column(
-                    spacing: 16.0,
-                    children: [
-                      _authenticationError == null
-                          ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 0.0),
-                              child: CircularProgressIndicator(),
-                            )
-                          : Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Icon(Icons.error),
-                            ),
-                      _authenticationError == null
-                          ? Text(
-                              Localizer.translate(context, 'lblSigningIn'),
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            )
-                          : Text(
-                              Localizer.translate(
-                                  context, _authenticationError!.messageKey),
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            )
-                    ],
-                  )
-                : AutofillGroup(
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+                child: Text(
+                  Localizer.translate(context, 'lblLandingText2'),
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 0.0),
+                  child: AutofillGroup(
                     child: Column(
                       spacing: 16.0,
                       children: [
@@ -223,42 +249,42 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
                       ],
                     ),
                   ),
-          ),
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-              child: Text(
-                Localizer.translate(context, 'lblActionBack'),
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.normal,
                 ),
               ),
-              onPressed: () {
-                widget.delegate.previousItem(widget);
-              },
-            ),
-            TextButton(
-              child: Text(
-                Localizer.translate(context, 'lblActionForward'),
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onPressed:
-                  _email == null || _password == null || _isAuthenticating
-                      ? null
-                      : () {
-                          _login();
-                        },
-            ),
-          ],
-        )
-      ],
-    );
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    child: Text(
+                      Localizer.translate(context, 'lblActionBack'),
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    onPressed: () {
+                      widget.delegate.previousItem(widget);
+                    },
+                  ),
+                  TextButton(
+                    child: Text(
+                      Localizer.translate(context, 'lblActionForward'),
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed:
+                        _email == null || _password == null || _isAuthenticating
+                            ? null
+                            : () {
+                                _login();
+                              },
+                  ),
+                ],
+              )
+            ],
+          );
   }
 }
