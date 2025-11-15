@@ -1,150 +1,143 @@
 package com.mediabeam.fitness
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.fitness.Fitness
-import com.google.android.gms.fitness.FitnessOptions
-import com.google.android.gms.fitness.data.DataType
-import com.google.android.gms.fitness.data.Field
-import com.google.android.gms.fitness.request.DataReadRequest
-import com.google.android.gms.tasks.Tasks
-import io.flutter.plugin.common.MethodChannel
-import java.lang.ref.WeakReference
-import java.text.DateFormat
+import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.records.ActivityIntensityRecord
+import androidx.health.connect.client.records.StepsRecord
+import androidx.health.connect.client.request.AggregateRequest
+import androidx.health.connect.client.time.TimeRangeFilter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import java.util.concurrent.Callable
-import java.util.concurrent.TimeUnit
 
-class FitSummaryTask(
-    private val context: WeakReference<Context>,
-    private val options: FitnessOptions,
-    private val result: MethodChannel.Result?
-) : Callable<Map<String, Any?>> {
+class FitSummaryTask(context: Context) {
+    private val packageName = "com.google.android.apps.healthdata"
+    private val healthConnectClient = HealthConnectClient.getOrCreate(context, packageName)
 
-    private val uiHandler = Handler(Looper.getMainLooper())
-
-    override fun call(): Map<String, Any?> {
-        val now = Calendar.getInstance(Locale.GERMANY)
+    suspend fun callAsync(): Map<String, Any?> = withContext(Dispatchers.IO) {
+        val now = Calendar.getInstance(Locale.getDefault())
         now.time = Date()
 
-        val dateFormat: DateFormat = DateFormat.getDateTimeInstance()
-
-        val nowMillis = now.timeInMillis
-        // Log.i("-", "\tnow: " + dateFormat.format(now.time))
-        now.set(Calendar.HOUR_OF_DAY, 0)
-        now.set(Calendar.MINUTE, 0)
-        now.set(Calendar.SECOND, 0)
-        now.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
-        now.add(Calendar.DATE, -7)
-
-        val lastWeekStartMillis: Long = now.timeInMillis
-        // Log.i("-", "\tlastWeekStart: " + dateFormat.format(now.time))
+        val lastWeekStart = Calendar.getInstance(Locale.getDefault()).apply {
+            time = now.time
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+            add(Calendar.DATE, -7)
+        }
 
         val data = HashMap<String, Any>()
-        data["steps"] = readSteps(lastWeekStartMillis, nowMillis)
-        data["activeMinutes"] = readActiveMinutes(lastWeekStartMillis, nowMillis)
-
-        uiHandler.post { result?.success(data) }
-        return data
+        data["steps"] = readSteps(lastWeekStart, now)
+        data["activeMinutes"] = readActiveMinutes(lastWeekStart, now)
+        return@withContext data
     }
 
-    private fun readSteps(from: Long, to: Long): Map<String, Int> {
-        try {
-            val readRequest = DataReadRequest.Builder()
-                .enableServerQueries()
-                // .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA)
-                .bucketByTime(1, TimeUnit.DAYS)
-                .setTimeRange(from, to, TimeUnit.MILLISECONDS)
-                .setLimit(9999)
-                .build()
-
-            val contextRef = context.get() ?: throw UnsupportedOperationException()
-            return read(contextRef, readRequest, DataType.TYPE_STEP_COUNT_DELTA, Field.FIELD_STEPS)
-        } catch (ex: Exception) {
-            ex.printStackTrace()
+    suspend fun readSteps(startTime: Calendar, endTime: Calendar): Map<String, Int> {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        var key: String
+        var value: Int
+        val map = HashMap<String, Int>()
+        val start = startTime
+        val end = Calendar.getInstance(Locale.getDefault()).apply {
+            time = start.time
+            add(Calendar.DATE, 1)
         }
-        return HashMap()
-    }
-
-    private fun readActiveMinutes(from: Long, to: Long): Map<String, Int> {
-        try {
-            val readRequest = DataReadRequest.Builder()
-                .enableServerQueries()
-                // .aggregate(DataType.TYPE_MOVE_MINUTES, DataType.AGGREGATE_MOVE_MINUTES)
-                .aggregate(DataType.TYPE_MOVE_MINUTES)
-                .bucketByTime(1, TimeUnit.DAYS)
-                .setTimeRange(from, to, TimeUnit.MILLISECONDS)
-                .setLimit(9999)
-                .build()
-
-            val contextRef = context.get() ?: throw UnsupportedOperationException()
-            return read(contextRef, readRequest, DataType.TYPE_MOVE_MINUTES, Field.FIELD_DURATION)
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
-        return HashMap()
-    }
-
-    private fun read(
-        context: Context,
-        request: DataReadRequest,
-        dataType: DataType,
-        field: Field
-    ): Map<String, Int> {
-        val account = GoogleSignIn
-            .getAccountForExtension(context, options)
-
-        val fitnessOptions = FitnessOptions.builder()
-            .addDataType(dataType, FitnessOptions.ACCESS_READ)
-            .build()
-
-        if (!GoogleSignIn.hasPermissions(
-                account,
-                fitnessOptions
-            )
-        ) throw IllegalAccessException("Missing Google Fit read permission for $dataType")
-
-        Fitness.getHistoryClient(context, account).apply {
-            readData(request).apply {
-                Tasks.await(this, 15, TimeUnit.SECONDS).apply {
-                    result?.apply {
-                        val map = HashMap<String, Int>()
-                        if (status.isSuccess) {
-                            val dateFormat: DateFormat =
-                                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
-                            buckets.forEach { bucket ->
-                                bucket.getDataSet(dataType)?.apply {
-
-                                    var key: String
-                                    var value: Int
-                                    dataPoints.forEach {
-                                        key =
-                                            dateFormat.format(it.getStartTime(TimeUnit.MILLISECONDS))
-                                        // Log.i("-", "\tkey:\t$key")
-                                        value = it.getValue(field).asInt()
-                                        // Log.i("-", "\tvalue:\t$value")
-
-                                        when (val oldValue = map[key]) {
-                                            null -> map[key] = value
-                                            else -> map[key] = oldValue + value
-                                        }
-                                    }
-                                }
-                            }
-                            return map
-                        } else return map
-                    }
-                }
+        while (start.before(endTime) && end.before(endTime)) {
+            key = dateFormat.format(start.time)
+            value = aggregateSteps(
+                healthConnectClient,
+                start.toInstant(),
+                end.toInstant()
+            ).toInt()
+            when (val oldValue = map[key]) {
+                null -> map[key] = value
+                else -> map[key] = oldValue + value
             }
+            start.add(Calendar.DATE, 1)
+            end.add(Calendar.DATE, 1)
         }
 
-        return HashMap()
+        key = dateFormat.format(start.time)
+        value =
+            aggregateSteps(healthConnectClient, start.toInstant(), end.toInstant()).toInt()
+        when (val oldValue = map[key]) {
+            null -> map[key] = value
+            else -> map[key] = oldValue + value
+        }
+
+        return map
+    }
+
+    suspend fun readActiveMinutes(startTime: Calendar, endTime: Calendar): Map<String, Int> {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        var key: String
+        var value: Int
+        val map = HashMap<String, Int>()
+        val start = startTime
+        val end = Calendar.getInstance(Locale.getDefault()).apply {
+            time = start.time
+            add(Calendar.DATE, 1)
+        }
+        while (start.before(endTime) && end.before(endTime)) {
+            key = dateFormat.format(start.time)
+            value = aggregateActiveMinutes(
+                healthConnectClient,
+                start.toInstant(),
+                end.toInstant()
+            ).toInt()
+            when (val oldValue = map[key]) {
+                null -> map[key] = value
+                else -> map[key] = oldValue + value
+            }
+            start.add(Calendar.DATE, 1)
+            end.add(Calendar.DATE, 1)
+        }
+
+        key = dateFormat.format(start.time)
+        value =
+            aggregateActiveMinutes(healthConnectClient, start.toInstant(), end.toInstant()).toInt()
+        when (val oldValue = map[key]) {
+            null -> map[key] = value
+            else -> map[key] = oldValue + value
+        }
+
+        return map
+    }
+
+    suspend fun aggregateActiveMinutes(
+        healthConnectClient: HealthConnectClient,
+        startTime: Instant,
+        endTime: Instant,
+    ): Long = try {
+        val response = healthConnectClient.aggregate(
+            AggregateRequest(
+                metrics = setOf(ActivityIntensityRecord.DURATION_TOTAL),
+                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
+            )
+        )
+        response[StepsRecord.COUNT_TOTAL] ?: 0L
+    } catch (e: Exception) {
+        0L
+    }
+
+    suspend fun aggregateSteps(
+        healthConnectClient: HealthConnectClient,
+        startTime: Instant,
+        endTime: Instant,
+    ): Long = try {
+        val response = healthConnectClient.aggregate(
+            AggregateRequest(
+                metrics = setOf(StepsRecord.COUNT_TOTAL),
+                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
+            )
+        )
+        response[StepsRecord.COUNT_TOTAL] ?: 0L
+    } catch (e: Exception) {
+        0L
     }
 }

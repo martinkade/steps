@@ -1,6 +1,5 @@
 package com.mediabeam.fitness
 
-import android.app.Activity
 import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,39 +8,39 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.fitness.FitnessOptions
-import com.google.android.gms.fitness.data.DataType
-import io.flutter.embedding.android.FlutterActivity
+import androidx.core.net.toUri
+import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.PermissionController
+import androidx.health.connect.client.permission.HealthPermission
+import androidx.health.connect.client.records.ActivityIntensityRecord
+import androidx.health.connect.client.records.StepsRecord
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import java.lang.ref.WeakReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-// https://developers.google.com/fit/datatypes/activity
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
 
     companion object {
         const val CHANNEL_FITNESS = "com.mediabeam/fitness"
         const val CHANNEL_NOTIFICATION = "com.mediabeam/notification"
-        const val REQUEST_CODE_DATA_AUTH = 1
-        const val REQUEST_CODE_AUTH = 2
         const val REQUEST_CODE_ALARM = 3
+
+        val PERMISSIONS = setOf(
+            HealthPermission.getReadPermission(StepsRecord::class),
+            HealthPermission.getReadPermission(ActivityIntensityRecord::class)
+        )
     }
 
     private var pendingCall: MethodCall? = null
     private var pendingResult: MethodChannel.Result? = null
-    private val fitnessOptions: FitnessOptions
-        get() = FitnessOptions.builder()
-            .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-            .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-            .addDataType(DataType.TYPE_MOVE_MINUTES, FitnessOptions.ACCESS_READ)
-            .addDataType(DataType.AGGREGATE_MOVE_MINUTES, FitnessOptions.ACCESS_READ)
-            .build()
 
     private lateinit var executor: ExecutorService
 
@@ -52,42 +51,86 @@ class MainActivity : FlutterActivity() {
             CHANNEL_FITNESS
         ).setMethodCallHandler { call, result ->
             // Note: this method is invoked on the main thread.
-            if (call.method == "getFitnessMetrics") {
-                MainActivity@ this.pendingResult = result
-                MainActivity@ this.pendingCall = call
-                val account: GoogleSignInAccount =
-                    GoogleSignIn.getAccountForExtension(this, fitnessOptions)
-                if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
-                    GoogleSignIn.requestPermissions(
-                        this,
-                        REQUEST_CODE_DATA_AUTH,
-                        account,
-                        fitnessOptions
-                    )
-                } else {
-                    handleDataCall(call, result)
+            when (call.method) {
+                "getFitnessMetrics" -> {
+                    this@MainActivity.pendingResult = result
+                    this@MainActivity.pendingCall = call
+                    val packageName = "com.google.android.apps.healthdata"
+                    val healthConnectClient = HealthConnectClient.getOrCreate(this, packageName)
+                    val job = CoroutineScope(Job() + Dispatchers.Main)
+                    job.launch {
+                        val granted =
+                            healthConnectClient.permissionController.getGrantedPermissions()
+                        if (granted.containsAll(PERMISSIONS)) {
+                            handleDataCall(call, result)
+                        } else {
+                            result.error(
+                                "E_HEALTH_AUTH",
+                                "HealthConnectClient is not authenticated",
+                                null
+                            )
+                        }
+                    }
                 }
-            } else if (call.method == "isAuthenticated") {
-                val account: GoogleSignInAccount =
-                    GoogleSignIn.getAccountForExtension(this, fitnessOptions)
-                result.success(GoogleSignIn.hasPermissions(account, fitnessOptions))
-            } else if (call.method == "authenticate") {
-                val account: GoogleSignInAccount =
-                    GoogleSignIn.getAccountForExtension(this, fitnessOptions)
-                MainActivity@ this.pendingResult = result
-                MainActivity@ this.pendingCall = call
-                GoogleSignIn.requestPermissions(
-                    this,
-                    REQUEST_CODE_AUTH,
-                    account,
-                    fitnessOptions
-                )
-            } else if (call.method == "getDeviceInfo") {
-                result.success(deviceInfo)
-            } else if (call.method == "getAppInfo") {
-                result.success(appInfo)
-            } else {
-                result.notImplemented()
+
+                "isInstalled" -> {
+                    val packageName = "com.google.android.apps.healthdata"
+                    when (HealthConnectClient.getSdkStatus(this, packageName)) {
+                        HealthConnectClient.SDK_UNAVAILABLE -> result.success(-1)
+                        HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> result.success(
+                            0
+                        )
+
+                        else -> result.success(1)
+                    }
+                }
+
+                "install" -> {
+                    val packageName = "com.google.android.apps.healthdata"
+                    val uriString =
+                        "market://details?id=$packageName&url=healthconnect%3A%2F%2Fonboarding"
+                    startActivity(
+                        Intent(Intent.ACTION_VIEW).apply {
+                            setPackage("com.android.vending")
+                            data = uriString.toUri()
+                            putExtra("overlay", true)
+                            putExtra("callerId", packageName)
+                        }
+                    )
+                }
+
+                "isAuthenticated" -> {
+                    val packageName = "com.google.android.apps.healthdata"
+                    val healthConnectClient = HealthConnectClient.getOrCreate(this, packageName)
+                    val job = CoroutineScope(Job() + Dispatchers.Main)
+                    job.launch {
+                        val granted =
+                            healthConnectClient.permissionController.getGrantedPermissions()
+                        if (granted.containsAll(PERMISSIONS)) {
+                            result.success(true)
+                        } else {
+                            result.success(false)
+                        }
+                    }
+                }
+
+                "authenticate" -> {
+                    this@MainActivity.pendingResult = result
+                    this@MainActivity.pendingCall = call
+                    requestPermissions.launch(PERMISSIONS)
+                }
+
+                "getDeviceInfo" -> {
+                    result.success(deviceInfo)
+                }
+
+                "getAppInfo" -> {
+                    result.success(appInfo)
+                }
+
+                else -> {
+                    result.notImplemented()
+                }
             }
         }
         MethodChannel(
@@ -111,6 +154,15 @@ class MainActivity : FlutterActivity() {
             }
         }
     }
+
+    private val requestPermissions =
+        registerForActivityResult(PermissionController.createRequestPermissionResultContract()) { granted ->
+            if (granted.containsAll(PERMISSIONS)) {
+                handleAuthCall(pendingCall, pendingResult, true)
+            } else {
+                handleAuthCall(pendingCall, pendingResult, false)
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,17 +192,11 @@ class MainActivity : FlutterActivity() {
         val result = pendingResult
         this.pendingResult = null
 
-        val task = FitSummaryTask(WeakReference(applicationContext), fitnessOptions, result)
-
-        val future = executor.submit(task)
-        val worker = Thread {
-            try {
-                future.get()
-            } catch (_: Exception) {
-
-            }
+        val task = FitSummaryTask(this@MainActivity)
+        val job = CoroutineScope(Job() + Dispatchers.Main)
+        job.launch {
+            result?.success(task.callAsync())
         }
-        worker.start()
     }
 
     private fun handleAuthCall(
@@ -165,23 +211,6 @@ class MainActivity : FlutterActivity() {
         this.pendingResult = null
 
         result?.success(granted)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CODE_DATA_AUTH) {
-                handleDataCall(pendingCall, pendingResult)
-            } else if (requestCode == REQUEST_CODE_AUTH) {
-                handleAuthCall(pendingCall, pendingResult, true)
-            }
-        } else {
-            if (requestCode == REQUEST_CODE_DATA_AUTH) {
-                handleDataCall(pendingCall, pendingResult)
-            } else if (requestCode == REQUEST_CODE_AUTH) {
-                handleAuthCall(pendingCall, pendingResult, false)
-            }
-        }
     }
 
     private val appInfo: String

@@ -50,7 +50,7 @@ android {
 
     defaultConfig {
         applicationId "com.mediabeam.fitness"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 26 // flutter.minSdkVersion
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -86,12 +86,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = JavaVersion.VERSION_21.toString()
     }
 }
 
@@ -100,7 +100,6 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.google.android.gms:play-services-fitness:21.3.0'
-    implementation 'com.google.android.gms:play-services-auth:21.4.0'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.health.connect:connect-client:1.2.0-alpha02'
 }

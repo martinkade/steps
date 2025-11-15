@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wandr/components/landing/landing.item.dart';
 import 'package:wandr/components/shared/localizer.dart';
+import 'package:wandr/model/xworksclient/xworksapi.error.dart';
+import 'package:wandr/model/xworksclient/xworksapi.module.auth.dart';
+import 'package:wandr/model/xworksclient/xworksapi.module.dart';
 
 class LandingIdentityItem extends LandingItem {
   ///
@@ -15,26 +18,35 @@ class LandingIdentityItem extends LandingItem {
 
 class _LandingIdentityItemState extends State<LandingIdentityItem> {
   ///
-  late TextEditingController _inputController;
+  late TextEditingController _emailController, _passwordController;
 
   ///
-  late FocusNode _focusNode;
+  late FocusNode _emailFocusNode, _passwordFocusNode;
 
   ///
-  String? _email;
+  String? _email, _password;
+
+  ///
+  ///
+  late XworksApiAuthModule _apiAuthModule;
+  bool _isAuthenticating = false;
+  XworksApiError? _authenticationError;
 
   @override
   void initState() {
     super.initState();
 
-    _inputController = TextEditingController();
-    _focusNode = FocusNode();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _emailFocusNode = FocusNode();
+    _passwordFocusNode = FocusNode();
+    _apiAuthModule = XworksApiAuthModule(XworksApiModule.defaultApiClient);
 
     SharedPreferences.getInstance().then((preferences) {
       final String? userValue = preferences.getString('kUser');
       if (!mounted) return;
       setState(() {
-        _inputController.text = userValue ?? '';
+        _emailController.text = userValue ?? '';
         _email = userValue;
       });
     });
@@ -42,12 +54,15 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
 
   @override
   void dispose() {
-    _focusNode.dispose();
-    _inputController.dispose();
+    _emailFocusNode.dispose();
+    _emailController.dispose();
+    _passwordFocusNode.dispose();
+    _passwordController.dispose();
+    _apiAuthModule.dispose();
     super.dispose();
   }
 
-  bool _validate(String value) {
+  bool _validateEmail(String value) {
     final String text = value.toLowerCase();
     final bool valid =
         RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@mediabeam.com")
@@ -67,6 +82,48 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
       });
     }
     return valid;
+  }
+
+  bool _validatePassword(String value) {
+    final String text = value.toLowerCase();
+    final bool valid =
+        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+").hasMatch(text);
+    if (valid) {
+      setState(() {
+        _password = text;
+      });
+    } else {
+      setState(() {
+        _password = null;
+      });
+    }
+    return valid;
+  }
+
+  void _login() {
+    setState(() {
+      _isAuthenticating = true;
+    });
+    _apiAuthModule
+        .getToken(
+      username: _emailController.text,
+      password: _passwordController.text,
+    )
+        .then(
+      (response) {
+        widget.delegate.nextItem(widget);
+      },
+    ).catchError(
+      (ex) {
+        setState(() {
+          _authenticationError = ex;
+        });
+      },
+    ).whenComplete(() {
+      setState(() {
+        _isAuthenticating = false;
+      });
+    });
   }
 
   @override
@@ -89,25 +146,83 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
           child: Padding(
             padding:
                 const EdgeInsets.symmetric(vertical: 16.0, horizontal: 0.0),
-            child: AutofillGroup(
-              child: TextField(
-                keyboardType: TextInputType.emailAddress,
-                controller: _inputController,
-                autofillHints: [AutofillHints.email],
-                focusNode: _focusNode,
-                onChanged: (value) {
-                  _validate(value);
-                },
-                onSubmitted: (value) {
-                  _validate(value);
-                },
-                obscureText: false,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: Localizer.translate(context, 'lblEmail'),
-                ),
-              ),
-            ),
+            child: _isAuthenticating || _authenticationError != null
+                ? Column(
+                    spacing: 16.0,
+                    children: [
+                      _authenticationError == null
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 0.0),
+                              child: CircularProgressIndicator(),
+                            )
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Icon(Icons.error),
+                            ),
+                      _authenticationError == null
+                          ? Text(
+                              Localizer.translate(context, 'lblSigningIn'),
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            )
+                          : Text(
+                              Localizer.translate(
+                                  context, _authenticationError!.messageKey),
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            )
+                    ],
+                  )
+                : AutofillGroup(
+                    child: Column(
+                      spacing: 16.0,
+                      children: [
+                        TextField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: _emailController,
+                          autofillHints: [AutofillHints.email],
+                          focusNode: _emailFocusNode,
+                          onChanged: (value) {
+                            _validateEmail(value);
+                          },
+                          onSubmitted: (value) {
+                            _validateEmail(value);
+                          },
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: Localizer.translate(context, 'lblEmail'),
+                          ),
+                        ),
+                        TextField(
+                          keyboardType: TextInputType.visiblePassword,
+                          controller: _passwordController,
+                          autofillHints: [AutofillHints.password],
+                          focusNode: _passwordFocusNode,
+                          onChanged: (value) {
+                            _validatePassword(value);
+                          },
+                          onSubmitted: (value) {
+                            _validatePassword(value);
+                          },
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText:
+                                Localizer.translate(context, 'lblPassword'),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
           ),
         ),
         Row(
@@ -134,11 +249,12 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              onPressed: _email == null
-                  ? null
-                  : () {
-                      widget.delegate.nextItem(widget);
-                    },
+              onPressed:
+                  _email == null || _password == null || _isAuthenticating
+                      ? null
+                      : () {
+                          _login();
+                        },
             ),
           ],
         )

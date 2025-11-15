@@ -15,7 +15,7 @@ import 'package:wandr/model/storage.dart';
 
 ///
 abstract class FitnessRepositoryClient {
-  /// Notify client with updated local data from Google Fit or Apple Health (or manually recordet data).
+  /// Notify client with updated local data from Health Connect or Apple Health (or manually recordet data).
   void fitnessRepositoryDidUpdate(
     FitnessRepository repository, {
     required SyncState state,

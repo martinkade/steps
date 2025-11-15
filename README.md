@@ -2,7 +2,7 @@
 
 Bleibe fit und gesund, indem du (mehr) Bewegung in deinen Alltag bringst. WANDR hilft dir dabei, die Motivation aufrecht zu erhalten. Du kannst beispielsweise deinem Team dabei helfen, die wöchentliche Challenge zu gewinnen, indem du Aktivitätspunkte sammelst.
 
-Du kannst WANDR ganz bequem mit Google Fit oder Apple Health verbinden. Wenn du das nicht möchtest, kannst du Schritte oder Aktivitätsminuten auch einfach manuell erfassen.
+Du kannst WANDR ganz bequem mit Health Connect oder Apple Health verbinden. Wenn du das nicht möchtest, kannst du Schritte oder Aktivitätsminuten auch einfach manuell erfassen.
 
 60 Aktive Minuten -> 60 Punkte (=)
 5000 Schritte -> 62 Punkte (~/80)

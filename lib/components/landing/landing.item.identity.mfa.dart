@@ -1,0 +1,148 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wandr/components/landing/landing.item.dart';
+import 'package:wandr/components/shared/localizer.dart';
+
+class LandingIdentityMfaItem extends LandingItem {
+  ///
+  LandingIdentityMfaItem(
+      {Key? key, required int index, required LandingDelegate delegate})
+      : super(key: key, index: index, delegate: delegate);
+
+  @override
+  _LandingIdentityMfaItemState createState() => _LandingIdentityMfaItemState();
+}
+
+class _LandingIdentityMfaItemState extends State<LandingIdentityMfaItem> {
+  ///
+  late TextEditingController _inputController;
+
+  ///
+  late FocusNode _focusNode;
+
+  ///
+  String? _email;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _inputController = TextEditingController();
+    _focusNode = FocusNode();
+
+    SharedPreferences.getInstance().then((preferences) {
+      final String? userValue = preferences.getString('kUser');
+      if (!mounted) return;
+      setState(() {
+        _inputController.text = userValue ?? '';
+        _email = userValue;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _inputController.dispose();
+    super.dispose();
+  }
+
+  bool _validate(String value) {
+    final String text = value.toLowerCase();
+    final bool valid =
+        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@mediabeam.com")
+            .hasMatch(text);
+    if (valid) {
+      SharedPreferences.getInstance().then((preferences) {
+        if (!mounted) return;
+        preferences.setString('kUser', text);
+        print('updated shared preference user key value to $text');
+      });
+      setState(() {
+        _email = text;
+      });
+    } else {
+      setState(() {
+        _email = null;
+      });
+    }
+    return valid;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+          child: Text(
+            Localizer.translate(context, 'lblLandingText2'),
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 0.0),
+            child: AutofillGroup(
+              child: TextField(
+                keyboardType: TextInputType.emailAddress,
+                controller: _inputController,
+                autofillHints: [AutofillHints.email],
+                focusNode: _focusNode,
+                onChanged: (value) {
+                  _validate(value);
+                },
+                onSubmitted: (value) {
+                  _validate(value);
+                },
+                obscureText: false,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: Localizer.translate(context, 'lblEmail'),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+              child: Text(
+                Localizer.translate(context, 'lblActionBack'),
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              onPressed: () {
+                widget.delegate.previousItem(widget);
+              },
+            ),
+            TextButton(
+              child: Text(
+                Localizer.translate(context, 'lblActionForward'),
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: _email == null
+                  ? null
+                  : () {
+                      widget.delegate.nextItem(widget);
+                    },
+            ),
+          ],
+        )
+      ],
+    );
+  }
+}

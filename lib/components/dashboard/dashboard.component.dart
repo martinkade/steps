@@ -176,7 +176,7 @@ class _DashboardState extends State<DashboardComponent>
     if (!mounted) return;
     (_goalKey.currentState)?.reload(snapshot);
     setState(() {
-      // apply local data snapshot with updated fitnes metrics from Google Fit or Apple health (or manually recorded data)
+      // apply local data snapshot with updated fitnes metrics from Health Connect or Apple health (or manually recorded data)
       _fitSnapshot = snapshot;
     });
   }

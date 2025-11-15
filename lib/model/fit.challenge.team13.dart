@@ -5,7 +5,7 @@ import 'package:wandr/model/fit.snapshot.dart';
 
 class FitChallenge13Team extends FitChallenge {
   ///
-  static DateTime kStartDate = DateTime(2025, 10, 23, 13, 30);
+  static DateTime kStartDate = DateTime(2025, 10, 22, 13, 30);
   static DateTime kEndDate = DateTime(2025, 10, 26, 21, 30);
 
   ///

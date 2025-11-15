@@ -29,10 +29,7 @@ class _LandingState extends State<Landing> implements LandingDelegate {
   int _cardIndex = 0;
 
   ///
-  String? _title;
-
-  ///
-  String? _subtitle;
+  String? _title, _subtitle;
 
   @override
   void initState() {
@@ -144,17 +141,32 @@ class _LandingState extends State<Landing> implements LandingDelegate {
   @override
   Widget build(BuildContext context) {
     final double cardWidth = MediaQuery.of(context).size.width - 24.0;
-    final double cardHeight = max(cardWidth * 0.75, 256.0);
+    final double cardHeight = max(cardWidth, 256.0);
 
-    final Widget madeWithLove = Row(
+    final Widget madeWithLove = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Made with'),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: Icon(Icons.favorite),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Made with',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Icon(Icons.favorite),
+            ),
+            Text(
+              'in Ahaus',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
-        Text('in Ahaus')
+        Text(
+          'powered by xworks',
+          style: TextStyle(fontStyle: FontStyle.italic),
+        )
       ],
     );
 
@@ -174,7 +186,7 @@ class _LandingState extends State<Landing> implements LandingDelegate {
               shadowColor: Colors.grey.withAlpha(50),
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(16.0),
               ),
               child: Container(
                 height: cardHeight,
@@ -232,7 +244,7 @@ class _LandingState extends State<Landing> implements LandingDelegate {
                         child: Text(
                           _title ?? '{{ title }}',
                           style: TextStyle(
-                            fontSize: 28.0,
+                            fontSize: 32.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
