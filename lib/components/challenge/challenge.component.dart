@@ -68,7 +68,7 @@ class _ChallengeState extends State<Challenge> {
                           shadowColor: Colors.grey.withAlpha(50),
                           clipBehavior: Clip.antiAlias,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(16.0),
                           ),
                           child: Container(
                             height: height,
@@ -198,7 +198,7 @@ class _ChallengeState extends State<Challenge> {
                           ? Card(
                               clipBehavior: Clip.antiAlias,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
+                                borderRadius: BorderRadius.circular(16.0),
                               ),
                               child: Container(
                                 height: 400.0,

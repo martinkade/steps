@@ -32,6 +32,7 @@ abstract class FitChallenge implements Comparable {
     initTargets();
   }
 
+  String get uniqueId => index.toString();
   bool get requiresSnapshotData => true;
   bool get requiresRankingData => true;
   bool get isCompleted => percent >= 1.0;

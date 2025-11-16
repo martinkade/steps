@@ -8,48 +8,56 @@ import 'dart:io' show Platform;
 import 'package:wandr/model/preferences.dart';
 
 class FitSnapshot {
-  ///
-  Map<dynamic, dynamic> data = Map();
+  num _today = 0;
+  num _yesterday = 0;
+  num _week = 0;
+  num _lastWeek = 0;
+  num _year = 0;
+  num _total = 0;
+
+  final Calendar calendar = Calendar();
+  Map<String, num> _challengeResults = Map();
+  Map<String, dynamic> _history = Map();
 
   ///
   FitSnapshot();
 
   ///
   void _reset() {
-    data.clear();
+    _today = 0;
+    _yesterday = 0;
+    _week = 0;
+    _lastWeek = 0;
+    _year = 0;
+    _total = 0;
+    _challengeResults.clear();
+    _history.clear();
   }
 
-  ///
-  void fillWithLocalData(
-    List<FitRecord> records, {
-    required List<FitChallenge> challenges,
+  /// Fill snapshot with data that is present in on-device SQLite database.
+  Future<void> fillWithCachedData(
+    List<FitRecord> recordList, {
+    required List<FitChallenge> challengeList,
     required DateTime anchor,
-  }) {
+  }) async {
     _reset();
-
-    final Map<String, dynamic> history = Map();
-    final List<int> challengePoints = List.filled(challenges.length, 0);
-
-    int today = 0;
-    int yesterday = 0;
-    int week = 0;
-    int lastWeek = 0;
-    int year = 0;
-    int total = 0;
 
     int points;
     DateTime date;
+    bool isAfterStart, isBeforeEnd;
+    challengeList
+        .forEach((challenge) => _challengeResults[challenge.uniqueId] = 0);
+
     final DateTime now = DateTime.now();
-    final Calendar calendar = Calendar();
-    records.forEach((record) {
+    recordList.forEach((record) {
       date = DateTime.fromMillisecondsSinceEpoch(record.timestamp);
       if (date.isAfter(anchor) || date.isAtSameMomentAs(anchor)) {
         points = record.type == FitRecord.TYPE_ACTIVE_MINUTES
             ? record.value
             : record.value ~/ 80;
-        total += points;
-        if (points > 0)
-          history.putIfAbsent(
+        _total += points;
+        if (points > 0) {
+          _history.putIfAbsent(
             record.dateTimeString,
             () => Map.fromEntries([
               MapEntry('source', record.source),
@@ -58,49 +66,43 @@ class FitSnapshot {
               MapEntry('name', record.name),
             ]),
           );
+        }
         if (calendar.isThisYear(date, now)) {
-          year += points;
+          _year += points;
         }
         if (calendar.isThisWeek(date, now)) {
-          week += points;
+          _week += points;
           if (calendar.isToday(date, now)) {
-            today += points;
+            _today += points;
           } else if (calendar.isYesterday(date, now)) {
-            yesterday += points;
+            _yesterday += points;
           }
         } else if (calendar.isLastWeek(date, now)) {
-          lastWeek += points;
+          _lastWeek += points;
           if (calendar.isYesterday(date, now)) {
-            yesterday += points;
+            _yesterday += points;
           }
         }
 
-        challenges.forEach((challenge) {
-          if (date.isAfter(challenge.startDate) ||
-              date.isAtSameMomentAs(challenge.startDate)) {
-            if (date.isBefore(challenge.endDate) ||
-                date.isAtSameMomentAs(challenge.endDate)) {
-              challengePoints[challenge.index] += points;
-            }
+        challengeList.forEach((challenge) {
+          isAfterStart = date.isAfter(challenge.startDate) ||
+              date.isAtSameMomentAs(challenge.startDate);
+          isBeforeEnd = date.isBefore(challenge.endDate) ||
+              date.isAtSameMomentAs(challenge.endDate);
+          if (isAfterStart && isBeforeEnd) {
+            _challengeResults.update(challenge.uniqueId, (old) => old + points,
+                ifAbsent: () => points);
           }
         });
       }
     });
-
-    data['stats'] = Map<String, dynamic>();
-    data['stats']['today'] = today;
-    data['stats']['yesterday'] = yesterday;
-    data['stats']['week'] = week;
-    data['stats']['lastWeek'] = lastWeek;
-    data['stats']['year'] = year;
-    data['stats']['total'] = total;
-    data['history'] = history;
-    data['challenges'] = challengePoints;
   }
 
-  ///
-  Future<void> fillWithExternalData(
-      FitRecordDao dao, Map<dynamic, dynamic> data) async {
+  /// Write provider data (either Apple Health or Health Connect) to on-device SQLite database.
+  Future<void> writeFitProviderDataToCache(
+    FitRecordDao dao,
+    Map<dynamic, dynamic> data,
+  ) async {
     final int source = Platform.isIOS
         ? FitRecord.SOURCE_APPLE_HEALTH
         : FitRecord.SOURCE_GOOGLE_FIT;
@@ -146,7 +148,7 @@ class FitSnapshot {
   }
 
   ///
-  Future<Map<String, dynamic>> persist() async {
+  Future<Map<String, dynamic>> createDataSnapshot() async {
     final Map<String, dynamic> meta = Map.fromEntries([
       MapEntry('timestamp', DateTime.now().millisecondsSinceEpoch),
       MapEntry('device', await FitPlugin.getDeviceInfo()),
@@ -154,62 +156,43 @@ class FitSnapshot {
       MapEntry('displayName', await Preferences().getDisplayName()),
     ]);
     final Map<String, dynamic> stats = Map.fromEntries([
-      MapEntry('today', today),
-      MapEntry('yesterday', yesterday),
-      MapEntry('week', week),
-      MapEntry('lastWeek', lastWeek),
-      MapEntry('year', year),
-      MapEntry('total', total),
+      MapEntry('today', todaysPoints),
+      MapEntry('yesterday', yesterdaysPoints),
+      MapEntry('week', weeksPoints),
+      MapEntry('lastWeek', lastWeeksPoints),
+      MapEntry('year', yearsPoints),
+      MapEntry('total', totalPoints),
     ]);
     return Map.fromEntries([
       MapEntry('meta', meta),
       MapEntry('stats', stats),
       MapEntry('history', history),
-      MapEntry('challenges', challenges),
-      // temporary, compatibility reasons: section 1
-      MapEntry('today', today),
-      MapEntry('yesterday', yesterday),
-      MapEntry('week', week),
-      MapEntry('lastWeek', lastWeek),
-      MapEntry('year', year),
-      MapEntry('total', total),
-      // temporary, compatibility reasons: section 2
-      MapEntry('timestamp', DateTime.now().millisecondsSinceEpoch),
-      MapEntry('device', await FitPlugin.getDeviceInfo()),
-      MapEntry('client', await FitPlugin.getAppInfo()),
+      MapEntry('challenges', challengePoints),
     ]);
   }
 
   ///
-  num get today =>
-      data['stats'] == null ? data['today'] ?? 0 : data['stats']['today'] ?? 0;
+  num get todaysPoints => _today;
 
   ///
-  num get yesterday => data['stats'] == null
-      ? data['yesterday'] ?? 0
-      : data['stats']['yesterday'] ?? 0;
+  num get yesterdaysPoints => _yesterday;
 
   ///
-  num get week =>
-      data['stats'] == null ? data['week'] ?? 0 : data['stats']['week'] ?? 0;
+  num get weeksPoints => _week;
 
   ///
-  num get lastWeek => data['stats'] == null
-      ? data['lastWeek'] ?? 0
-      : data['stats']['lastWeek'] ?? 0;
+  num get lastWeeksPoints => _lastWeek;
 
   ///
-  num get year =>
-      data['stats'] == null ? data['year'] ?? 0 : data['stats']['year'] ?? 0;
+  num get yearsPoints => _year;
 
   ///
-  num get total =>
-      data['stats'] == null ? data['total'] ?? 0 : data['stats']['total'] ?? 0;
+  num get totalPoints => _total;
 
   ///
-  Map<String, dynamic> get history => data['history'] ?? Map();
+  List<num> get challengePoints =>
+      _challengeResults.entries.map((entry) => entry.value).toList();
 
   ///
-  List<num> get challenges =>
-      List.castFrom<dynamic, int>(data['challenges'].map((c) => c).toList());
+  Map<String, dynamic> get history => _history;
 }

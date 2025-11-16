@@ -27,6 +27,7 @@ import 'package:wandr/model/fit.snapshot.dart';
 import 'package:wandr/model/fit.team.dart';
 import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/challenge.repository.dart';
+import 'package:wandr/model/repositories/fitness.repository.dart';
 import 'package:wandr/model/repositories/repository.dart';
 import 'package:wandr/model/storage.dart';
 
@@ -78,10 +79,13 @@ class _DashboardState extends State<DashboardComponent>
   FitRanking? _ranking;
 
   ///
-  StreamSubscription? _rankingSubscription;
+  StreamSubscription? _firebaseRealtimeDatabaseSubscription;
 
   ///
   List<FitChallenge> _challenges = [];
+
+  ///
+  final FitnessRepository _repository = FitnessRepository();
 
   ///
   final GlobalKey<DashboardSyncItemState> _syncKey =
@@ -117,7 +121,6 @@ class _DashboardState extends State<DashboardComponent>
           _organizationName = 'Team mediaBEAM';
           _teamName = team == null ? 'Ohne Team' : team.name;
         });
-
         _load();
       } else {
         _land();
@@ -136,37 +139,50 @@ class _DashboardState extends State<DashboardComponent>
     );
   }
 
-  void _load() {
-    Preferences().isFlagSet(kFlagUnitKilometers).then((enabled) {
-      if (!mounted) return;
-      _unitKilometersEnabled = enabled;
-      print('Kilometer unit enabled: $_unitKilometersEnabled');
-      Storage().access().then((instance) {
-        final FirebaseDatabase db =
-            FirebaseDatabase.instanceFor(app: instance!);
-        db.ref().child('users').once().then((snapshot) {
-          if (!mounted) return;
-          _onSnapshotChanged(snapshot);
-        });
+  void _load() async {
+    _unitKilometersEnabled = await Preferences().isFlagSet(kFlagUnitKilometers);
+    print('Kilometer unit enabled: $_unitKilometersEnabled');
+    try {
+      final firebaseApp = await Storage().access();
+      if (firebaseApp == null) {
+        throw Exception('Could not establish Firebase connection');
+      }
+      final FirebaseDatabase db =
+          FirebaseDatabase.instanceFor(app: firebaseApp);
+      await _fetchFirebaseRealtimeDatabaseSnapshot(db);
+      _subscribeForFirebaseRealtimeUpdatesIfNeccessary(db);
+    } on Exception catch (ex) {
+      print('$ex');
+    }
+  }
 
-        if (_rankingSubscription == null) {
-          _rankingSubscription =
-              db.ref().child('users').onChildChanged.listen((_) {
-            if (!mounted) return;
-            db.ref().child('users').once().then((snapshot) {
-              _onSnapshotChanged(snapshot);
-            });
-          });
-        }
-      });
+  void _subscribeForFirebaseRealtimeUpdatesIfNeccessary(FirebaseDatabase db) {
+    if (_firebaseRealtimeDatabaseSubscription != null) return;
+    _firebaseRealtimeDatabaseSubscription =
+        db.ref().child('users').onChildChanged.listen((_) async {
+      await _fetchFirebaseRealtimeDatabaseSnapshot(db);
     });
   }
 
-  void _onSnapshotChanged(DatabaseEvent snapshot) {
+  Future<void> _fetchFirebaseRealtimeDatabaseSnapshot(
+      FirebaseDatabase db) async {
+    try {
+      final DatabaseEvent databaseEvent = await db.ref().child('users').once();
+      _onFirebaseRealtimeDatabaseSnapshotUpdate(databaseEvent);
+    } on Exception catch (ex) {
+      print('$ex');
+    }
+  }
+
+  void _onFirebaseRealtimeDatabaseSnapshotUpdate(DatabaseEvent snapshot) async {
     if (!mounted) return;
+    final FitRanking ranking =
+        await FitRanking.createFromFirebaseSnapshot(snapshot);
+    if (ranking.obsoleteUserIdList.isNotEmpty) {
+      _repository.deleteObsoleteUserList(ranking.obsoleteUserIdList);
+    }
     setState(() {
-      // create ranking from Firebase realtime database
-      _ranking = FitRanking.createFromSnapshot(snapshot);
+      _ranking = ranking;
     });
   }
 
@@ -175,7 +191,6 @@ class _DashboardState extends State<DashboardComponent>
     if (!mounted) return;
     (_goalKey.currentState)?.reload(snapshot);
     setState(() {
-      // apply local data snapshot with updated fitnes metrics from Health Connect or Apple health (or manually recorded data)
       _fitSnapshot = snapshot;
     });
   }
@@ -284,7 +299,7 @@ class _DashboardState extends State<DashboardComponent>
 
   @override
   void dispose() {
-    _rankingSubscription?.cancel();
+    _firebaseRealtimeDatabaseSubscription?.cancel();
     super.dispose();
   }
 
@@ -318,6 +333,7 @@ class _DashboardState extends State<DashboardComponent>
             return DashboardSyncItem(
               key: _syncKey,
               title: Localizer.translate(context, 'lblDashboardUserStats'),
+              repository: _repository,
               delegate: this,
               userKey: _username,
               teamName: _teamName,

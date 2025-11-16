@@ -9,7 +9,6 @@ import 'package:wandr/model/fit.record.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 import 'package:wandr/model/fit.team.dart';
 import 'package:wandr/model/fit.user.dart';
-import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/repository.dart';
 import 'package:wandr/model/storage.dart';
 
@@ -28,6 +27,19 @@ class FitnessRepository extends Repository {
   ///
   static const fitness = const MethodChannel('com.mediabeam/fitness');
   static const notification = const MethodChannel('com.mediabeam/notification');
+
+  FirebaseDatabase? _db;
+  Future<FirebaseDatabase> _accessFirebaseDatabase() async {
+    if (_db != null) return _db!;
+    try {
+      final FirebaseApp? instance = await Storage().access();
+      _db = FirebaseDatabase.instanceFor(app: instance!);
+      return _db!;
+    } on Exception catch (ex) {
+      print(ex.toString());
+      throw ex;
+    }
+  }
 
   ///
   static DateTime firstPossibleDate() {
@@ -92,7 +104,8 @@ class FitnessRepository extends Repository {
   ///
   Future<void> addTeam(FitTeam team) async {
     final FitTeamDao dao = FitTeamDao();
-    return await dao.insertOrReplace(teams: [team]).then((value) => syncRemoteTeams());
+    return await dao
+        .insertOrReplace(teams: [team]).then((value) => syncRemoteTeams());
   }
 
   ///
@@ -149,7 +162,8 @@ class FitnessRepository extends Repository {
     // restrict data to start on september, 1
     final DateTime anchor = FitnessRepository.firstPossibleDate();
     final FitRecordDao dao = FitRecordDao();
-    final List<FitRecord> historicalData = await _readSnapshot(userKey);
+    final List<FitRecord> historicalData =
+        await _readUserPointsHistoryFromFirebaseDatabase(userKey);
     final List<FitRecord> localData = await dao.fetch(
       from: anchor,
       onlyManualRecords: false,
@@ -159,10 +173,10 @@ class FitnessRepository extends Repository {
 
   ///
   Future<List<FitUser>> readUsers() async {
-    final FirebaseApp? instance = await Storage().access();
-    final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
+    final FirebaseDatabase db = await _accessFirebaseDatabase();
     db.setPersistenceEnabled(true);
     db.setPersistenceCacheSizeBytes(1024 * 1024);
+
     final DataSnapshot? data = await db.ref().child('users').get();
     Map dict;
     if (data?.value != null) {
@@ -176,31 +190,29 @@ class FitnessRepository extends Repository {
     dict.forEach((key, value) {
       user = FitUser();
       user.fill(
-        id: key,
-        name: value['meta']?['displayName']?.toString() ?? '',
-        team: value['team']?.toString(),
-        organization: value['organization']?.toString(),
-        today: value['today']?.toInt()
-      );
+          id: key,
+          name: value['meta']?['displayName']?.toString() ?? '',
+          team: value['team']?.toString(),
+          organization: value['organization']?.toString(),
+          today: value['today']?.toInt());
       users.add(user);
     });
     return users;
   }
 
   ///
-  Future<void> updateUserTeam(
-      {required String userKey,
-        required String teamName}) async {
-    Storage().access().then((instance) async {
-      final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
-      db.setPersistenceEnabled(true);
-      db.setPersistenceCacheSizeBytes(1024 * 1024);
+  Future<void> updateUserTeam({
+    required String userKey,
+    required String teamName,
+  }) async {
+    final FirebaseDatabase db = await _accessFirebaseDatabase();
+    db.setPersistenceEnabled(true);
+    db.setPersistenceCacheSizeBytes(1024 * 1024);
 
-      final Map<String, dynamic> snapshotData = Map();
-      snapshotData.putIfAbsent('team', () => teamName);
-      print('FitRepository#_updateTeam:\n\t$userKey\n\t$snapshotData');
-      await db.ref().child('users').child(userKey).update(snapshotData);
-    });
+    final Map<String, dynamic> snapshotData = Map();
+    snapshotData.putIfAbsent('team', () => teamName);
+    print('FitRepository#_updateTeam:\n\t$userKey\n\t$snapshotData');
+    await db.ref().child('users').child(userKey).update(snapshotData);
   }
 
   ///
@@ -222,10 +234,10 @@ class FitnessRepository extends Repository {
 
   ///
   Future<List<FitTeam>> _readTeams() async {
-    final FirebaseApp? instance = await Storage().access();
-    final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
+    final FirebaseDatabase db = await _accessFirebaseDatabase();
     db.setPersistenceEnabled(true);
     db.setPersistenceCacheSizeBytes(1024 * 1024);
+
     final DataSnapshot? data = await db.ref().child('teams').get();
     Map dict;
     if (data?.value != null) {
@@ -249,24 +261,22 @@ class FitnessRepository extends Repository {
 
   ///
   Future<void> _writeTeams(List<FitTeam> teams) async {
-    Storage().access().then((instance) async {
-      final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
-      db.setPersistenceEnabled(true);
-      db.setPersistenceCacheSizeBytes(1024 * 1024);
+    final FirebaseDatabase db = await _accessFirebaseDatabase();
+    db.setPersistenceEnabled(true);
+    db.setPersistenceCacheSizeBytes(1024 * 1024);
 
-      Map<String, dynamic> teamData;
-      await db.ref().child('teams').remove();
-      teams.forEach((team) async {
-        teamData = Map.fromEntries([MapEntry('name', team.name)]);
-        print('FitRepository#_writeTeams:\n\t$teamData');
-        await db.ref().child('teams').child(team.uuid).set(teamData);
-
-      });
+    Map<String, dynamic> teamData;
+    await db.ref().child('teams').remove();
+    teams.forEach((team) async {
+      teamData = Map.fromEntries([MapEntry('name', team.name)]);
+      print('FitRepository#_writeTeams:\n\t$teamData');
+      await db.ref().child('teams').child(team.uuid).set(teamData);
     });
   }
 
   ///
   Future<void> syncPoints({
+    required bool isAutoSyncEnabled,
     required String userKey,
     required String teamName,
     required String organizationName,
@@ -275,9 +285,8 @@ class FitnessRepository extends Repository {
     bool pushData = false,
   }) async {
     FitSnapshot snapshot = FitSnapshot();
-    final bool isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
 
-    // restrict data to start on september, 1
+    // restrict data to start on a certain date
     final DateTime anchor = FitnessRepository.firstPossibleDate();
     final FitRecordDao dao = FitRecordDao();
     final List<FitRecord> localData = await dao.fetch(
@@ -285,9 +294,9 @@ class FitnessRepository extends Repository {
       onlyManualRecords: !isAutoSyncEnabled,
     );
     await dao.delete(records: localData, exclude: true);
-    snapshot.fillWithLocalData(
+    await snapshot.fillWithCachedData(
       localData,
-      challenges: challenges,
+      challengeList: challenges,
       anchor: anchor,
     );
     client.fitnessRepositoryDidUpdate(
@@ -301,7 +310,7 @@ class FitnessRepository extends Repository {
       if (isAutoSyncEnabled && await hasPermissions()) {
         final Map<dynamic, dynamic> data =
             await fitness.invokeMethod('getFitnessMetrics');
-        await snapshot.fillWithExternalData(dao, data);
+        await snapshot.writeFitProviderDataToCache(dao, data);
       }
     } on Exception catch (ex) {
       print(ex.toString());
@@ -312,9 +321,9 @@ class FitnessRepository extends Repository {
       from: anchor,
       onlyManualRecords: !isAutoSyncEnabled,
     ));
-    snapshot.fillWithLocalData(
+    await snapshot.fillWithCachedData(
       localData,
-      challenges: challenges,
+      challengeList: challenges,
       anchor: anchor,
     );
 
@@ -325,14 +334,8 @@ class FitnessRepository extends Repository {
       snapshot: snapshot,
     );
 
-    snapshot = FitSnapshot();
-    snapshot.fillWithLocalData(
-      localData,
-      challenges: challenges,
-      anchor: anchor,
-    );
     if (pushData) {
-      _writeSnapshot(
+      await _writeSnapshotToFirebaseDatabase(
         snapshot,
         userKey: userKey,
         teamName: teamName,
@@ -342,22 +345,24 @@ class FitnessRepository extends Repository {
   }
 
   ///
-  Future<List<FitRecord>> _readSnapshot(String userKey) async {
-    final FirebaseApp? instance = await Storage().access();
-    final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
+  Future<List<FitRecord>> _readUserPointsHistoryFromFirebaseDatabase(
+    String userKey,
+  ) async {
+    final FirebaseDatabase db = await _accessFirebaseDatabase();
     db.setPersistenceEnabled(true);
     db.setPersistenceCacheSizeBytes(1024 * 1024);
+
     final DataSnapshot? data =
         await db.ref().child('users').child(userKey).get();
     Map<dynamic, dynamic> history;
-    Map dict;
-    if (data?.value != null) {
-      dict = data!.value! as Map;
-      history = dict['history'] == null ? Map() : dict['history'] ?? Map();
-    } else {
+    try {
+      Map mData = data?.value != null ? data!.value! as Map : Map();
+      history = mData['history'] ?? Map();
+    } on Exception {
       history = Map();
     }
-    print('FitRepository#_readSnapshot:\n\t$userKey\n\t$history');
+    print(
+        'FitRepository#_readUserPointsHistoryFromFirebaseDatabase:\n\t$userKey\n\t$history');
 
     FitRecord record;
     final List<FitRecord> records = <FitRecord>[];
@@ -371,29 +376,40 @@ class FitnessRepository extends Repository {
         type: value['type']?.toInt() ?? 0,
         name: value['name']?.toString() ?? '',
       );
-      print('FitRepository#_readSnapshot: \t${record.dateTimeString}');
+      print(
+          'FitRepository#_readUserPointsHistoryFromFirebaseDatabase: \t${record.dateTimeString}');
       records.add(record);
     });
     return records;
   }
 
   ///
-  Future<void> _writeSnapshot(FitSnapshot snapshot,
-      {required String userKey,
-      required String teamName,
-      required String organizationName}) async {
-    Storage().access().then((instance) async {
-      final FirebaseDatabase db = FirebaseDatabase.instanceFor(app: instance!);
-      db.setPersistenceEnabled(true);
-      db.setPersistenceCacheSizeBytes(1024 * 1024);
+  Future<void> _writeSnapshotToFirebaseDatabase(
+    FitSnapshot snapshot, {
+    required String userKey,
+    required String teamName,
+    required String organizationName,
+  }) async {
+    final FirebaseDatabase db = await _accessFirebaseDatabase();
+    db.setPersistenceEnabled(true);
+    db.setPersistenceCacheSizeBytes(1024 * 1024);
 
-      final Map<String, dynamic> snapshotData = Map();
-      snapshotData.putIfAbsent('team', () => teamName);
-      snapshotData.putIfAbsent('organization', () => organizationName);
-      snapshotData.addAll(await snapshot.persist());
-      print('FitRepository#_writeSnapshot:\n\t$userKey\n\t$snapshotData');
+    final Map<String, dynamic> snapshotData = Map();
+    snapshotData.putIfAbsent('team', () => teamName);
+    snapshotData.putIfAbsent('organization', () => organizationName);
+    snapshotData.addAll(await snapshot.createDataSnapshot());
+    print(
+        'FitRepository#_writeSnapshotToFirebaseDatabase:\n\t$userKey\n\t$snapshotData');
 
-      await db.ref().child('users').child(userKey).set(snapshotData);
+    await db.ref().child('users').child(userKey).set(snapshotData);
+  }
+
+  Future<void> deleteObsoleteUserList(List<String> obsoleteUserIdList) async {
+    final FirebaseDatabase db = await _accessFirebaseDatabase();
+    db.setPersistenceEnabled(true);
+    db.setPersistenceCacheSizeBytes(1024 * 1024);
+    obsoleteUserIdList.forEach((userKey) async {
+      await db.ref().child('users').child(userKey).remove();
     });
   }
 }

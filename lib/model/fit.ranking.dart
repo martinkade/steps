@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/calendar.dart';
 import 'package:intl/intl.dart';
@@ -15,11 +16,14 @@ class FitRanking {
     MapEntry('lastWeek', <FitRankingEntry>[]),
     MapEntry('total', <FitRankingEntry>[]),
   ]);
-  int totalPoints = 0, totalUsers = 0;
-  List<int> challengeTotals = <int>[];
+  num totalPoints = 0, totalUsers = 0;
+  List<num> challengeTotals = <num>[];
+  List<String> obsoleteUserIdList = <String>[];
   FitRanking._internal();
 
-  static FitRanking createFromSnapshot(dynamic snapshot) {
+  static Future<FitRanking> createFromFirebaseSnapshot(
+    DatabaseEvent databaseEvent,
+  ) async {
     final FitRanking ranking = FitRanking._internal();
 
     final Map<String, Map<String, Map<String, dynamic>>> summary = Map();
@@ -34,169 +38,176 @@ class FitRanking {
     dynamic data;
     Map<String, Map<String, dynamic>> categoryValue = Map();
 
+    DataSnapshot dataSnapshot;
+    String userId;
+    dynamic value;
+    final Iterator iterator = databaseEvent.snapshot.children.iterator;
     // iterate through user documents
-    snapshot?.snapshot.value?.forEach((userId, value) {
+    while (iterator.moveNext()) {
+      dataSnapshot = iterator.current;
+      if (dataSnapshot.key == null) continue;
+      if (dataSnapshot.value == null) continue;
+      userId = dataSnapshot.key!;
+      value = dataSnapshot.value!;
       itemKey = userId;
 
-      //TODO dirty hack, maybe data migration?
-      if (value['organization'] == null) {
-        organizationKey = value['team'];
-        teamKey = null;
-      } else {
-        teamKey = value['team'] == null ? null : value['team'];
-        organizationKey =
-        value['organization'] == null ? null : value['organization'];
+      if (value['meta'] == null) {
+        ranking.obsoleteUserIdList.add(userId);
+        continue;
       }
-      itemName = value['meta'] == null
-          ? 'Anonym'
-          : value['meta']['displayName'] ?? 'Anonym';
+
+      timestampKey = value['meta']['timestamp']?.toInt() ?? 0;
+      timestamp = timestampKey > 0
+          ? DateTime.fromMillisecondsSinceEpoch(timestampKey)
+          : null;
+      if (timestamp == null ||
+          timestamp.isBefore(now.subtract(Duration(days: 365)))) {
+        ranking.obsoleteUserIdList.add(userId);
+        continue;
+      }
+
+      data = value['stats'] == null ? value : value['stats'];
+      // print('FitRanking#createFromSnapshot:\n\t$key\n\t$data');
+
+      itemName = value['meta']['displayName'] ?? 'Anonym';
+      if (value['organization'] == null) {
+        teamKey = null;
+        organizationKey = value['team'];
+      } else {
+        teamKey = value['team'];
+        organizationKey = value['organization'];
+      }
 
       if (userId == AprilJokes.botID) {
         AprilJokes.botName = itemName;
       }
 
-      timestampKey = value['meta'] == null
-          ? value['timestamp']?.toInt() ?? 0
-          : value['meta']['timestamp']?.toInt() ?? 0;
-      timestamp = timestampKey > 0
-          ? DateTime.fromMillisecondsSinceEpoch(timestampKey)
-          : null;
-      data = value['stats'] == null ? value : value['stats'];
-      // print('FitRanking#createFromSnapshot:\n\t$key\n\t$data');
-
       // collect points
       // - sum user's weekly points if sync timestamp is within current week
       // - sum user's last weeks points if sync timestamp is within current week
-      if (timestampKey != 0 &&
-          timestamp != null &&
-          calendar.isThisWeek(timestamp!, now)) {
+      if (calendar.isThisWeek(timestamp, now)) {
         // this week, last week
         readCategoriesData(
-            ['week', 'lastWeek'],
-            ['week', 'lastWeek'],
-            itemKey,
-            itemName,
-            teamKey,
-            organizationKey,
-            timestamp!,
-            data,
-            categoryValue,
-            summary,
-            participation);
-      } else if (timestampKey != 0 &&
-          timestamp != null &&
-          calendar.isLastWeek(timestamp!, now)) {
+          ['week', 'lastWeek'],
+          ['week', 'lastWeek'],
+          itemKey,
+          itemName,
+          teamKey,
+          organizationKey,
+          timestamp,
+          data,
+          categoryValue,
+          summary,
+          participation,
+        );
+      } else if (calendar.isLastWeek(timestamp, now)) {
         // last week
         readCategoryData(
-            'week',
-            'lastWeek',
-            itemKey,
-            itemName,
-            teamKey,
-            organizationKey,
-            timestamp!,
-            data,
-            categoryValue,
-            summary,
-            participation);
+          'week',
+          'lastWeek',
+          itemKey,
+          itemName,
+          teamKey,
+          organizationKey,
+          timestamp,
+          data,
+          categoryValue,
+          summary,
+          participation,
+        );
       }
 
       // collect points
       // - sum user's today points if sync timestamp is today
       // - sum user's yesterday points if sync timestamp is today
-      if (timestampKey > 0 &&
-          timestamp != null &&
-          calendar.isToday(timestamp!, now)) {
+      if (calendar.isToday(timestamp, now)) {
         // today, yesterday
         readCategoriesData(
-            ['today', 'yesterday'],
-            ['today', 'yesterday'],
-            itemKey,
-            itemName,
-            teamKey,
-            organizationKey,
-            timestamp!,
-            data,
-            categoryValue,
-            summary,
-            participation);
-      } else if (timestampKey > 0 &&
-          timestamp != null &&
-          calendar.isYesterday(timestamp!, now)) {
+          ['today', 'yesterday'],
+          ['today', 'yesterday'],
+          itemKey,
+          itemName,
+          teamKey,
+          organizationKey,
+          timestamp,
+          data,
+          categoryValue,
+          summary,
+          participation,
+        );
+      } else if (calendar.isYesterday(timestamp, now)) {
         // yesterday
         readCategoryData(
-            'today',
-            'yesterday',
-            itemKey,
-            itemName,
-            teamKey,
-            organizationKey,
-            timestamp!,
-            data,
-            categoryValue,
-            summary,
-            participation);
+          'today',
+          'yesterday',
+          itemKey,
+          itemName,
+          teamKey,
+          organizationKey,
+          timestamp,
+          data,
+          categoryValue,
+          summary,
+          participation,
+        );
       }
 
-      if (timestampKey > 0 &&
-          timestamp != null &&
-          calendar.isThisYear(timestamp!, now)) {
+      if (calendar.isThisYear(timestamp, now)) {
         // year
         readCategoryData(
-            'year',
-            'year',
-            itemKey,
-            itemName,
-            teamKey,
-            organizationKey,
-            timestamp!,
-            data,
-            categoryValue,
-            summary,
-            participation);
+          'year',
+          'year',
+          itemKey,
+          itemName,
+          teamKey,
+          organizationKey,
+          timestamp,
+          data,
+          categoryValue,
+          summary,
+          participation,
+        );
       }
 
-      // collect total points if user synced within last 14 days
-      if (timestampKey > 0 &&
-          timestamp != null &&
-          !timestamp!.isBefore(now.subtract(Duration(days: 14)))) {
-        // print('[INFO] sync user $userId ($timestamp)\n\t - with app version ${value['client']}\n\t - on ${value['device']}');
+      // total
+      readCategoryData(
+        'total',
+        'total',
+        itemKey,
+        itemName,
+        teamKey,
+        organizationKey,
+        timestamp,
+        data,
+        categoryValue,
+        summary,
+        participation,
+      );
 
-        // total
-        readCategoryData(
-            'total',
-            'total',
-            itemKey,
-            itemName,
-            teamKey,
-            organizationKey,
-            timestamp!,
-            data,
-            categoryValue,
-            summary,
-            participation);
+      ranking.totalPoints += data['total'] as num;
+
+      // count active users (active: if synced within last 14 days)
+      if (!timestamp.isBefore(now.subtract(Duration(days: 14)))) {
         ranking.totalUsers += 1;
-      } else {
-        // print('[INFO] ignore user $userId, has not synced within last 14 days');
       }
 
-      ranking.totalPoints += data['total'] as int;
       if (value['challenges']?.isNotEmpty == true) {
-        final int challengeCount = value['challenges'].length;
-        final List<int> newTotals = List.castFrom<dynamic, int>(
-            value['challenges'].map((c) => c).toList());
+        final dynamic challengeList = value['challenges'];
+        final int challengeCount = challengeList.length;
+        final List<num> newTotals =
+            List.castFrom<dynamic, num>(challengeList.map((c) => c).toList());
         if (challengeCount > ranking.challengeTotals.length) {
           for (int i = ranking.challengeTotals.length;
               i < newTotals.length;
               i++) {
-            ranking.challengeTotals.add(0);
+            ranking.challengeTotals.insert(i, 0);
           }
         }
         newTotals
             .asMap()
             .forEach((i, value) => ranking.challengeTotals[i] += value);
       }
-    });
+    }
 
     List<String> itemKeys;
     summary.forEach((categoryKey, categoryValue) {

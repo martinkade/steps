@@ -6,7 +6,6 @@ import 'package:wandr/components/shared/loading.indicator.dart';
 import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/lifecycle.dart';
 import 'package:wandr/model/fit.snapshot.dart';
-import 'package:wandr/model/fit.team.dart';
 import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/fitness.repository.dart';
 import 'package:wandr/model/repositories/repository.dart';
@@ -22,12 +21,16 @@ class DashboardSyncItem extends DashboardItem {
   final String? organizationName;
 
   ///
+  final FitnessRepository repository;
+
+  ///
   final DashboardSyncDelegate delegate;
 
   ///
   DashboardSyncItem({
     Key? key,
     required title,
+    required this.repository,
     required this.delegate,
     this.userKey,
     this.teamName,
@@ -46,9 +49,6 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
 
   ///
   bool _autoSyncEnabled = true;
-
-  ///
-  final FitnessRepository _repository = FitnessRepository();
 
   ///
   SyncState _fitnessSyncState = SyncState.NOT_FETCHED;
@@ -85,53 +85,49 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
     _syncSteps(context);
   }
 
-  void _syncSteps(BuildContext context) {
-    Preferences().isAutoSyncEnabled().then((enabled) {
-      if (!mounted) return;
-      if (enabled) {
-        _repository.hasPermissions().then((authorized) {
-          if (!mounted) return;
-          setState(() {
-            _autoSyncEnabled = authorized;
-          });
-        });
-      } else {
+  void _syncSteps(BuildContext context) async {
+    final isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
+    if (isAutoSyncEnabled) {
+      widget.repository.hasPermissions().then((authorized) {
+        if (!mounted) return;
         setState(() {
-          _autoSyncEnabled = false;
+          _autoSyncEnabled = authorized;
         });
-      }
-    });
-
-    _repository.syncTeams().then((_) {
-      Preferences().hasRestoredData().then((restored) async {
-        final FitTeam? team = await Preferences.getTeam();
-        final String? teamName = team == null ? 'Ohne Team' : team.name;
-        if (restored) {
-          _repository.syncPoints(
-            userKey: widget.userKey!,
-            teamName: teamName!,
-            organizationName: widget.organizationName!,
-            challenges: widget.delegate.getChallenges(),
-            client: this,
-            pushData: true,
-          );
-        } else {
-          _repository
-              .restorePoints(userKey: widget.userKey!, client: this)
-              .then((_) async {
-            await Preferences().setHasRestoredData(true);
-            _repository.syncPoints(
-              userKey: widget.userKey!,
-              teamName: teamName!,
-              organizationName: widget.organizationName!,
-              challenges: widget.delegate.getChallenges(),
-              client: this,
-              pushData: true,
-            );
-          });
-        }
       });
-    });
+    } else {
+      setState(() {
+        _autoSyncEnabled = false;
+      });
+    }
+
+    await widget.repository.syncTeams();
+    final hasRestoredData = await Preferences().hasRestoredData();
+    if (hasRestoredData) {
+      widget.repository.syncPoints(
+        isAutoSyncEnabled: isAutoSyncEnabled,
+        userKey: widget.userKey!,
+        teamName: widget.teamName!,
+        organizationName: widget.organizationName!,
+        challenges: widget.delegate.getChallenges(),
+        client: this,
+        pushData: true,
+      );
+    } else {
+      widget.repository
+          .restorePoints(userKey: widget.userKey!, client: this)
+          .then((_) async {
+        await Preferences().setHasRestoredData(true);
+        widget.repository.syncPoints(
+          isAutoSyncEnabled: isAutoSyncEnabled,
+          userKey: widget.userKey!,
+          teamName: widget.teamName!,
+          organizationName: widget.organizationName!,
+          challenges: widget.delegate.getChallenges(),
+          client: this,
+          pushData: true,
+        );
+      });
+    }
   }
 
   @override

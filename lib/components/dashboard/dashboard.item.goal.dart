@@ -80,7 +80,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
     });
   }
 
-  int get _delta => _goalDaily - ((_snapshot?.today ?? 0).toInt());
+  int get _delta => _goalDaily - ((_snapshot?.todaysPoints ?? 0).toInt());
 
   bool get _showMotivation {
     final int hour = DateTime.now().hour;
@@ -178,7 +178,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                     padding: const EdgeInsets.only(right: 8.0),
                     child: DashboardGoalDisplay(
                       displayType: DashboardGoalDisplayType.DAILY,
-                      end: (_snapshot?.today ?? 0).toInt(),
+                      end: (_snapshot?.todaysPoints ?? 0).toInt(),
                       target: _goalDaily,
                       label: Localizer.translate(
                           context, 'lblDashboardUserStatsToday'),
@@ -186,7 +186,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                               context, 'lblDashboardUserStatsKilometer')
                           .replaceAll(
                         '%1',
-                        _approxKilometers((_snapshot?.today ?? 0).toInt()),
+                        _approxKilometers((_snapshot?.todaysPoints ?? 0).toInt()),
                       ),
                     ),
                   ),
@@ -196,7 +196,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                     padding: const EdgeInsets.only(left: 8.0),
                     child: DashboardGoalDisplay(
                       displayType: DashboardGoalDisplayType.WEEKLY,
-                      end: (_snapshot?.week ?? 0).toInt(),
+                      end: (_snapshot?.weeksPoints ?? 0).toInt(),
                       target: _goalDaily * 7,
                       label: Localizer.translate(
                           context, 'lblDashboardUserStatsWeek'),
@@ -204,7 +204,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                               context, 'lblDashboardUserStatsKilometer')
                           .replaceAll(
                         '%1',
-                        _approxKilometers((_snapshot?.week ?? 0).toInt()),
+                        _approxKilometers((_snapshot?.weeksPoints ?? 0).toInt()),
                       ),
                     ),
                   ),
