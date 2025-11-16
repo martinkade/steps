@@ -49,7 +49,6 @@ class ChallengeRepository extends Repository {
       state: SyncState.FETCHING_DATA,
       challengeList: challengeList,
     );
-    // TODO: fetch data from server
     client.challengeRepositoryDidUpdate(
       this,
       state: SyncState.DATA_READY,

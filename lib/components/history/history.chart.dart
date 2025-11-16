@@ -91,8 +91,6 @@ class _ChartData {
 }
 
 class _HistoryChartState extends State<HistoryChart> {
-  ///
-  FitRecord? _record;
 
   @override
   void initState() {

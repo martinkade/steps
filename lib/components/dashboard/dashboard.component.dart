@@ -161,7 +161,8 @@ class _DashboardState extends State<DashboardComponent>
   void _subscribeForFirebaseRealtimeUpdatesIfNeccessary(FirebaseDatabase db) {
     if (_firebaseRealtimeDatabaseSubscription != null) return;
     _firebaseRealtimeDatabaseSubscription =
-        db.ref().child('users').onChildChanged.listen((_) async {
+        db.ref().child('users').onChildChanged.listen((childEvent) async {
+      print('$childEvent');
       await _fetchFirebaseRealtimeDatabaseSnapshot(db);
     });
   }

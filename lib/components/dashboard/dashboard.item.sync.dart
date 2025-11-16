@@ -50,9 +50,6 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
   ///
   bool _autoSyncEnabled = true;
 
-  ///
-  SyncState _fitnessSyncState = SyncState.NOT_FETCHED;
-
   @override
   bool get wantKeepAlive => true;
 
@@ -146,7 +143,6 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
     }
 
     setState(() {
-      _fitnessSyncState = state;
       _loading = false;
     });
   }

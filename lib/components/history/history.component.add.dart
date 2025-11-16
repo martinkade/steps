@@ -73,7 +73,7 @@ class _HistoryAddState extends State<HistoryAdd> {
   }
 
   bool _validate(String value) {
-    final int numericValue = int.tryParse(value) ?? 0;
+    // final int numericValue = int.tryParse(value) ?? 0;
     return true;
   }
 

@@ -40,12 +40,11 @@ class _TabsState extends State<Tabs> {
     Preferences.getUserKey().then((userValue) {
       if (!mounted) return;
 
-final String? username = userValue['username'];
+      final String? username = userValue['username'];
       final String? xworksToken = userValue['xworksToken'];
-      if (username?.isNotEmpty == true) {
+      if (username?.isNotEmpty == true && xworksToken?.isNotEmpty == true) {
         setState(() {
           _userName = username!.split('@').first.replaceAll('.', '_');
-          print('Init data for kUser=$_userName');
           _userName = _md5(_userName!);
           _teamName = 'Team mediaBEAM';
         });

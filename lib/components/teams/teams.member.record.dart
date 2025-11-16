@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wandr/model/fit.team.dart';
 
 import 'package:wandr/components/shared/localizer.dart';
 

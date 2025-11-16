@@ -100,6 +100,7 @@ class _DashboardChallengeItemState extends State<DashboardChallengeItem>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final double cardWidth = min(MediaQuery.of(context).size.width - 24.0,
         (_challenges?.length ?? 0) > 1 ? 360.0 : 412.0);
     final double cardHeight = cardWidth * 0.67; // max(cardWidth * 0.67, 241.0);

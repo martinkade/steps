@@ -99,7 +99,7 @@ class _SettingsNotificationItemState extends State<SettingsNotificationItem> {
               ),
               Switch(
                 value: _notificationsEnabled,
-                activeColor: Theme.of(context).colorScheme.primary,
+                activeThumbColor: Theme.of(context).colorScheme.primary,
                 onChanged: (active) {
                   _toggleNotifications(active);
                 },

@@ -275,4 +275,22 @@ class GermanCupertinoLocalizations implements CupertinoLocalizations {
   
   @override
   String get cancelButtonLabel => 'Abbrechen';
+  
+  @override
+  String get collapsedHint => '';
+  
+  @override
+  String get expandedHint => '';
+  
+  @override
+  String get expansionTileCollapsedHint => '';
+  
+  @override
+  String get expansionTileCollapsedTapHint => '';
+  
+  @override
+  String get expansionTileExpandedHint => '';
+  
+  @override
+  String get expansionTileExpandedTapHint => '';
 }

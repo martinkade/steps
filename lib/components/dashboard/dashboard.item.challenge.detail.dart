@@ -55,7 +55,7 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
         child: Container(
-          color: Colors.black.withOpacity(0.1),
+          color: Colors.black.withAlpha(32),
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,7 +88,7 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
         child: Container(
-          color: Colors.black.withOpacity(0.1),
+          color: Colors.black.withAlpha(32),
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -123,7 +123,7 @@ class _DashboardChallengeDetailState extends State<DashboardChallengeDetail> {
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
         child: Container(
-          color: Colors.black.withOpacity(0.1),
+          color: Colors.black.withAlpha(32),
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

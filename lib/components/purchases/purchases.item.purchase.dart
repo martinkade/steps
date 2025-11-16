@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/util/Purchase.dart';
 
 class PurchasesPurchaseItem extends StatefulWidget {

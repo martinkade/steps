@@ -117,7 +117,7 @@ class DashboardInfoItem extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    delegate?.onInfoRequested();
+                    delegate.onInfoRequested();
                   },
                 ),
               ],

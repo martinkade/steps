@@ -75,10 +75,6 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
     }
   }
 
-  void _restorePoints() {
-    _repository.restorePoints(userKey: widget.userKey);
-  }
-
   @override
   Widget build(BuildContext context) {
     final Widget titleWidget = Padding(
@@ -125,7 +121,7 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
               ),
               Switch(
                 value: _autoSyncEnabled,
-                activeColor: Theme.of(context).colorScheme.primary,
+                activeThumbColor: Theme.of(context).colorScheme.primary,
                 onChanged: (active) {
                   _toggleAutoSync(active);
                 },
