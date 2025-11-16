@@ -88,11 +88,9 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
   void _syncSteps(BuildContext context) async {
     final isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
     if (isAutoSyncEnabled) {
-      widget.repository.hasPermissions().then((authorized) {
-        if (!mounted) return;
-        setState(() {
-          _autoSyncEnabled = authorized;
-        });
+      final hasProviderPermissions = await widget.repository.hasPermissions();
+      setState(() {
+        _autoSyncEnabled = hasProviderPermissions;
       });
     } else {
       setState(() {
@@ -139,12 +137,11 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
   }) {
     if (!mounted) return;
     switch (state) {
-      case SyncState.NOT_FETCHED:
+      case SyncState.DATA_READY:
       case SyncState.FETCHING_DATA:
-        // loading indicator
+        widget.delegate.onFitnessDataUpdate(snapshot, syncState: state);
         break;
       default:
-        widget.delegate.onFitnessDataUpdate(snapshot);
         break;
     }
 

@@ -118,7 +118,7 @@ class _HistoryState extends State<HistoryComponent> {
                       shadowColor: Colors.grey.withAlpha(50),
                       clipBehavior: Clip.antiAlias,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(16.0),
                       ),
                       child: Container(
                         color:
@@ -144,7 +144,7 @@ class _HistoryState extends State<HistoryComponent> {
                       shadowColor: Colors.grey.withAlpha(32),
                       clipBehavior: Clip.antiAlias,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(16.0),
                       ),
                       child: Container(
                         color: Theme.of(context)

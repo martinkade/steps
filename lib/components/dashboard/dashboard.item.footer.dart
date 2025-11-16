@@ -39,7 +39,7 @@ class _DashboardFooterItemState extends State<DashboardFooterItem> {
         builder: (BuildContext context) {
           return Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
             child: DashboardDebugDialog(
               setJokeActive: (jokeIndex) {

@@ -50,7 +50,7 @@ class _SettingsDisplayItemState extends State<SettingsDisplayItem> {
         builder: (BuildContext context) {
           return Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
             child: DashboardSettingsDisplayNameDialog(
               setDisplayName: (newDisplayName) {
@@ -171,7 +171,7 @@ class _SettingsDisplayItemState extends State<SettingsDisplayItem> {
             shadowColor: Colors.grey.withAlpha(50),
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
             child: contentWidget,
           ),

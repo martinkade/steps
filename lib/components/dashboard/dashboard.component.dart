@@ -32,7 +32,10 @@ import 'package:wandr/model/repositories/repository.dart';
 import 'package:wandr/model/storage.dart';
 
 abstract class DashboardSyncDelegate {
-  void onFitnessDataUpdate(FitSnapshot snapshot);
+  void onFitnessDataUpdate(
+    FitSnapshot snapshot, {
+    required SyncState syncState,
+  });
 
   List<FitChallenge> getChallenges();
 
@@ -117,7 +120,6 @@ class _DashboardState extends State<DashboardComponent>
         setState(() {
           _username = username?.split('@').first.replaceAll('.', '_');
           _username = _md5(_username!);
-          print('Init data for kUser=$_username');
           _organizationName = 'Team mediaBEAM';
           _teamName = team == null ? 'Ohne Team' : team.name;
         });
@@ -187,7 +189,10 @@ class _DashboardState extends State<DashboardComponent>
   }
 
   @override
-  void onFitnessDataUpdate(FitSnapshot snapshot) {
+  void onFitnessDataUpdate(
+    FitSnapshot snapshot, {
+    required SyncState syncState,
+  }) {
     if (!mounted) return;
     (_goalKey.currentState)?.reload(snapshot);
     setState(() {

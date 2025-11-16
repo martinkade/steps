@@ -50,7 +50,7 @@ class _TeamsListState extends State<TeamsListComponent> {
         builder: (BuildContext context) {
           return Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
             child: TeamsCreateDialog(
               teams: _teams,
@@ -156,7 +156,7 @@ class _TeamsListState extends State<TeamsListComponent> {
                   shadowColor: Colors.grey.withAlpha(50),
                   clipBehavior: Clip.antiAlias,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: Container(
                     color: Theme.of(context).colorScheme.primary.withAlpha(50),

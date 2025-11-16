@@ -1,7 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:wandr/components/shared/localizer.dart';
-import 'package:wandr/model/calendar.dart';
 import 'package:wandr/model/fit.record.dart';
 
 class HistoryChart extends StatefulWidget {
@@ -116,8 +115,8 @@ class _HistoryChartState extends State<HistoryChart> {
       text = const Text('', style: style);
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
       child: text,
+      meta: meta,
       fitInside: const SideTitleFitInsideData(
         enabled: true,
         distanceFromEdge: 0.0,
@@ -254,80 +253,3 @@ class _HistoryChartState extends State<HistoryChart> {
     );
   }
 }
-
-/*
- charts.TimeSeriesChart(
-            widget.series,
-            selectionModels: [
-              charts.SelectionModelConfig(
-                changedListener: _infoSelectionModelUpdated,
-              ),
-            ],
-            animate: widget.animate,
-            behaviors: [
-              charts.RangeAnnotation([
-                charts.LineAnnotationSegment(
-                  widget.unitKilometersEnabled
-                      ? widget.target / 12.0
-                      : widget.target,
-                  charts.RangeAnnotationAxisType.measure,
-                  dashPattern: [4, 4],
-                  strokeWidthPx: 1,
-                  axisId: 'points',
-                  color: primaryColor,
-                  endLabel:
-                      Localizer.translate(context, 'lblSettingsGoalDailyTitle'),
-                  labelStyleSpec: charts.TextStyleSpec(
-                    fontSize: 12,
-                    color: primaryColor,
-                  ),
-                ),
-              ]),
-              charts.LinePointHighlighter(
-                showHorizontalFollowLine:
-                    charts.LinePointHighlighterFollowLineType.none,
-                showVerticalFollowLine:
-                    charts.LinePointHighlighterFollowLineType.nearest,
-                symbolRenderer: TooltipRenderer(
-                  delegate: this,
-                  dotColor: HistoryChart.colorFrom(
-                    widget.theme.colorScheme.primary,
-                  ),
-                  backgroundColor: tooltipBackgoundColor,
-                  textColor: tooltipTextColor,
-                  chartWidth: width,
-                ),
-              ),
-              charts.SelectNearest(
-                eventTrigger: charts.SelectionTrigger.tapAndDrag,
-              )
-            ],
-            dateTimeFactory: const charts.LocalDateTimeFactory(),
-            domainAxis: charts.DateTimeAxisSpec(
-              renderSpec: charts.SmallTickRendererSpec(
-                labelStyle: charts.TextStyleSpec(
-                  fontSize: 14,
-                  color: HistoryChart.colorFrom(
-                      widget.theme.textTheme.bodyText1.color),
-                ),
-                lineStyle: charts.LineStyleSpec(
-                  color: HistoryChart.colorFrom(
-                      widget.theme.textTheme.bodyText1.color),
-                ),
-              ),
-            ),
-            primaryMeasureAxis: charts.NumericAxisSpec(
-              renderSpec: charts.GridlineRendererSpec(
-                labelStyle: charts.TextStyleSpec(
-                  fontSize: 14,
-                  color: HistoryChart.colorFrom(
-                      widget.theme.textTheme.bodyText1.color),
-                ),
-                lineStyle: charts.LineStyleSpec(
-                  color: HistoryChart.colorFrom(
-                      widget.theme.textTheme.bodyText1.color),
-                ),
-              ),
-            ),
-          ),
- */
