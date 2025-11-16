@@ -28,6 +28,7 @@
     "lblDashboardActionSettings": "Einstellungen",
     "lblDashboardActionTeams": "Teams",
     "lblDashboardActionPurchases": "Einkäufe",
+    "lblDashboardUpdateDataMessage": "%1 war fleißig und hat neue Punkte gesammelt. 💥",
 
     "lblChallengeStartDate": "beginnt am %1",
     "lblChallengeDeltaDaysMany": "beginnt in %1 Tagen",

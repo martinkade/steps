@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -162,7 +163,19 @@ class _DashboardState extends State<DashboardComponent>
     if (_firebaseRealtimeDatabaseSubscription != null) return;
     _firebaseRealtimeDatabaseSubscription =
         db.ref().child('users').onChildChanged.listen((childEvent) async {
-      print('$childEvent');
+      final dynamic snapshot = childEvent.snapshot.value;
+      final String? displayName = snapshot?['meta']?['displayName'];
+      if (displayName != null) {
+        await Flushbar(
+          title: 'WANDR News',
+          message: Localizer.translate(context, 'lblDashboardUpdateDataMessage')
+              .replaceFirst(
+            '%1',
+            displayName,
+          ),
+          duration: Duration(seconds: 3),
+        ).show(context);
+      }
       await _fetchFirebaseRealtimeDatabaseSnapshot(db);
     });
   }
