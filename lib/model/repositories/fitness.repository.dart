@@ -85,6 +85,26 @@ class FitnessRepository extends Repository {
   }
 
   ///
+  Future<bool> isInstalled() async {
+    try {
+      final bool isInstalled = (await fitness.invokeMethod('isInstalled')) == 1;
+      return isInstalled;
+    } on Exception catch (ex) {
+      print(ex.toString());
+    }
+    return false;
+  }
+
+  ///
+  Future<void> requestInstallation() async {
+    try {
+      await fitness.invokeMethod('install');
+    } on Exception catch (ex) {
+      print(ex.toString());
+    }
+  }
+
+  ///
   Future<bool> requestPermissions() async {
     try {
       final bool isAuthenticated = await fitness.invokeMethod('authenticate');

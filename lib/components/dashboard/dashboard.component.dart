@@ -179,7 +179,7 @@ class _DashboardState extends State<DashboardComponent>
     final FitRanking ranking =
         await FitRanking.createFromFirebaseSnapshot(snapshot);
     if (ranking.obsoleteUserIdList.isNotEmpty) {
-      _repository.deleteObsoleteUserList(ranking.obsoleteUserIdList);
+      await _repository.deleteObsoleteUserList(ranking.obsoleteUserIdList);
     }
     setState(() {
       _ranking = ranking;

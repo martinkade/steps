@@ -37,9 +37,7 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
     super.initState();
 
     _emailController = TextEditingController();
-    _emailController.text = 'martin.kade@xworks.net';
     _passwordController = TextEditingController();
-    _passwordController.text = '#321ieziloP';
     _emailFocusNode = FocusNode();
     _passwordFocusNode = FocusNode();
     _apiAuthModule = XworksApiAuthModule(XworksApiModule.defaultApiClient);

@@ -83,7 +83,11 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
                           color: Colors.green,
                         )
                       : TextButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            if (Platform.isAndroid &&
+                                !(await _repository.isInstalled())) {
+                              await _repository.requestInstallation();
+                            }
                             _repository.requestPermissions().then((authorized) {
                               if (!mounted) return;
                               _enableAutoSync(authorized);

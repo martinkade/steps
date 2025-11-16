@@ -55,8 +55,11 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
     });
   }
 
-  void _toggleAutoSync(bool enable) {
+  void _toggleAutoSync(bool enable) async {
     if (enable) {
+      if (Platform.isAndroid && !(await _repository.isInstalled())) {
+        await _repository.requestInstallation();
+      }
       _repository.requestPermissions().then((authorized) {
         if (!mounted) return;
         Preferences().setAutoSyncEnabled(authorized);
