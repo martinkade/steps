@@ -1,0 +1,2 @@
+Leistungsverbesserungen, Speicher-Optimierung und mehr Stabilität:
+gemeldete Fehler nehmen wir sehr ernst. Auch in dieser Version haben wir viele kleinere Probleme behoben und einiges optimiert.

@@ -1,0 +1,51 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+ENV['SUPPLY_UPLOAD_MAX_RETRIES']='5'
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Deploy a new version of WANDR to Google Play"
+    lane :wandr do
+      gradle(task: "clean")
+      gradle(
+          task: "bundle",
+          build_type: "Release"
+      )
+      upload_to_play_store(
+          track: 'internal',
+          aab: '../build/app/outputs/bundle/release/app-release.aab',
+          mapping: '../build/app/outputs/mapping/release/mapping.txt',
+          metadata_path: 'fastlane/metadata',
+          timeout: 600
+      )
+      upload_to_play_store(
+          track: 'internal',
+          track_promote_to: 'alpha',
+          skip_upload_apk: true,
+          skip_upload_aab: true,
+          skip_upload_metadata: true,
+          skip_upload_changelogs: true,
+          skip_upload_images: true,
+          skip_upload_screenshots: true
+      )
+    end
+end

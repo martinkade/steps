@@ -29,13 +29,13 @@ if (flutterVersionName == null) {
 
 // https://flutter.dev/docs/deployment/android
 def keystoreDebugProperties = new Properties()
-def keystoreDebugPropertiesFile = rootProject.file('debug.key.properties')
+def keystoreDebugPropertiesFile = rootProject.file('signing/debug.key.properties')
 if (keystoreDebugPropertiesFile.exists()) {
     keystoreDebugProperties.load(new FileInputStream(keystoreDebugPropertiesFile))
 }
 
 def keystoreReleaseProperties = new Properties()
-def keystoreReleasePropertiesFile = rootProject.file('release.key.properties')
+def keystoreReleasePropertiesFile = rootProject.file('signing/release.key.properties')
 if (keystoreReleasePropertiesFile.exists()) {
     keystoreReleaseProperties.load(new FileInputStream(keystoreReleasePropertiesFile))
 }
