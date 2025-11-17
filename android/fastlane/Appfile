@@ -1,0 +1,2 @@
+json_key_file("signing/api-6254482999914809585-459612-12b83127a9eb.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.mediabeam.fitness") # e.g. com.krausefx.app
