@@ -163,9 +163,10 @@ class _DashboardState extends State<DashboardComponent>
     if (_firebaseRealtimeDatabaseSubscription != null) return;
     _firebaseRealtimeDatabaseSubscription =
         db.ref().child('users').onChildChanged.listen((childEvent) async {
+      final dynamic snapshotKey = childEvent.snapshot.key;
       final dynamic snapshot = childEvent.snapshot.value;
       final String? displayName = snapshot?['meta']?['displayName'];
-      if (displayName != null) {
+      if (displayName != null && snapshotKey != _username) {
         await Flushbar(
           title: 'WANDR News',
           message: Localizer.translate(context, 'lblDashboardUpdateDataMessage')
