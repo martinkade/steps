@@ -209,7 +209,7 @@ class _DashboardState extends State<DashboardComponent>
     required SyncState syncState,
   }) {
     if (!mounted) return;
-    (_goalKey.currentState)?.reload(snapshot);
+    (_goalKey.currentState)?.reload(snapshot, syncState: syncState);
     setState(() {
       _fitSnapshot = snapshot;
     });

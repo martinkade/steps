@@ -15,8 +15,10 @@
     "lblDashboardUserStatsKilometer": "or %1 kilometers",
     "lblDashboardUserStatsAutoSyncOffApple": "Automatic synchronization with Apple Health is disabled. You can change that in the settings.",
     "lblDashboardUserStatsAutoSyncOnApple": "Automatic synchronization with Apple Health is enabled.",
+    "lblDashboardUserStatsAutoSyncProgressApple": "Synchronizing Apple Health...",
     "lblDashboardUserStatsAutoSyncOffGoogle": "Automatic synchronization with Health Connect is disabled. You can change that in the settings.",
     "lblDashboardUserStatsAutoSyncOnGoogle": "Automatic synchronization with Health Connect is enabled.",
+    "lblDashboardUserStatsAutoSyncProgressGoogle": "Synchronizing Health Connect...",
     
     "lblDashboardMotivation": "Here we go!",
     "lblDashboardMotivationDay": "Collect %1 points today to reach your daily goal.",

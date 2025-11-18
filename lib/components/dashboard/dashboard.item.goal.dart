@@ -8,6 +8,7 @@ import 'package:wandr/components/shared/localizer.dart';
 import 'package:wandr/model/fit.challenge.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 import 'package:wandr/model/preferences.dart';
+import 'package:wandr/model/repositories/repository.dart';
 
 class DashboardGoalItem extends DashboardItem {
   ///
@@ -57,9 +58,15 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
     _load();
   }
 
-  void reload(FitSnapshot snapshot) {
+  void reload(
+    FitSnapshot snapshot, {
+    required SyncState syncState,
+  }) {
     _snapshot = snapshot;
-    _syncSteps(context);
+
+    if (syncState == SyncState.DATA_READY) {
+      _syncSteps(context);
+    }
   }
 
   void _load() {
@@ -89,6 +96,7 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
 
   Widget _calendarWidget(BuildContext context) {
     return Column(
+      key: Key('_calendarWidget'),
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -186,7 +194,8 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                               context, 'lblDashboardUserStatsKilometer')
                           .replaceAll(
                         '%1',
-                        _approxKilometers((_snapshot?.todaysPoints ?? 0).toInt()),
+                        _approxKilometers(
+                            (_snapshot?.todaysPoints ?? 0).toInt()),
                       ),
                     ),
                   ),
@@ -204,7 +213,8 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                               context, 'lblDashboardUserStatsKilometer')
                           .replaceAll(
                         '%1',
-                        _approxKilometers((_snapshot?.weeksPoints ?? 0).toInt()),
+                        _approxKilometers(
+                            (_snapshot?.weeksPoints ?? 0).toInt()),
                       ),
                     ),
                   ),
@@ -227,7 +237,16 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
-        child: _loading ? LoadingIndicator() : contentWidget,
+        child: _loading
+            ? ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: 280,
+                ),
+                child: Center(
+                  child: LoadingIndicator(),
+                ),
+              )
+            : contentWidget,
       ),
     );
   }

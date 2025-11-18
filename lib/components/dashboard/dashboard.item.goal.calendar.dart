@@ -32,7 +32,8 @@ class DashboardGoalCalendar extends StatefulWidget {
 
 class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
   ///
-  bool _loading = true;
+  // bool _loading = true;
+  bool _initialLoading = true;
 
   ///
   final List<_WeekModel> _weeks = <_WeekModel>[];
@@ -46,17 +47,16 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
 
   void _load() {
     if (_weeks.isEmpty) {
-      setState(() {
-        _loading = true;
-      });
+      // _loading = true;
     }
     _weeks.clear();
     _loadStats(context).then((weeks) {
       if (!mounted) return;
       _weeks.clear();
       _weeks.addAll(weeks);
+      // _loading = false;
       setState(() {
-        _loading = false;
+        _initialLoading = false;
       });
     });
   }
@@ -122,14 +122,16 @@ class _DashboardGoalCalendarState extends State<DashboardGoalCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    return _loading
-        ? LoadingIndicator()
+    return _initialLoading
+        ? LoadingIndicator(height: 96)
         : Container(
+            key: UniqueKey(),
             height: 96.0,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemBuilder: (BuildContext context, int index) {
                 return _CalendarWeekDisplay(
+                  key: Key('KW${_weeks[index].index}'),
                   label: 'KW${_weeks[index].index}',
                   percent: _weeks[index].percent,
                   index: index,
@@ -205,7 +207,6 @@ class _CalendarWeekDisplayState extends State<_CalendarWeekDisplay> {
                 ),
               ),
               animation: _animate,
-              // circularStrokeCap: CircularStrokeCap.round,
               backgroundColor:
                   Theme.of(context).colorScheme.primary.withAlpha(50),
               progressColor: Theme.of(context).colorScheme.primary,

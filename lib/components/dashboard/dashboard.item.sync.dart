@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:wandr/components/dashboard/dashboard.component.dart';
 import 'dart:io' show Platform;
@@ -45,7 +47,10 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
     with AutomaticKeepAliveClientMixin<DashboardSyncItem>
     implements FitnessRepositoryClient {
   ///
-  bool _loading = true;
+  bool _loadingAutoSyncState = true;
+  bool _loadingPoints = true;
+  double _loadingPointsProgressOld = 0;
+  double _loadingPointsProgressNew = 0.2;
 
   ///
   bool _autoSyncEnabled = true;
@@ -77,7 +82,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
 
   void _load() {
     setState(() {
-      _loading = true;
+      _loadingAutoSyncState = true;
     });
     _syncSteps(context);
   }
@@ -88,10 +93,12 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
       final hasProviderPermissions = await widget.repository.hasPermissions();
       setState(() {
         _autoSyncEnabled = hasProviderPermissions;
+        _loadingAutoSyncState = false;
       });
     } else {
       setState(() {
         _autoSyncEnabled = false;
+        _loadingAutoSyncState = false;
       });
     }
 
@@ -135,16 +142,27 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
     if (!mounted) return;
     switch (state) {
       case SyncState.DATA_READY:
+        widget.delegate.onFitnessDataUpdate(snapshot, syncState: state);
+        setState(() {
+          _loadingPointsProgressOld = _loadingPointsProgressNew;
+          _loadingPointsProgressNew = 1.0;
+        });
+        Timer(Duration(milliseconds: 500), () {
+          setState(() {
+            _loadingPoints = false;
+          });
+        });
+        break;
       case SyncState.FETCHING_DATA:
         widget.delegate.onFitnessDataUpdate(snapshot, syncState: state);
+        setState(() {
+          _loadingPointsProgressOld = _loadingPointsProgressNew;
+          _loadingPointsProgressNew = 0.8;
+        });
         break;
       default:
         break;
     }
-
-    setState(() {
-      _loading = false;
-    });
   }
 
   @override
@@ -159,7 +177,7 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
-        child: _loading
+        child: _loadingAutoSyncState
             ? LoadingIndicator()
             : _autoSyncEnabled
                 ? Container(
@@ -180,13 +198,60 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
                             ),
                           ),
                           Expanded(
-                            child: Text(
-                              Localizer.translate(
-                                  context,
-                                  Platform.isIOS
-                                      ? 'lblDashboardUserStatsAutoSyncOnApple'
-                                      : 'lblDashboardUserStatsAutoSyncOnGoogle'),
-                              style: TextStyle(fontSize: 16.0),
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.only(right: 16.0),
+                              child: _loadingPoints
+                                  ? Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          Localizer.translate(
+                                            context,
+                                            Platform.isIOS
+                                                ? 'lblDashboardUserStatsAutoSyncProgressApple'
+                                                : 'lblDashboardUserStatsAutoSyncProgressGoogle',
+                                          ),
+                                          style: TextStyle(fontSize: 16.0),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsGeometry.only(top: 8.0),
+                                          child: TweenAnimationBuilder<double>(
+                                            duration: const Duration(
+                                              milliseconds: 250,
+                                            ),
+                                            curve: Curves.easeInOut,
+                                            tween: Tween<double>(
+                                              begin: _loadingPointsProgressOld,
+                                              end: _loadingPointsProgressNew,
+                                            ),
+                                            builder: (context, value, _) =>
+                                                LinearProgressIndicator(
+                                              color: Colors.green.withAlpha(80),
+                                              backgroundColor:
+                                                  Colors.green.withAlpha(50),
+                                              value: value,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : Text(
+                                      Localizer.translate(
+                                        context,
+                                        Platform.isIOS
+                                            ? 'lblDashboardUserStatsAutoSyncOnApple'
+                                            : 'lblDashboardUserStatsAutoSyncOnGoogle',
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        height: 1.1,
+                                      ),
+                                    ),
                             ),
                           )
                         ],

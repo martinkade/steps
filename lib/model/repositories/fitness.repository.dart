@@ -9,6 +9,7 @@ import 'package:wandr/model/fit.record.dart';
 import 'package:wandr/model/fit.snapshot.dart';
 import 'package:wandr/model/fit.team.dart';
 import 'package:wandr/model/fit.user.dart';
+import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/repository.dart';
 import 'package:wandr/model/storage.dart';
 
@@ -374,6 +375,18 @@ class FitnessRepository extends Repository {
 
     final DataSnapshot? data =
         await db.ref().child('users').child(userKey).get();
+
+    // restore users displayName from previous installation
+    Map<dynamic, dynamic> meta;
+    try {
+      Map mData = data?.value != null ? data!.value! as Map : Map();
+      meta = mData['meta'] ?? Map();
+      await Preferences().setDisplayName(meta['displayName']);
+    } on Exception {
+      meta = Map();
+    }
+
+    // restore users history from previous installation
     Map<dynamic, dynamic> history;
     try {
       Map mData = data?.value != null ? data!.value! as Map : Map();
@@ -381,8 +394,6 @@ class FitnessRepository extends Repository {
     } on Exception {
       history = Map();
     }
-    print(
-        'FitRepository#_readUserPointsHistoryFromFirebaseDatabase:\n\t$userKey\n\t$history');
 
     FitRecord record;
     final List<FitRecord> records = <FitRecord>[];
@@ -396,8 +407,6 @@ class FitnessRepository extends Repository {
         type: value['type']?.toInt() ?? 0,
         name: value['name']?.toString() ?? '',
       );
-      print(
-          'FitRepository#_readUserPointsHistoryFromFirebaseDatabase: \t${record.dateTimeString}');
       records.add(record);
     });
     return records;
