@@ -9,8 +9,11 @@ class XworksApiAuthModule extends XworksApiModule {
     required String password,
   }) async {
     final XworksApiRequestParams headerParams =
-        XworksApiModule.defaultRequestHeaders;
-    headerParams.data.addAll({'Content-Type': 'application/json'});
+        XworksApiModule.defaultRequestHeaders.append(
+      newData: Map.from(
+        {'Content-Type': 'application/json'},
+      ),
+    );
     final XworksApiJsonRequestBody data = XworksApiJsonRequestBody(
       data: Map.from({
         'credentials': {

@@ -55,6 +55,35 @@ class Preferences {
   }
 
   ///
+  Future<void> setLastBackupTimestamp(DateTime timestamp) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setInt(
+        'kLastBackupTimestamp', timestamp.millisecondsSinceEpoch);
+  }
+
+  ///
+  Future<DateTime?> getLastBackupTimestamp() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    final int millisecondsSinceEpoch =
+        preferences.getInt('kLastBackupTimestamp') ?? 0;
+    return millisecondsSinceEpoch > 0
+        ? DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch)
+        : null;
+  }
+
+  ///
+  Future<void> setLastBackupFileUuid(String fileUuid) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('kLastBackupFileUuid', fileUuid);
+  }
+
+  ///
+  Future<String?> getLastBackupFileUuid() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString('kLastBackupFileUuid');
+  }
+
+  ///
   Future<void> setAutoSyncEnabled(bool enabled) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool('kAutoSync', enabled);

@@ -27,8 +27,7 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
   String? _email, _password;
 
   ///
-  ///
-  late XworksApiAuthModule _apiAuthModule;
+  late XworksApiAuthModule _apiAuthModule = XworksApiAuthModule(XworksApiModule.defaultApiClient);
   bool _isAuthenticating = false;
   XworksApiError? _authenticationError;
 
@@ -40,7 +39,6 @@ class _LandingIdentityItemState extends State<LandingIdentityItem> {
     _passwordController = TextEditingController();
     _emailFocusNode = FocusNode();
     _passwordFocusNode = FocusNode();
-    _apiAuthModule = XworksApiAuthModule(XworksApiModule.defaultApiClient);
 
     SharedPreferences.getInstance().then((preferences) {
       final String? userValue = preferences.getString('kUser');

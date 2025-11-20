@@ -39,7 +39,7 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
 
   void _load() async {
     final bool isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
-    if (isAutoSyncEnabled && await _repository.hasPermissions()) {
+    if (isAutoSyncEnabled && await _repository.hasExternalDataPermissions()) {
       setState(() {
         _autoSyncEnabled = true;
       });
@@ -52,11 +52,11 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
 
   void _toggleAutoSync(bool enable) async {
     if (enable) {
-      if (Platform.isAndroid && !(await _repository.isInstalled())) {
-        await _repository.requestInstallation();
+      if (!(await _repository.isExternalDataProviderInstalled())) {
+        await _repository.invokeExternalDataProviderInstallation();
       }
       final bool hasAutoSyncPermissions =
-          await _repository.requestPermissions();
+          await _repository.requestExternalDataProviderPermissions();
       await Preferences().setAutoSyncEnabled(hasAutoSyncPermissions);
       setState(() {
         _autoSyncEnabled = hasAutoSyncPermissions;
@@ -91,14 +91,12 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             Expanded(
-                  child:  GestureDetector(
-                onTap: () {
-                  if (Platform.isAndroid) {
-                  _repository.requestExternalSettings();
-                  }
-                },
-                child: Column(
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    _repository.invokeExternalDataProviderSettings();
+                  },
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(

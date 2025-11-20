@@ -77,6 +77,12 @@ class _HistoryState extends State<HistoryComponent> {
     });
   }
 
+  @override
+  void dispose() {
+    _repository.dispose();
+    super.dispose();
+  }
+
   void _displayRecord(FitRecord record) {
     Navigator.push(
       context,

@@ -9,15 +9,18 @@ import androidx.health.connect.client.time.TimeRangeFilter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.time.Instant
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
-class FitSummaryTask(context: Context) {
-    private val packageName = "com.google.android.apps.healthdata"
-    private val healthConnectClient = HealthConnectClient.getOrCreate(context, packageName)
+class HealthConnectDataAggregationTask(
+    context: Context,
+) {
+    private val healthConnectClient = HealthConnectLink.getInstance(context).healthConnectClient
 
+    // https://developer.android.com/health-and-fitness/health-connect/read-data?hl=de
     suspend fun callAsync(): Map<String, Any?> = withContext(Dispatchers.IO) {
         val now = Calendar.getInstance(TimeZone.getDefault())
         val lastWeekStart = Calendar.getInstance(TimeZone.getDefault()).apply {
@@ -30,8 +33,8 @@ class FitSummaryTask(context: Context) {
         }
 
         val data = HashMap<String, Any>()
-        data["steps"] = readSteps(lastWeekStart, now)
-        data["activeMinutes"] = readActiveMinutes(lastWeekStart, now)
+        data["steps"] = readSteps(lastWeekStart, now).filter { it.value > 0 }
+        data["activeMinutes"] = readActiveMinutes(lastWeekStart, now).filter { it.value > 0 }
         return@withContext data
     }
 
@@ -40,8 +43,10 @@ class FitSummaryTask(context: Context) {
         var key: String
         var value: Int
         val map = HashMap<String, Int>()
-        val start = startTime
-        val end = Calendar.getInstance(Locale.getDefault()).apply {
+        val start = Calendar.getInstance(TimeZone.getDefault()).apply {
+            time = startTime.time
+        }
+        val end = Calendar.getInstance(TimeZone.getDefault()).apply {
             time = start.time
             add(Calendar.DATE, 1)
         }
@@ -79,18 +84,20 @@ class FitSummaryTask(context: Context) {
         var key: String
         var value: Int
         val map = HashMap<String, Int>()
-        val start = startTime
-        val end = Calendar.getInstance(Locale.getDefault()).apply {
+        val start = Calendar.getInstance(TimeZone.getDefault()).apply {
+            time = startTime.time
+        }
+        val end = Calendar.getInstance(TimeZone.getDefault()).apply {
             time = start.time
             add(Calendar.DATE, 1)
         }
         while (start.before(endTime) && end.before(endTime)) {
             key = dateFormat.format(start.time)
-            value = aggregateActiveMinutes(
+            value = aggregateActiveDuration(
                 healthConnectClient,
                 start.toInstant(),
                 end.toInstant()
-            ).toInt()
+            ).toMinutes().toInt()
             when (val oldValue = map[key]) {
                 null -> map[key] = value
                 else -> map[key] = oldValue + value
@@ -100,12 +107,11 @@ class FitSummaryTask(context: Context) {
         }
 
         key = dateFormat.format(start.time)
-        value =
-            aggregateActiveMinutes(
-                healthConnectClient,
-                start.toInstant(),
-                end.toInstant()
-            ).toInt()
+        value = aggregateActiveDuration(
+            healthConnectClient,
+            start.toInstant(),
+            end.toInstant()
+        ).toMinutes().toInt()
         when (val oldValue = map[key]) {
             null -> map[key] = value
             else -> map[key] = oldValue + value
@@ -114,21 +120,21 @@ class FitSummaryTask(context: Context) {
         return map
     }
 
-    suspend fun aggregateActiveMinutes(
+    suspend fun aggregateActiveDuration(
         healthConnectClient: HealthConnectClient,
         startTime: Instant,
         endTime: Instant,
-    ): Long = try {
+    ): Duration = try {
         val response = healthConnectClient.aggregate(
             AggregateRequest(
                 metrics = setOf(ExerciseSessionRecord.EXERCISE_DURATION_TOTAL),
                 timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
             )
         )
-        response[StepsRecord.COUNT_TOTAL] ?: 0L
+        response[ExerciseSessionRecord.EXERCISE_DURATION_TOTAL] ?: Duration.ofMinutes(0)
     } catch (ex: Exception) {
         ex.printStackTrace()
-        0L
+        Duration.ofMinutes(0)
     }
 
     suspend fun aggregateSteps(

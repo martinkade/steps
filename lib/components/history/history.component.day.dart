@@ -69,6 +69,12 @@ class _HistoryDayState extends State<HistoryDay> {
   }
 
   @override
+  void dispose() {
+    _repository.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Widget placeholderWidget = Container(
       child: Center(

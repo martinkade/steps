@@ -106,6 +106,12 @@ class _TeamsTeamState extends State<TeamsTeamComponent> {
   }
 
   @override
+  void dispose() {
+    _repository.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final List<FitUser> users =
         _users.where((element) => widget.myTeam?.name == element.team).toList();

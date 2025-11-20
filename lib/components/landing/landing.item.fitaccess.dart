@@ -31,12 +31,18 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
   }
 
   void _load() {
-    _repository.hasPermissions().then((authorized) {
+    _repository.hasExternalDataPermissions().then((authorized) {
       if (!mounted) return;
       setState(() {
         _isAuthorized = authorized;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _repository.dispose();
+    super.dispose();
   }
 
   void _enableAutoSync(bool enable) {
@@ -85,10 +91,10 @@ class _LandingFitAccessItemState extends State<LandingFitAccessItem> {
                       : TextButton(
                           onPressed: () async {
                             if (Platform.isAndroid &&
-                                !(await _repository.isInstalled())) {
-                              await _repository.requestInstallation();
+                                !(await _repository.isExternalDataProviderInstalled())) {
+                              await _repository.invokeExternalDataProviderInstallation();
                             }
-                            _repository.requestPermissions().then((authorized) {
+                            _repository.requestExternalDataProviderPermissions().then((authorized) {
                               if (!mounted) return;
                               _enableAutoSync(authorized);
                               setState(() {

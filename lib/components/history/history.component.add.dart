@@ -135,6 +135,7 @@ class _HistoryAddState extends State<HistoryAdd> {
     _nameInputController.dispose();
     _dateFocusNode.dispose();
     _dateInputController.dispose();
+    _repository.dispose();
     super.dispose();
   }
 

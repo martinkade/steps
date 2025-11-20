@@ -80,17 +80,19 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
     _syncSteps(context);
   }
 
-  void _load() {
+  void _load() async {
     setState(() {
       _loadingAutoSyncState = true;
     });
+
     _syncSteps(context);
   }
 
   void _syncSteps(BuildContext context) async {
     final isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
     if (isAutoSyncEnabled) {
-      final hasProviderPermissions = await widget.repository.hasPermissions();
+      final hasProviderPermissions =
+          await widget.repository.hasExternalDataPermissions();
       setState(() {
         _autoSyncEnabled = hasProviderPermissions;
         _loadingAutoSyncState = false;

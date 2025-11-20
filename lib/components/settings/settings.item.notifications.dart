@@ -48,6 +48,12 @@ class _SettingsNotificationItemState extends State<SettingsNotificationItem> {
   }
 
   @override
+  void dispose() {
+    _repository.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Widget titleWidget = Padding(
       padding: const EdgeInsets.fromLTRB(22.0, 22.0, 22.0, 4.0),

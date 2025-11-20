@@ -121,6 +121,16 @@ class FitSnapshot {
         );
         records.add(record);
       });
+      data['steps']?.forEach((key, value) {
+        id = DateTime.parse(key).add(Duration(seconds: 1));
+        record = FitRecord(dateTime: id);
+        record.fill(
+          source: source,
+          value: value.toInt(),
+          type: FitRecord.TYPE_STEPS,
+        );
+        records.add(record);
+      });
     } else {
       data['activeMinutes']?.forEach((key, value) {
         id = DateTime.parse(key);

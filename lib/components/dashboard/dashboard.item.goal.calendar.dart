@@ -207,9 +207,9 @@ class _CalendarWeekDisplayState extends State<_CalendarWeekDisplay> {
                 ),
               ),
               animation: _animate,
-              backgroundColor:
-                  Theme.of(context).colorScheme.primary.withAlpha(50),
-              progressColor: Theme.of(context).colorScheme.primary,
+              backgroundColor: Colors.grey.withAlpha(50),
+              progressColor: Colors.blue.withAlpha(80),
+              circularStrokeCap: CircularStrokeCap.round,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),

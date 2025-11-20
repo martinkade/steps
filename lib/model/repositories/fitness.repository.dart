@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io' show File, FileMode, Platform;
 import 'package:wandr/model/cache/fit.record.dao.dart';
 import 'package:wandr/model/cache/fit.team.dao.dart';
 import 'package:wandr/model/fit.challenge.dart';
@@ -12,6 +14,9 @@ import 'package:wandr/model/fit.user.dart';
 import 'package:wandr/model/preferences.dart';
 import 'package:wandr/model/repositories/repository.dart';
 import 'package:wandr/model/storage.dart';
+import 'package:wandr/model/xworksclient/xworksapi.error.dart';
+import 'package:wandr/model/xworksclient/xworksapi.module.cloud.dart';
+import 'package:wandr/model/xworksclient/xworksapi.module.dart';
 
 ///
 abstract class FitnessRepositoryClient {
@@ -40,6 +45,13 @@ class FitnessRepository extends Repository {
       print(ex.toString());
       throw ex;
     }
+  }
+
+  late XworksApiCloudModule _apiCloudModule =
+      XworksApiCloudModule(XworksApiModule.defaultApiClient);
+
+  void dispose() {
+    _apiCloudModule.dispose();
   }
 
   ///
@@ -74,21 +86,14 @@ class FitnessRepository extends Repository {
   }
 
   ///
-  Future<bool> hasPermissions() async {
+  Future<bool> isExternalDataProviderInstalled() async {
     try {
-      final bool isAuthenticated =
-          await fitness.invokeMethod('isAuthenticated');
-      return isAuthenticated;
-    } on Exception catch (ex) {
-      print(ex.toString());
-    }
-    return false;
-  }
-
-  ///
-  Future<bool> isInstalled() async {
-    try {
-      final bool isInstalled = (await fitness.invokeMethod('isInstalled')) == 1;
+      bool isInstalled;
+      if (Platform.isAndroid) {
+        isInstalled = (await fitness.invokeMethod('isHealthInstalled')) == 1;
+      } else {
+        isInstalled = true;
+      }
       return isInstalled;
     } on Exception catch (ex) {
       print(ex.toString());
@@ -96,19 +101,107 @@ class FitnessRepository extends Repository {
     return false;
   }
 
-  ///
-  Future<void> requestInstallation() async {
+  /// Write backup to xworks cloud if either
+  /// - there is no backup yet or
+  /// - the last backup is older than 24 hours
+  Future<int> _writeBackupIfNeccessary(FitSnapshot snapshot) async {
+    final DateTime now = DateTime.now();
     try {
-      await fitness.invokeMethod('install');
-    } on Exception catch (ex) {
-      print(ex.toString());
+      final DateTime? lastBackup = await Preferences().getLastBackupTimestamp();
+      if (lastBackup != null && now.difference(lastBackup).inHours < 24) {
+        return 0;
+      }
+      final cacheDir = await getApplicationCacheDirectory();
+      final backupFilename = 'wandr-backup-${now.year}.bak';
+      File backupFile = File('${cacheDir.path}/${backupFilename}');
+      backupFile = await backupFile.writeAsString(
+        'modified#${now.toIso8601String()}\n',
+        mode: FileMode.writeOnly,
+      );
+      snapshot.history.forEach((date, value) async {
+        backupFile = await backupFile.writeAsString(
+          '$date#${value['source']};${value['type']};${value['value']};${value['name']}\n',
+          mode: FileMode.append,
+        );
+      });
+      final backupFolderUuid = await _createBackupFolder();
+      final dynamic response = await _apiCloudModule.uploadFile(
+        file: backupFile,
+        filename: backupFilename,
+        folderUuid: backupFolderUuid,
+      );
+      final String backupFileUuid = response['file']?['id'];
+      await Preferences().setLastBackupFileUuid(backupFileUuid);
+      return backupFile.lengthSync();
+    } on Exception {
+      return -1;
+    } finally {
+      await Preferences().setLastBackupTimestamp(now);
+    }
+  }
+
+  /// Create backup folder named WANDR within root directory of xworks cloud.
+  Future<String> _createBackupFolder() async {
+    String folderUuid;
+    try {
+      dynamic response = await _apiCloudModule.getFolderTree();
+      final dynamic rootFolder = response['folderList']?.firstWhere(
+          (node) => node['parentId'] == '00000000-0000-0000-0000-000000000000');
+      folderUuid = rootFolder?['id'];
+
+      final dynamic backupFolder =
+          rootFolder?['folder']?.firstWhere((node) => node['name'] == 'WANDR');
+      if (backupFolder != null) {
+        folderUuid = backupFolder?['id'];
+      } else {
+        response = await _apiCloudModule.createFolder(
+          name: 'WANDR',
+          parentUuid: folderUuid,
+        );
+        folderUuid = response['id'];
+      }
+      return folderUuid;
+    } on XworksApiException catch (ex) {
+      throw ex;
+    }
+  }
+
+  /// Read backup from xworks cloud and restore data.
+  Future<int> _applyBackupIfNecessary() async {
+    final DateTime now = DateTime.now();
+    try {
+      final DateTime? lastBackup = await Preferences().getLastBackupTimestamp();
+      final String? lastBackupFileUuid =
+          await Preferences().getLastBackupFileUuid();
+      // TODO: handle case when backup is from an other device
+      if (lastBackup == null || lastBackupFileUuid == null) {
+        return 0;
+      }
+      final cacheDir = await getApplicationCacheDirectory();
+      final backupFilename = 'wandr-backup-${now.year}.bak';
+      File backupFile = File('${cacheDir.path}/${backupFilename}');
+      final dynamic =
+          await _apiCloudModule.downloadFile(fileUuid: lastBackupFileUuid);
+      backupFile = await backupFile.writeAsBytes(
+        dynamic,
+        mode: FileMode.writeOnly,
+      );
+      final String data = await backupFile.readAsString();
+      return backupFile.lengthSync();
+    } on Exception {
+      return -1;
     }
   }
 
   ///
-  Future<bool> requestExternalSettings() async {
+  Future<bool> invokeExternalDataProviderInstallation() async {
     try {
-      final bool isLaunched = await fitness.invokeMethod('getFitnessSettings');
+      bool isLaunched;
+      if (Platform.isAndroid) {
+        isLaunched = await fitness.invokeMethod('installHealth');
+      } else {
+        isLaunched = true;
+      }
       return isLaunched;
     } on Exception catch (ex) {
       print(ex.toString());
@@ -117,10 +210,47 @@ class FitnessRepository extends Repository {
   }
 
   ///
-  Future<bool> requestPermissions() async {
+  Future<bool> hasExternalDataPermissions() async {
     try {
-      final bool isAuthenticated = await fitness.invokeMethod('authenticate');
+      bool isAuthenticated;
+      if (Platform.isAndroid) {
+        isAuthenticated = await fitness.invokeMethod('isHealthAuthenticated');
+      } else {
+        isAuthenticated = await fitness.invokeMethod('isAuthenticated');
+      }
       return isAuthenticated;
+    } on Exception catch (ex) {
+      print(ex.toString());
+    }
+    return false;
+  }
+
+  ///
+  Future<bool> requestExternalDataProviderPermissions() async {
+    try {
+      bool isAuthenticated;
+      if (Platform.isAndroid) {
+        isAuthenticated = await fitness.invokeMethod('authenticateHealth');
+      } else {
+        isAuthenticated = await fitness.invokeMethod('authenticate');
+      }
+      return isAuthenticated;
+    } on Exception catch (ex) {
+      print(ex.toString());
+    }
+    return false;
+  }
+
+  ///
+  Future<bool> invokeExternalDataProviderSettings() async {
+    try {
+      bool isLaunched;
+      if (Platform.isAndroid) {
+        isLaunched = await fitness.invokeMethod('getHealthSettings');
+      } else {
+        isLaunched = true;
+      }
+      return isLaunched;
     } on Exception catch (ex) {
       print(ex.toString());
     }
@@ -339,9 +469,13 @@ class FitnessRepository extends Repository {
     );
 
     try {
-      if (isAutoSyncEnabled && await hasPermissions()) {
-        final Map<dynamic, dynamic> data =
-            await fitness.invokeMethod('getFitnessMetrics');
+      if (isAutoSyncEnabled && await hasExternalDataPermissions()) {
+        Map<dynamic, dynamic> data;
+        if (Platform.isAndroid) {
+          data = await fitness.invokeMethod('getHealthData');
+        } else {
+          data = await fitness.invokeMethod('getFitnessMetrics');
+        }
         await snapshot.writeFitProviderDataToCache(dao, data);
       }
     } on Exception catch (ex) {
@@ -358,6 +492,9 @@ class FitnessRepository extends Repository {
       challengeList: challenges,
       anchor: anchor,
     );
+
+    await _writeBackupIfNeccessary(snapshot);
+    // await _applyBackupIfNecessary();
 
     client.fitnessRepositoryDidUpdate(
       this,

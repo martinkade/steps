@@ -320,6 +320,7 @@ class _DashboardState extends State<DashboardComponent>
   @override
   void dispose() {
     _firebaseRealtimeDatabaseSubscription?.cancel();
+    _repository.dispose();
     super.dispose();
   }
 

@@ -8,12 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.core.net.toUri
-import androidx.health.connect.client.HealthConnectClient
+import androidx.core.content.edit
 import androidx.health.connect.client.PermissionController
-import androidx.health.connect.client.permission.HealthPermission
-import androidx.health.connect.client.records.ExerciseSessionRecord
-import androidx.health.connect.client.records.StepsRecord
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
@@ -25,7 +21,6 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import androidx.core.content.edit
 
 class MainActivity : FlutterFragmentActivity() {
 
@@ -33,13 +28,6 @@ class MainActivity : FlutterFragmentActivity() {
         const val CHANNEL_FITNESS = "com.mediabeam/fitness"
         const val CHANNEL_NOTIFICATION = "com.mediabeam/notification"
         const val REQUEST_CODE_ALARM = 3
-
-        val PERMISSIONS = setOf(
-            HealthPermission.PERMISSION_READ_HEALTH_DATA_IN_BACKGROUND,
-            HealthPermission.PERMISSION_READ_HEALTH_DATA_HISTORY,
-            HealthPermission.getReadPermission(StepsRecord::class),
-            HealthPermission.getReadPermission(ExerciseSessionRecord::class)
-        )
     }
 
     private var pendingCall: MethodCall? = null
@@ -55,61 +43,32 @@ class MainActivity : FlutterFragmentActivity() {
         ).setMethodCallHandler { call, result ->
             // Note: this method is invoked on the main thread.
             when (call.method) {
-                "getFitnessMetrics" -> {
-                    this@MainActivity.pendingResult = result
-                    this@MainActivity.pendingCall = call
-                    val packageName = "com.google.android.apps.healthdata"
-                    val healthConnectClient = HealthConnectClient.getOrCreate(this, packageName)
-                    val job = CoroutineScope(Job() + Dispatchers.Main)
-                    job.launch {
-                        val granted =
-                            healthConnectClient.permissionController.getGrantedPermissions()
-                        if (granted.containsAll(PERMISSIONS)) {
-                            handleDataCall(call, result)
-                        } else {
-                            result.error(
-                                "E_HEALTH_AUTH",
-                                "HealthConnectClient is not authenticated",
-                                null
-                            )
-                        }
-                    }
-                }
-
-                "isInstalled" -> {
-                    val packageName = "com.google.android.apps.healthdata"
-                    when (HealthConnectClient.getSdkStatus(this, packageName)) {
-                        HealthConnectClient.SDK_UNAVAILABLE -> result.success(-1)
-                        HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> result.success(
-                            0
-                        )
-
-                        else -> result.success(1)
-                    }
-                }
-
-                "install" -> {
-                    val packageName = "com.google.android.apps.healthdata"
-                    val uriString =
-                        "market://details?id=$packageName&url=healthconnect%3A%2F%2Fonboarding"
-                    startActivity(
-                        Intent(Intent.ACTION_VIEW).apply {
-                            setPackage("com.android.vending")
-                            data = uriString.toUri()
-                            putExtra("overlay", true)
-                            putExtra("callerId", packageName)
-                        }
+                "isHealthInstalled" -> {
+                    result.success(
+                        HealthConnectLink.getInstance(this).installStatus
                     )
                 }
 
-                "isAuthenticated" -> {
-                    val packageName = "com.google.android.apps.healthdata"
-                    val healthConnectClient = HealthConnectClient.getOrCreate(this, packageName)
+                "installHealth" -> {
+                    try {
+                        startActivity(
+                            HealthConnectLink.getInstance(this).installIntent
+                        )
+                        result.success(true)
+                    } catch (ex: Exception) {
+                        result.error(
+                            "E_HEALTH_INSTALL",
+                            "HealthConnectClient can not be installed",
+                            ex.message
+                        )
+                    }
+                }
+
+                "isHealthAuthenticated" -> {
                     val job = CoroutineScope(Job() + Dispatchers.Main)
                     job.launch {
-                        val granted =
-                            healthConnectClient.permissionController.getGrantedPermissions()
-                        val oneMatch = granted.intersect(PERMISSIONS).isNotEmpty()
+                        val oneMatch =
+                            HealthConnectLink.getInstance(this@MainActivity).hasSomePermissions()
                         if (oneMatch) {
                             result.success(true)
                         } else {
@@ -118,43 +77,57 @@ class MainActivity : FlutterFragmentActivity() {
                     }
                 }
 
-                "authenticate" -> {
+                "authenticateHealth" -> {
                     this@MainActivity.pendingResult = result
                     this@MainActivity.pendingCall = call
-                    requestPermissions.launch(PERMISSIONS)
+                    requestPermissions.launch(HealthConnectLink.RequiredPermissions)
                 }
 
-                "getFitnessSettings" -> {
-                    val packageName = "com.google.android.apps.healthdata"
-                    when (HealthConnectClient.getSdkStatus(this, packageName)) {
-                        HealthConnectClient.SDK_UNAVAILABLE, HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> {
-                            val uriString =
-                                "market://details?id=$packageName&url=healthconnect%3A%2F%2Fonboarding"
-                            try {
-                                val intent = Intent(Intent.ACTION_VIEW).apply {
-                                    setPackage("com.android.vending")
-                                    data = uriString.toUri()
-                                    putExtra("overlay", true)
-                                    putExtra("callerId", packageName)
-                                }
-                                startActivity(intent)
-                                result.success(true)
-                            } catch (ex: Exception) {
-                                ex.printStackTrace()
-                                result.success(false)
-                            }
+                "getHealthSettings" -> {
+                    if (HealthConnectLink.getInstance(this).installStatus < 1) {
+                        try {
+                            startActivity(
+                                HealthConnectLink.getInstance(this).installIntent
+                            )
+                            result.success(true)
+                        } catch (ex: Exception) {
+                            result.error(
+                                "E_HEALTH_INSTALL",
+                                "HealthConnectClient can not be installed",
+                                ex.message
+                            )
                         }
+                    } else {
+                        try {
+                            startActivity(
+                                HealthConnectLink.getInstance(this).settingsIntent
+                            )
+                            result.success(true)
+                        } catch (ex: Exception) {
+                            result.error(
+                                "E_HEALTH_SETTINGS",
+                                "HealthConnectClient settings can not be accessed",
+                                ex.message
+                            )
+                        }
+                    }
+                }
 
-                        else -> {
-                            try {
-                                val intent =
-                                    Intent(HealthConnectClient.ACTION_HEALTH_CONNECT_SETTINGS)
-                                startActivity(intent)
-                                result.success(true)
-                            } catch (ex: Exception) {
-                                ex.printStackTrace()
-                                result.success(false)
-                            }
+                "getHealthData" -> {
+                    this@MainActivity.pendingResult = result
+                    this@MainActivity.pendingCall = call
+                    val job = CoroutineScope(Job() + Dispatchers.Main)
+                    job.launch {
+                        val oneMatch =
+                            HealthConnectLink.getInstance(this@MainActivity).hasSomePermissions()
+                        if (oneMatch) {
+                            handleDataCall(call, result)
+                        } else {
+                            result.error(
+                                "E_HEALTH_READ",
+                                "HealthConnectClient is not authenticated",
+                                null
+                            )
                         }
                     }
                 }
@@ -196,11 +169,15 @@ class MainActivity : FlutterFragmentActivity() {
 
     private val requestPermissions =
         registerForActivityResult(PermissionController.createRequestPermissionResultContract()) { granted ->
-            val oneMatch = granted.intersect(PERMISSIONS).isNotEmpty()
-            if (oneMatch) {
-                handleAuthCall(pendingCall, pendingResult, true)
-            } else {
-                handleAuthCall(pendingCall, pendingResult, false)
+            val job = CoroutineScope(Job() + Dispatchers.Main)
+            job.launch {
+                val oneMatch =
+                    HealthConnectLink.getInstance(this@MainActivity).hasSomePermissions(granted)
+                if (oneMatch) {
+                    handleAuthCall(pendingCall, pendingResult, true)
+                } else {
+                    handleAuthCall(pendingCall, pendingResult, false)
+                }
             }
         }
 
@@ -232,7 +209,7 @@ class MainActivity : FlutterFragmentActivity() {
         val result = pendingResult
         this.pendingResult = null
 
-        val task = FitSummaryTask(this@MainActivity)
+        val task = HealthConnectDataAggregationTask(this)
         val job = CoroutineScope(Job() + Dispatchers.Main)
         job.launch {
             result?.success(task.callAsync())

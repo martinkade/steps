@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wandr/model/xworksclient/xworksapi.error.dart';
 
 class XworksApiClient {
@@ -8,6 +11,7 @@ class XworksApiClient {
   XworksApiClient({required this.authority});
 
   late http.Client _httpClient = http.Client();
+  late String? _token = null;
 
   Future<dynamic> makeRequest(
     String path, {
@@ -17,6 +21,7 @@ class XworksApiClient {
     XworksApiRequestBody? data,
   }) async {
     final _XworksApiRequest request = _XworksApiRequest(
+      authority: authority,
       path: path,
       method: method,
       headerParams: headerParams,
@@ -25,17 +30,32 @@ class XworksApiClient {
     return await request.make(_httpClient, body: data);
   }
 
+  Future<String> requireToken() async {
+    if (_token != null) {
+      return _token ?? '';
+    }
+    try {
+      final SharedPreferences preferences =
+          await SharedPreferences.getInstance();
+      return preferences.getString('kXworksToken') ?? '';
+    } on Exception {
+      return '';
+    }
+  }
+
   void dispose() {
     _httpClient.close();
   }
 }
 
 class _XworksApiRequest {
+  final String authority;
   final String path;
   final XworksApiRequestMethod method;
   final XworksApiRequestParams? headerParams;
   final XworksApiRequestParams? queryParams;
   _XworksApiRequest({
+    required this.authority,
     required this.path,
     required this.method,
     this.headerParams,
@@ -43,7 +63,7 @@ class _XworksApiRequest {
   });
 
   Uri get requestUrl => Uri.https(
-        'api.next.xworks.net',
+        authority,
         path,
         queryParams?.data,
       );
@@ -175,6 +195,11 @@ class XworksApiRequestParams {
       this.data.addAll(data!);
     }
   }
+
+  XworksApiRequestParams append({required Map<String, String> newData}) {
+    data.addAll(newData);
+    return this;
+  }
 }
 
 abstract class XworksApiRequestBody<T, R> {
@@ -190,4 +215,12 @@ class XworksApiJsonRequestBody extends XworksApiRequestBody<dynamic, String> {
   }) : super(data: data);
 
   String get payload => jsonEncode(data);
+}
+
+class XworksApiFileRequestBody extends XworksApiRequestBody<File, Uint8List> {
+  XworksApiFileRequestBody({
+    required File data,
+  }) : super(data: data);
+
+  Uint8List get payload => data.readAsBytesSync();
 }

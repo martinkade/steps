@@ -111,6 +111,12 @@ class _TeamsListState extends State<TeamsListComponent> {
   }
 
   @override
+  void dispose() {
+    _repository.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultPage(
       title: Localizer.translate(context, 'lblTeams'),
