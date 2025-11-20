@@ -12,7 +12,7 @@ import androidx.core.net.toUri
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
-import androidx.health.connect.client.records.ActivityIntensityRecord
+import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.StepsRecord
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import androidx.core.content.edit
 
 class MainActivity : FlutterFragmentActivity() {
 
@@ -34,8 +35,10 @@ class MainActivity : FlutterFragmentActivity() {
         const val REQUEST_CODE_ALARM = 3
 
         val PERMISSIONS = setOf(
+            HealthPermission.PERMISSION_READ_HEALTH_DATA_IN_BACKGROUND,
+            HealthPermission.PERMISSION_READ_HEALTH_DATA_HISTORY,
             HealthPermission.getReadPermission(StepsRecord::class),
-            HealthPermission.getReadPermission(ActivityIntensityRecord::class)
+            HealthPermission.getReadPermission(ExerciseSessionRecord::class)
         )
     }
 
@@ -106,7 +109,8 @@ class MainActivity : FlutterFragmentActivity() {
                     job.launch {
                         val granted =
                             healthConnectClient.permissionController.getGrantedPermissions()
-                        if (granted.containsAll(PERMISSIONS)) {
+                        val oneMatch = granted.intersect(PERMISSIONS).isNotEmpty()
+                        if (oneMatch) {
                             result.success(true)
                         } else {
                             result.success(false)
@@ -118,6 +122,41 @@ class MainActivity : FlutterFragmentActivity() {
                     this@MainActivity.pendingResult = result
                     this@MainActivity.pendingCall = call
                     requestPermissions.launch(PERMISSIONS)
+                }
+
+                "getFitnessSettings" -> {
+                    val packageName = "com.google.android.apps.healthdata"
+                    when (HealthConnectClient.getSdkStatus(this, packageName)) {
+                        HealthConnectClient.SDK_UNAVAILABLE, HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> {
+                            val uriString =
+                                "market://details?id=$packageName&url=healthconnect%3A%2F%2Fonboarding"
+                            try {
+                                val intent = Intent(Intent.ACTION_VIEW).apply {
+                                    setPackage("com.android.vending")
+                                    data = uriString.toUri()
+                                    putExtra("overlay", true)
+                                    putExtra("callerId", packageName)
+                                }
+                                startActivity(intent)
+                                result.success(true)
+                            } catch (ex: Exception) {
+                                ex.printStackTrace()
+                                result.success(false)
+                            }
+                        }
+
+                        else -> {
+                            try {
+                                val intent =
+                                    Intent(HealthConnectClient.ACTION_HEALTH_CONNECT_SETTINGS)
+                                startActivity(intent)
+                                result.success(true)
+                            } catch (ex: Exception) {
+                                ex.printStackTrace()
+                                result.success(false)
+                            }
+                        }
+                    }
                 }
 
                 "getDeviceInfo" -> {
@@ -157,7 +196,8 @@ class MainActivity : FlutterFragmentActivity() {
 
     private val requestPermissions =
         registerForActivityResult(PermissionController.createRequestPermissionResultContract()) { granted ->
-            if (granted.containsAll(PERMISSIONS)) {
+            val oneMatch = granted.intersect(PERMISSIONS).isNotEmpty()
+            if (oneMatch) {
                 handleAuthCall(pendingCall, pendingResult, true)
             } else {
                 handleAuthCall(pendingCall, pendingResult, false)
@@ -245,7 +285,7 @@ class MainActivity : FlutterFragmentActivity() {
 
     private fun enableNotifications(enable: Boolean): Boolean {
         val preferences = getSharedPreferences("$packageName.prefs", MODE_PRIVATE)
-        preferences.edit().putBoolean("notifications", enable).apply()
+        preferences.edit { putBoolean("notifications", enable) }
         if (enable) {
             scheduleWeeklyResultNotification()
         } else {
@@ -301,17 +341,15 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.lblNotificationChannelResults)
-            val descriptionText = getString(R.string.lblNotificationChannelResultsInfo)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel =
-                NotificationChannel("$packageName.notification.results", name, importance).apply {
-                    description = descriptionText
-                }
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
+        val name = getString(R.string.lblNotificationChannelResults)
+        val descriptionText = getString(R.string.lblNotificationChannelResultsInfo)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel =
+            NotificationChannel("$packageName.notification.results", name, importance).apply {
+                description = descriptionText
+            }
+        val notificationManager: NotificationManager =
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }

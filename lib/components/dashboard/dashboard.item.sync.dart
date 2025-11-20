@@ -179,114 +179,127 @@ class DashboardSyncItemState extends State<DashboardSyncItem>
         ),
         child: _loadingAutoSyncState
             ? LoadingIndicator()
-            : _autoSyncEnabled
-                ? Container(
-                    color: Colors.green.withAlpha(50),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 16.0),
-                            child: SizedBox(
-                              child: Image.asset(Platform.isIOS
-                                  ? 'assets/images/fit_apple.png'
-                                  : 'assets/images/fit_google.png'),
-                              width: 44.0,
-                              height: 44.0,
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsetsGeometry.only(right: 16.0),
-                              child: _loadingPoints
-                                  ? Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
+            : GestureDetector(
+                child: _autoSyncEnabled
+                    ? Container(
+                        color: Colors.yellow.withAlpha(50),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: SizedBox(
+                                  child: Image.asset(Platform.isIOS
+                                      ? 'assets/images/fit_apple.png'
+                                      : 'assets/images/fit_google.png'),
+                                  width: 44.0,
+                                  height: 44.0,
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsetsGeometry.only(right: 16.0),
+                                  child: _loadingPoints
+                                      ? Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              Localizer.translate(
+                                                context,
+                                                Platform.isIOS
+                                                    ? 'lblDashboardUserStatsAutoSyncProgressApple'
+                                                    : 'lblDashboardUserStatsAutoSyncProgressGoogle',
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(fontSize: 16.0),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsetsGeometry.only(
+                                                  top: 8.0),
+                                              child:
+                                                  TweenAnimationBuilder<double>(
+                                                duration: const Duration(
+                                                  milliseconds: 250,
+                                                ),
+                                                curve: Curves.easeInOut,
+                                                tween: Tween<double>(
+                                                  begin:
+                                                      _loadingPointsProgressOld,
+                                                  end:
+                                                      _loadingPointsProgressNew,
+                                                ),
+                                                builder: (context, value, _) =>
+                                                    LinearProgressIndicator(
+                                                  borderRadius:
+                                                      BorderRadiusGeometry
+                                                          .circular(4.0),
+                                                  backgroundColor:
+                                                      Colors.grey.withAlpha(50),
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    Colors.blue.withAlpha(80),
+                                                  ),
+                                                  value: value,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      : Text(
                                           Localizer.translate(
                                             context,
                                             Platform.isIOS
-                                                ? 'lblDashboardUserStatsAutoSyncProgressApple'
-                                                : 'lblDashboardUserStatsAutoSyncProgressGoogle',
+                                                ? 'lblDashboardUserStatsAutoSyncOnApple'
+                                                : 'lblDashboardUserStatsAutoSyncOnGoogle',
                                           ),
-                                          style: TextStyle(fontSize: 16.0),
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            height: 1.1,
+                                          ),
                                         ),
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsGeometry.only(top: 8.0),
-                                          child: TweenAnimationBuilder<double>(
-                                            duration: const Duration(
-                                              milliseconds: 250,
-                                            ),
-                                            curve: Curves.easeInOut,
-                                            tween: Tween<double>(
-                                              begin: _loadingPointsProgressOld,
-                                              end: _loadingPointsProgressNew,
-                                            ),
-                                            builder: (context, value, _) =>
-                                                LinearProgressIndicator(
-                                              color: Colors.green.withAlpha(80),
-                                              backgroundColor:
-                                                  Colors.green.withAlpha(50),
-                                              value: value,
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  : Text(
-                                      Localizer.translate(
-                                        context,
-                                        Platform.isIOS
-                                            ? 'lblDashboardUserStatsAutoSyncOnApple'
-                                            : 'lblDashboardUserStatsAutoSyncOnGoogle',
-                                      ),
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        height: 1.1,
-                                      ),
-                                    ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                : GestureDetector(
-                    child: Container(
-                      color: Colors.red.withAlpha(50),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: Icon(Icons.sync_problem_rounded),
-                            ),
-                            Expanded(
-                              child: Text(
-                                Localizer.translate(
-                                    context,
-                                    Platform.isIOS
-                                        ? 'lblDashboardUserStatsAutoSyncOffApple'
-                                        : 'lblDashboardUserStatsAutoSyncOffGoogle'),
-                                style: TextStyle(fontSize: 16.0),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(
+                        color: Colors.red.withAlpha(50),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: Icon(Icons.sync_problem_rounded),
                               ),
-                            )
-                          ],
+                              Expanded(
+                                child: Text(
+                                  Localizer.translate(
+                                      context,
+                                      Platform.isIOS
+                                          ? 'lblDashboardUserStatsAutoSyncOffApple'
+                                          : 'lblDashboardUserStatsAutoSyncOffGoogle'),
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    onTap: () {
-                      widget.delegate.onSettingsRequested();
-                    }),
+                onTap: () {
+                  widget.delegate.onSettingsRequested();
+                },
+              ),
       ),
     );
   }

@@ -151,10 +151,11 @@ class _AnimatedProgressTextState extends State<AnimatedProgressText>
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: LinearProgressIndicator(
-            backgroundColor:
-                Theme.of(context).colorScheme.primary.withAlpha(50),
+            borderRadius: BorderRadiusGeometry.circular(4.0),
+            backgroundColor: Colors.grey.withAlpha(50),
             valueColor: AlwaysStoppedAnimation<Color>(
-                Theme.of(context).colorScheme.primary),
+              Colors.blue.withAlpha(80),
+            ),
             value:
                 widget.end > 0 ? _displayValue / widget.target.toDouble() : 0.0,
           ),

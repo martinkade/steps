@@ -171,6 +171,18 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
   Widget build(BuildContext context) {
     super.build(context);
     final Widget contentWidget = Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.yellow.withAlpha(50),
+            Colors.yellow.withAlpha(0),
+          ],
+          begin: const FractionalOffset(0.0, 1.0),
+          end: const FractionalOffset(0.5, 0.0),
+          stops: [0.0, 0.5],
+          tileMode: TileMode.clamp,
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -189,13 +201,17 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                       end: (_snapshot?.todaysPoints ?? 0).toInt(),
                       target: _goalDaily,
                       label: Localizer.translate(
-                          context, 'lblDashboardUserStatsToday'),
+                        context,
+                        'lblDashboardUserStatsToday',
+                      ),
                       text: Localizer.translate(
-                              context, 'lblDashboardUserStatsKilometer')
-                          .replaceAll(
+                        context,
+                        'lblDashboardUserStatsKilometer',
+                      ).replaceAll(
                         '%1',
                         _approxKilometers(
-                            (_snapshot?.todaysPoints ?? 0).toInt()),
+                          (_snapshot?.todaysPoints ?? 0).toInt(),
+                        ),
                       ),
                     ),
                   ),
@@ -208,13 +224,17 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                       end: (_snapshot?.weeksPoints ?? 0).toInt(),
                       target: _goalDaily * 7,
                       label: Localizer.translate(
-                          context, 'lblDashboardUserStatsWeek'),
+                        context,
+                        'lblDashboardUserStatsWeek',
+                      ),
                       text: Localizer.translate(
-                              context, 'lblDashboardUserStatsKilometer')
-                          .replaceAll(
+                        context,
+                        'lblDashboardUserStatsKilometer',
+                      ).replaceAll(
                         '%1',
                         _approxKilometers(
-                            (_snapshot?.weeksPoints ?? 0).toInt()),
+                          (_snapshot?.weeksPoints ?? 0).toInt(),
+                        ),
                       ),
                     ),
                   ),
@@ -242,8 +262,22 @@ class DashboardGoalItemState extends State<DashboardGoalItem>
                 constraints: BoxConstraints(
                   minHeight: 280,
                 ),
-                child: Center(
-                  child: LoadingIndicator(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.yellow.withAlpha(50),
+                        Colors.yellow.withAlpha(0),
+                      ],
+                      begin: const FractionalOffset(0.0, 1.0),
+                      end: const FractionalOffset(0.5, 0.0),
+                      stops: [0.0, 0.5],
+                      tileMode: TileMode.clamp,
+                    ),
+                  ),
+                  child: Center(
+                    child: LoadingIndicator(),
+                  ),
                 ),
               )
             : contentWidget,

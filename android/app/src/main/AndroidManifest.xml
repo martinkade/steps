@@ -1,8 +1,18 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.health.READ_STEPS" />
-    <uses-permission android:name="android.permission.health.READ_ACTIVITY_INTENSITY" />
-    <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_HISTORY" />
+    <uses-permission
+        android:name="android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"
+        tools:ignore="HealthConnectPolicy" />
+    <uses-permission
+        android:name="android.permission.health.READ_HEALTH_DATA_HISTORY"
+        tools:ignore="HealthConnectPolicy" />
+    <uses-permission
+        android:name="android.permission.health.READ_STEPS"
+        tools:ignore="HealthConnectPolicy" />
+    <uses-permission
+        android:name="android.permission.health.READ_EXERCISE"
+        tools:ignore="HealthConnectPolicy" />
 
     <queries>
         <package android:name="com.google.android.apps.healthdata" />

@@ -37,22 +37,17 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
     _load();
   }
 
-  void _load() {
-    Preferences().isAutoSyncEnabled().then((enabled) {
-      if (!mounted) return;
-      if (enabled) {
-        _repository.hasPermissions().then((authorized) {
-          if (!mounted) return;
-          setState(() {
-            _autoSyncEnabled = authorized;
-          });
-        });
-      } else {
-        setState(() {
-          _autoSyncEnabled = false;
-        });
-      }
-    });
+  void _load() async {
+    final bool isAutoSyncEnabled = await Preferences().isAutoSyncEnabled();
+    if (isAutoSyncEnabled && await _repository.hasPermissions()) {
+      setState(() {
+        _autoSyncEnabled = true;
+      });
+    } else {
+      setState(() {
+        _autoSyncEnabled = false;
+      });
+    }
   }
 
   void _toggleAutoSync(bool enable) async {
@@ -60,15 +55,14 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
       if (Platform.isAndroid && !(await _repository.isInstalled())) {
         await _repository.requestInstallation();
       }
-      _repository.requestPermissions().then((authorized) {
-        if (!mounted) return;
-        Preferences().setAutoSyncEnabled(authorized);
-        setState(() {
-          _autoSyncEnabled = authorized;
-        });
+      final bool hasAutoSyncPermissions =
+          await _repository.requestPermissions();
+      await Preferences().setAutoSyncEnabled(hasAutoSyncPermissions);
+      setState(() {
+        _autoSyncEnabled = hasAutoSyncPermissions;
       });
     } else {
-      Preferences().setAutoSyncEnabled(false);
+      await Preferences().setAutoSyncEnabled(false);
       setState(() {
         _autoSyncEnabled = false;
       });
@@ -97,26 +91,34 @@ class _SettingsSyncItemState extends State<SettingsSyncItem> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
+             Expanded(
+                  child:  GestureDetector(
+                onTap: () {
+                  if (Platform.isAndroid) {
+                  _repository.requestExternalSettings();
+                  }
+                },
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      Platform.isIOS
-                          ? Localizer.translate(
-                              context, 'lblSettingsDataSourceApple')
-                          : Localizer.translate(
-                              context, 'lblSettingsDataSourceGoogle'),
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Platform.isIOS
+                            ? Localizer.translate(
+                                context, 'lblSettingsDataSourceApple')
+                            : Localizer.translate(
+                                context, 'lblSettingsDataSourceGoogle'),
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      Localizer.translate(context, 'lblSettingsDataSourceInfo'),
-                      style: TextStyle(fontSize: 16.0),
-                    )
-                  ],
+                      Text(
+                        Localizer.translate(
+                            context, 'lblSettingsDataSourceInfo'),
+                        style: TextStyle(fontSize: 16.0),
+                      )
+                    ],
+                  ),
                 ),
               ),
               Switch(

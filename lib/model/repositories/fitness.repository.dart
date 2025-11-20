@@ -106,6 +106,17 @@ class FitnessRepository extends Repository {
   }
 
   ///
+  Future<bool> requestExternalSettings() async {
+    try {
+      final bool isLaunched = await fitness.invokeMethod('getFitnessSettings');
+      return isLaunched;
+    } on Exception catch (ex) {
+      print(ex.toString());
+    }
+    return false;
+  }
+
+  ///
   Future<bool> requestPermissions() async {
     try {
       final bool isAuthenticated = await fitness.invokeMethod('authenticate');
