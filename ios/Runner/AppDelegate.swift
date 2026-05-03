@@ -23,16 +23,13 @@ import Flutter
     func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
         GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
         
-        if let controller = window?.rootViewController as? FlutterViewController {
-            let fitnessChannel = FlutterMethodChannel(name: "com.mediabeam/fitness", binaryMessenger: controller.binaryMessenger)
-            let fitnessHandler = FitnessHandler()
-            fitnessHandler.subscribe(toChannel: fitnessChannel, fromController: controller)
-            if #available(iOS 10.0, *) {
-                let notificationChannel = FlutterMethodChannel(name: "com.mediabeam/notification", binaryMessenger: controller.binaryMessenger)
-                let notificationHandler = NotificationHandler(withDelegate: self)
-                notificationHandler.subscribe(toChannel: notificationChannel, fromController: controller)
-            }
-        }
+        let fitnessChannel = FlutterMethodChannel(name: "com.mediabeam/fitness", binaryMessenger: engineBridge.applicationRegistrar.messenger())
+        let fitnessHandler = FitnessHandler()
+        fitnessHandler.subscribe(toChannel: fitnessChannel)
+        let notificationChannel = FlutterMethodChannel(name: "com.mediabeam/notification", binaryMessenger: engineBridge.applicationRegistrar.messenger())
+        let notificationHandler = NotificationHandler(withDelegate: self)
+        notificationHandler.subscribe(toChannel: notificationChannel)
+        
     }
     
 }

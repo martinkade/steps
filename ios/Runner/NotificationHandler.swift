@@ -18,7 +18,7 @@ class NotificationHandler: NSObject {
         super.init()
     }
     
-    @objc func subscribe(toChannel channel: FlutterMethodChannel, fromController controller: FlutterViewController) {
+    @objc func subscribe(toChannel channel: FlutterMethodChannel) {
         channel.setMethodCallHandler({ (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
             if call.method == "isNotificationsEnabled" {
                 self.isAuthorized { (enabled) in

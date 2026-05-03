@@ -11,7 +11,7 @@ import HealthKit
 
 class FitnessHandler: NSObject {
 
-    @objc func subscribe(toChannel channel: FlutterMethodChannel, fromController controller: FlutterViewController) {
+    @objc func subscribe(toChannel channel: FlutterMethodChannel) {
         channel.setMethodCallHandler({ (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
             if call.method == "getFitnessMetrics" {
                 let queue = DispatchQueue.main
