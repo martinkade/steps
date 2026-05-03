@@ -2,25 +2,13 @@ import UIKit
 import Flutter
 
 @main
-@objc class AppDelegate: FlutterAppDelegate {
+@objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
     
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         
-        if let controller = window?.rootViewController as? FlutterViewController {
-            let fitnessChannel = FlutterMethodChannel(name: "com.mediabeam/fitness", binaryMessenger: controller.binaryMessenger)
-            let fitnessHandler = FitnessHandler()
-            fitnessHandler.subscribe(toChannel: fitnessChannel, fromController: controller)
-            if #available(iOS 10.0, *) {
-                let notificationChannel = FlutterMethodChannel(name: "com.mediabeam/notification", binaryMessenger: controller.binaryMessenger)
-                let notificationHandler = NotificationHandler(withDelegate: self)
-                notificationHandler.subscribe(toChannel: notificationChannel, fromController: controller)
-            }
-        }
-        
-        GeneratedPluginRegistrant.register(with: self)
         let result = super.application(application, didFinishLaunchingWithOptions: launchOptions)
         
         return result
@@ -30,6 +18,18 @@ import Flutter
         super.applicationDidBecomeActive(application)
         
         application.applicationIconBadgeNumber = 0
+    }
+    
+    func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
+        GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+        
+        let fitnessChannel = FlutterMethodChannel(name: "com.mediabeam/fitness", binaryMessenger: engineBridge.applicationRegistrar.messenger())
+        let fitnessHandler = FitnessHandler()
+        fitnessHandler.subscribe(toChannel: fitnessChannel)
+        let notificationChannel = FlutterMethodChannel(name: "com.mediabeam/notification", binaryMessenger: engineBridge.applicationRegistrar.messenger())
+        let notificationHandler = NotificationHandler(withDelegate: self)
+        notificationHandler.subscribe(toChannel: notificationChannel)
+        
     }
     
 }
